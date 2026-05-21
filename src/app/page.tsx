@@ -33,8 +33,10 @@ import {
   Fingerprint,
   Atom,
   Pill,
+  Battery,
 } from "lucide-react";
 import { PaymentModal } from "@/components/payment-modal";
+import Link from "next/link";
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -878,11 +880,111 @@ function CTASection({ onOrderNow }: { onOrderNow: () => void }) {
   );
 }
 
+function ExploreSolutionsSection() {
+  const solutions = [
+    {
+      icon: Heart,
+      title: "Natural ED Supplement",
+      description: "Get harder, firmer erections naturally with our blood flow optimizing formula.",
+      href: "/ed-supplement",
+    },
+    {
+      icon: Zap,
+      title: "Testosterone Booster",
+      description: "Restore your T-levels, drive and confidence with Zinc, Tribulus & Fenugreek.",
+      href: "/testosterone-booster",
+    },
+    {
+      icon: Battery,
+      title: "Stamina Supplement",
+      description: "Last longer and perform stronger with Maca Root, Ginseng & L-Arginine.",
+      href: "/stamina-supplement",
+    },
+    {
+      icon: Flame,
+      title: "Libido Enhancer",
+      description: "Reignite your desire and passion with Tribulus, Maca & Fenugreek.",
+      href: "/libido-enhancer",
+    },
+    {
+      icon: Trophy,
+      title: "Male Performance",
+      description: "Total bedroom dominance — all 6 ingredients for comprehensive performance.",
+      href: "/male-performance",
+    },
+  ];
+
+  return (
+    <section
+      id="solutions"
+      className="py-24 lg:py-32 bg-[#0d0d0a] texture-overlay relative overflow-hidden"
+    >
+      <div className="light-beam" style={{ top: "30%", left: "-20%" }} />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
+        >
+          <Badge className="mb-4 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
+            Targeted Solutions
+          </Badge>
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight">
+            <span className="gold-gradient-text">EXPLORE OUR</span>{" "}
+            <span className="text-foreground">SOLUTIONS</span>
+          </h2>
+          <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
+            Every man&apos;s needs are different. Find the targeted solution that
+            addresses your specific challenge — or go all-in with our comprehensive
+            performance formula.
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {solutions.map((solution, i) => (
+            <motion.div
+              key={solution.href}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
+              <Link href={solution.href}>
+                <Card className="h-full bg-[#111110] border border-gold/10 hover:border-gold/30 transition-all duration-300 group gold-glow cursor-pointer">
+                  <CardHeader className="pb-4">
+                    <div className="w-14 h-14 rounded-none bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                      <solution.icon className="h-7 w-7 text-gold" />
+                    </div>
+                    <CardTitle className="text-xl font-black tracking-wider text-foreground">
+                      {solution.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/50 leading-relaxed font-light mb-4">
+                      {solution.description}
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-gold text-xs font-bold tracking-widest uppercase group-hover:gap-2 transition-all">
+                      Learn More <ChevronRight className="h-3 w-3" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="bg-[#050504] border-t border-gold/10 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               <Flame className="h-6 w-6 text-gold" />
@@ -894,6 +996,53 @@ function Footer() {
               Premium men&apos;s performance supplement — stronger stamina,
               harder results, and the confidence to back it up.
             </p>
+          </div>
+          <div>
+            <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
+              Solutions
+            </h4>
+            <ul className="space-y-2 text-sm text-foreground/30 font-light">
+              <li>
+                <Link
+                  href="/ed-supplement"
+                  className="hover:text-gold transition-colors"
+                >
+                  Natural ED Supplement
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/testosterone-booster"
+                  className="hover:text-gold transition-colors"
+                >
+                  Testosterone Booster
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/stamina-supplement"
+                  className="hover:text-gold transition-colors"
+                >
+                  Stamina Supplement
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/libido-enhancer"
+                  className="hover:text-gold transition-colors"
+                >
+                  Libido Enhancer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/male-performance"
+                  className="hover:text-gold transition-colors"
+                >
+                  Male Performance
+                </Link>
+              </li>
+            </ul>
           </div>
           <div>
             <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
@@ -998,6 +1147,7 @@ export default function Home() {
         <WhyChooseSection />
         <IngredientsSection />
         <QuizSection onOrderNow={() => setShowPayment(true)} />
+        <ExploreSolutionsSection />
         <CTASection onOrderNow={() => setShowPayment(true)} />
       </main>
       <Footer />
