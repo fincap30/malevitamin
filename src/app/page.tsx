@@ -34,6 +34,7 @@ import {
   Atom,
   Pill,
 } from "lucide-react";
+import { PaymentModal } from "@/components/payment-modal";
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -175,7 +176,7 @@ const quizQuestions = [
 /*  COMPONENTS                                                         */
 /* ------------------------------------------------------------------ */
 
-function Navbar() {
+function Navbar({ onOrderNow }: { onOrderNow: () => void }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -224,24 +225,24 @@ function Navbar() {
           <Button
             size="sm"
             className="rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
-            asChild
+            onClick={onOrderNow}
           >
-            <a href="#order">Order Now</a>
+            Order Now
           </Button>
         </div>
         <Button
           size="sm"
           className="md:hidden rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
-          asChild
+          onClick={onOrderNow}
         >
-          <a href="#order">Order</a>
+          Order
         </Button>
       </div>
     </motion.nav>
   );
 }
 
-function HeroSection() {
+function HeroSection({ onOrderNow }: { onOrderNow: () => void }) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Deep black background with texture */}
@@ -544,7 +545,7 @@ function IngredientsSection() {
   );
 }
 
-function QuizSection() {
+function QuizSection({ onOrderNow }: { onOrderNow: () => void }) {
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -792,6 +793,7 @@ function QuizSection() {
                             <Button
                               size="lg"
                               className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-10"
+                              onClick={onOrderNow}
                             >
                               <Package className="mr-2 h-5 w-5" />
                               Order Now — R 850.00
@@ -819,7 +821,7 @@ function QuizSection() {
   );
 }
 
-function CTASection() {
+function CTASection({ onOrderNow }: { onOrderNow: () => void }) {
   return (
     <section id="order" className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.03] to-transparent" />
@@ -849,6 +851,7 @@ function CTASection() {
               <Button
                 size="lg"
                 className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-12"
+                onClick={onOrderNow}
               >
                 Order Now — R 850.00{" "}
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -984,18 +987,24 @@ function Footer() {
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
+  const [showPayment, setShowPayment] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a08]">
-      <Navbar />
+      <Navbar onOrderNow={() => setShowPayment(true)} />
       <main className="flex-1">
-        <HeroSection />
+        <HeroSection onOrderNow={() => setShowPayment(true)} />
         <BenefitsSection />
         <WhyChooseSection />
         <IngredientsSection />
-        <QuizSection />
-        <CTASection />
+        <QuizSection onOrderNow={() => setShowPayment(true)} />
+        <CTASection onOrderNow={() => setShowPayment(true)} />
       </main>
       <Footer />
+      <PaymentModal
+        isOpen={showPayment}
+        onClose={() => setShowPayment(false)}
+      />
     </div>
   );
 }
