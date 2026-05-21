@@ -224,15 +224,17 @@ function Navbar() {
           <Button
             size="sm"
             className="rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
+            asChild
           >
-            Order Now
+            <a href="#order">Order Now</a>
           </Button>
         </div>
         <Button
           size="sm"
           className="md:hidden rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
+          asChild
         >
-          Order
+          <a href="#order">Order</a>
         </Button>
       </div>
     </motion.nav>
@@ -421,7 +423,10 @@ function BenefitsSection() {
 
 function WhyChooseSection() {
   return (
-    <section className="py-24 lg:py-32 bg-[#0d0d0a] texture-overlay relative overflow-hidden">
+    <section
+      id="why-choose"
+      className="py-24 lg:py-32 bg-[#0d0d0a] texture-overlay relative overflow-hidden"
+    >
       {/* Diagonal light beam */}
       <div className="light-beam" style={{ top: "50%", left: "-20%" }} />
 
@@ -816,7 +821,7 @@ function QuizSection() {
 
 function CTASection() {
   return (
-    <section className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative overflow-hidden">
+    <section id="order" className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.03] to-transparent" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/5 rounded-full blur-[120px]" />
 
@@ -924,17 +929,17 @@ function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#benefits" className="hover:text-gold transition-colors">
                   FAQs
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#ingredients" className="hover:text-gold transition-colors">
                   Shipping
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#quiz" className="hover:text-gold transition-colors">
                   Returns
                 </a>
               </li>
@@ -946,17 +951,17 @@ function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#benefits" className="hover:text-gold transition-colors">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#ingredients" className="hover:text-gold transition-colors">
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
+                <a href="#quiz" className="hover:text-gold transition-colors">
                   Disclaimer
                 </a>
               </li>
