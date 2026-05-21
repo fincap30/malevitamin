@@ -8,7 +8,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -16,7 +15,6 @@ import {
   Zap,
   Shield,
   Heart,
-  Leaf,
   ChevronRight,
   Star,
   CheckCircle,
@@ -26,10 +24,15 @@ import {
   Target,
   TrendingUp,
   Sparkles,
-  CircleCheck,
   Package,
   Clock,
   Award,
+  Swords,
+  Dumbbell,
+  Crown,
+  Fingerprint,
+  Atom,
+  Pill,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -39,132 +42,131 @@ import {
 const benefits = [
   {
     icon: Zap,
-    title: "Enhanced Energy Levels",
+    title: "ENHANCED ENERGY",
+    subtitle: "Dominate Your Day",
     description:
-      "Power through your day with sustained, natural energy. Our formula combats fatigue at its source, so you stay sharp and active from morning to night without the crash of stimulants.",
+      "Power through with sustained, relentless energy. Our formula obliterates fatigue at its source so you stay sharp and unstoppable from morning to night — no crashes, no excuses.",
   },
   {
-    icon: Shield,
-    title: "Improved Confidence",
+    icon: Swords,
+    title: "UNSHAKEABLE CONFIDENCE",
+    subtitle: "Own Every Room",
     description:
-      "Feel assured in your performance and presence. When your body gets the nutrients it craves, confidence follows naturally — in the boardroom, the gym, and your personal life.",
+      "When your body gets what it craves, confidence isn't optional — it's automatic. Step into every situation knowing you're at your peak, in the boardroom, the gym, and beyond.",
   },
   {
     icon: Heart,
-    title: "Greater Overall Satisfaction",
+    title: "TOTAL SATISFACTION",
+    subtitle: "No Compromises",
     description:
-      "Experience a renewed sense of fulfillment across every area of life. Balanced hormones and improved circulation translate to deeper satisfaction in your intimate moments and daily activities.",
+      "Balanced hormones and maximized circulation deliver a level of satisfaction most men only dream about. Experience what it means to be truly fulfilled — in every area of life.",
   },
 ];
 
 const whyChoose = [
   {
-    icon: Star,
-    title: "High-Quality Ingredients",
+    icon: Crown,
+    title: "PREMIUM INGREDIENTS",
     description:
-      "Each ingredient is carefully selected for its purity and effectiveness, ensuring you get the best possible results. We source only premium-grade raw materials that meet rigorous quality standards.",
+      "Every ingredient is meticulously selected for maximum purity and potency. We source only pharmaceutical-grade raw materials that pass the most rigorous quality standards — because you deserve nothing less.",
   },
   {
     icon: Shield,
-    title: "Safe and Effective",
+    title: "PROVEN & SAFE",
     description:
-      "Our formula is designed with your health in mind, providing a safe way to enhance your vitality. Every batch is third-party tested to guarantee safety and consistency.",
+      "Engineered with your health as the top priority. Every batch is third-party tested to guarantee safety, consistency, and results. No shortcuts, no compromises, no exceptions.",
   },
   {
-    icon: Leaf,
-    title: "Holistic Wellness",
+    icon: Flame,
+    title: "TOTAL OPTIMIZATION",
     description:
-      "Supports overall health and well-being, helping you feel more confident and satisfied in all areas of life. Our approach goes beyond a single benefit to nurture your whole system.",
+      "This isn't a band-aid solution. Our holistic approach optimizes your entire system — energy, hormones, circulation, and vitality — for lasting, transformational results you can feel.",
   },
 ];
 
 const ingredients = [
   {
-    name: "L-Arginine",
+    name: "L-ARGININE",
     description:
       "An amino acid that supports blood flow and overall circulation, promoting improved performance and stamina.",
     icon: TrendingUp,
   },
   {
-    name: "Tribulus Terrestris",
+    name: "TRIBULUS TERRESTRIS",
     description:
-      "A plant extract traditionally used to enhance vitality and overall well-being.",
-    icon: Flame,
+      "A powerful plant extract traditionally used to enhance vitality and overall well-being.",
+    icon: Dumbbell,
   },
   {
-    name: "Maca Root",
+    name: "MACA ROOT",
     description:
-      "Known for its energy-boosting properties, this root helps increase endurance and support hormonal balance.",
+      "Known for its energy-boosting properties, this root increases endurance and supports hormonal balance.",
     icon: Zap,
   },
   {
-    name: "Ginseng Extract",
+    name: "GINSENG EXTRACT",
     description:
-      "A natural adaptogen that helps reduce fatigue and enhance physical performance.",
+      "A natural adaptogen that reduces fatigue and enhances physical performance under pressure.",
     icon: Target,
   },
   {
-    name: "Zinc",
+    name: "ZINC",
     description:
-      "An essential mineral that plays a crucial role in supporting immune function and maintaining healthy testosterone levels.",
-    icon: Shield,
+      "An essential mineral crucial for supporting immune function and maintaining healthy testosterone levels.",
+    icon: Atom,
   },
   {
-    name: "Fenugreek Extract",
+    name: "FENUGREEK EXTRACT",
     description:
-      "Known to support hormonal health and overall vitality.",
-    icon: Sparkles,
+      "Known to support hormonal health, boost vitality, and enhance overall male performance.",
+    icon: Pill,
   },
 ];
 
 const quizQuestions = [
   {
     id: 1,
-    question: "How would you rate your current energy levels throughout the day?",
+    question: "HOW WOULD YOU RATE YOUR CURRENT ENERGY LEVELS?",
     options: [
-      { label: "Low — I often feel sluggish and tired", value: "low" },
-      { label: "Moderate — I have good and bad days", value: "medium" },
-      { label: "High — I feel energized most of the time", value: "high" },
+      { label: "LOW — I'M RUNNING ON EMPTY", value: "low" },
+      { label: "MODERATE — INCONSISTENT AT BEST", value: "medium" },
+      { label: "HIGH — I'M CHARGED UP", value: "high" },
     ],
   },
   {
     id: 2,
-    question:
-      "How confident do you feel in your daily performance and vitality?",
+    question: "HOW CONFIDENT ARE YOU IN YOUR DAILY PERFORMANCE?",
     options: [
-      { label: "Not very confident — I know I can do better", value: "low" },
-      {
-        label: "Somewhat confident — Room for improvement",
-        value: "medium",
-      },
-      { label: "Very confident — I feel at my peak", value: "high" },
+      { label: "NOT CONFIDENT — I KNOW I CAN DO BETTER", value: "low" },
+      { label: "SOMEWHAT — ROOM FOR IMPROVEMENT", value: "medium" },
+      { label: "VERY CONFIDENT — I'M AT MY PEAK", value: "high" },
     ],
   },
   {
     id: 3,
-    question: "How would you describe your overall satisfaction with your wellness?",
+    question: "HOW SATISFIED ARE YOU WITH YOUR OVERALL WELLNESS?",
     options: [
-      { label: "Unsatisfied — I'm looking for real change", value: "low" },
-      { label: "It's okay — But I want more", value: "medium" },
-      { label: "Very satisfied — I feel great", value: "high" },
+      { label: "UNSATISFIED — I NEED REAL CHANGE", value: "low" },
+      { label: "IT'S OKAY — BUT I WANT MORE", value: "medium" },
+      { label: "VERY SATISFIED — I FEEL GREAT", value: "high" },
     ],
   },
   {
     id: 4,
-    question: "Does stress affect your daily performance?",
+    question: "DOES STRESS AFFECT YOUR PERFORMANCE?",
     options: [
-      { label: "Often — Stress takes a heavy toll on me", value: "low" },
-      { label: "Sometimes — I manage but could use support", value: "medium" },
-      { label: "Rarely — I handle stress well", value: "high" },
+      { label: "OFTEN — STRESS CRUSHES ME", value: "low" },
+      { label: "SOMETIMES — I MANAGE BUT NEED SUPPORT", value: "medium" },
+      { label: "RARELY — I HANDLE IT", value: "high" },
     ],
   },
   {
     id: 5,
-    question: "Are you open to a natural supplement to support your vitality?",
+    question: "ARE YOU READY FOR A NATURAL VITALITY SOLUTION?",
     options: [
-      { label: "Absolutely — I'm ready for a solution", value: "low" },
-      { label: "Maybe — I'd like to learn more first", value: "medium" },
-      { label: "Not really — I prefer other approaches", value: "high" },
+      { label: "ABSOLUTELY — I'M READY TO DOMINATE", value: "low" },
+      { label: "MAYBE — I WANT TO LEARN MORE", value: "medium" },
+      { label: "NOT REALLY — I PREFER OTHER WAYS", value: "high" },
     ],
   },
 ];
@@ -189,33 +191,48 @@ function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-lg border-b border-border"
+          ? "bg-black/90 backdrop-blur-md shadow-lg shadow-black/50 border-b border-gold/20"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <div className="flex items-center gap-2">
-          <Flame className="h-7 w-7 text-amber-600" />
-          <span className="text-xl font-bold tracking-tight text-foreground">
+        <div className="flex items-center gap-2.5">
+          <Flame className="h-7 w-7 text-gold" />
+          <span className="text-xl font-black tracking-widest text-gold uppercase">
             Male Vitamine
           </span>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-          <a href="#benefits" className="hover:text-foreground transition-colors">
+        <div className="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-foreground/60">
+          <a
+            href="#benefits"
+            className="hover:text-gold transition-colors duration-200"
+          >
             Benefits
           </a>
-          <a href="#ingredients" className="hover:text-foreground transition-colors">
+          <a
+            href="#ingredients"
+            className="hover:text-gold transition-colors duration-200"
+          >
             Ingredients
           </a>
-          <a href="#quiz" className="hover:text-foreground transition-colors">
+          <a
+            href="#quiz"
+            className="hover:text-gold transition-colors duration-200"
+          >
             Take Quiz
           </a>
-          <Button size="sm" className="rounded-full">
-            Shop Now
+          <Button
+            size="sm"
+            className="rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
+          >
+            Order Now
           </Button>
         </div>
-        <Button size="sm" className="md:hidden rounded-full">
-          Shop Now
+        <Button
+          size="sm"
+          className="md:hidden rounded-none bg-gold text-black font-black tracking-wider uppercase hover:bg-gold-light"
+        >
+          Order
         </Button>
       </div>
     </motion.nav>
@@ -225,60 +242,70 @@ function Navbar() {
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-white" />
-      <div className="absolute top-20 right-0 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-orange-200/20 rounded-full blur-3xl" />
+      {/* Deep black background with texture */}
+      <div className="absolute inset-0 bg-[#0a0a08]" />
+      <div className="absolute inset-0 texture-overlay" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 grid lg:grid-cols-2 gap-12 items-center">
+      {/* Diagonal gold light beam */}
+      <div className="light-beam" style={{ top: "40%", left: "-20%" }} />
+      <div
+        className="light-beam"
+        style={{ top: "60%", left: "-20%", opacity: 0.5 }}
+      />
+
+      {/* Ambient glow */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/3 rounded-full blur-[100px]" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 grid lg:grid-cols-2 gap-16 items-center">
         {/* Text content */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Badge className="mb-6 bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-200">
-            <Sparkles className="h-3.5 w-3.5 mr-1" />
-            Premium Men&apos;s Supplement
+          <Badge className="mb-6 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
+            <Crown className="h-3.5 w-3.5 mr-1.5" />
+            Premium Performance Supplement
           </Badge>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
-            Elevate Your{" "}
-            <span className="text-amber-600">Vitality</span> with Our Premium
-            Supplement
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.95]">
+            <span className="gold-gradient-text">RECLAIM</span>
+            <br />
+            <span className="gold-gradient-text">YOUR EDGE</span>
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-xl">
+          <p className="mt-8 text-lg text-foreground/60 leading-relaxed max-w-xl font-light">
             Discover our unique formula for men&apos;s vitality, libido and
-            wellness. Crafted with high-quality, safe ingredients, our supplement
-            ensures you feel your best and achieve peak performance even under
-            stress.
+            wellness. Crafted with high-quality, safe ingredients to ensure you
+            feel your best and achieve peak performance — even under
+            pressure.
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row gap-4">
             <Button
               size="lg"
-              className="rounded-full bg-amber-600 hover:bg-amber-700 text-white text-base px-8"
+              className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-10"
               asChild
             >
               <a href="#quiz">
-                Take the Quiz <ArrowRight className="ml-2 h-5 w-5" />
+                Take The Quiz <ArrowRight className="ml-2 h-5 w-5" />
               </a>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full text-base px-8"
+              className="rounded-none border-gold/30 text-gold font-bold tracking-wider uppercase text-sm hover:bg-gold/10 hover:border-gold/50 h-14 px-10"
               asChild
             >
               <a href="#benefits">Learn More</a>
             </Button>
           </div>
 
-          <div className="mt-10 flex items-center gap-6">
+          <div className="mt-12 flex items-center gap-8">
             <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full bg-amber-200 border-2 border-white flex items-center justify-center text-amber-700 text-xs font-bold"
+                  className="w-10 h-10 rounded-full bg-gold/20 border-2 border-[#0a0a08] flex items-center justify-center text-gold text-xs font-bold"
                 >
                   {String.fromCharCode(64 + i)}
                 </div>
@@ -289,12 +316,12 @@ function HeroSection() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
                     key={i}
-                    className="h-4 w-4 fill-amber-400 text-amber-400"
+                    className="h-4 w-4 fill-gold text-gold"
                   />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground">
-                Trusted by 2,000+ men
+              <p className="text-xs text-foreground/40 font-bold tracking-wider uppercase mt-1">
+                Trusted by 2,000+ Men
               </p>
             </div>
           </div>
@@ -302,24 +329,24 @@ function HeroSection() {
 
         {/* Product image */}
         <motion.div
-          initial={{ opacity: 0, x: 40, scale: 0.9 }}
+          initial={{ opacity: 0, x: 50, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="relative flex justify-center"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-3xl blur-2xl scale-95" />
-          <div className="relative bg-gradient-to-br from-amber-50 to-white rounded-3xl p-8 shadow-2xl border border-amber-100">
+          <div className="absolute inset-0 bg-gold/5 rounded-2xl blur-3xl scale-90" />
+          <div className="relative bg-gradient-to-br from-[#1a1a15] to-[#0d0d0a] rounded-2xl p-8 sm:p-12 border border-gold/15 gold-glow-strong">
             <img
               src="/product-image.webp"
               alt="Male Vitamine Premium Supplement"
               className="w-72 h-72 sm:w-80 sm:h-80 object-contain drop-shadow-2xl"
             />
-            <div className="mt-6 text-center">
-              <p className="text-3xl font-bold text-foreground">
+            <div className="mt-8 text-center">
+              <p className="text-4xl font-black text-gold tracking-wide">
                 R 850.00
               </p>
-              <Badge className="mt-2 bg-green-100 text-green-700 hover:bg-green-100 border-green-200">
-                <CircleCheck className="h-3.5 w-3.5 mr-1" />
+              <Badge className="mt-3 bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded-none font-bold tracking-widest uppercase text-xs">
+                <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                 In Stock
               </Badge>
             </div>
@@ -332,31 +359,33 @@ function HeroSection() {
 
 function BenefitsSection() {
   return (
-    <section id="benefits" className="py-20 lg:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="benefits"
+      className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative"
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.02] to-transparent" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <Badge
-            variant="outline"
-            className="mb-4 border-amber-300 text-amber-700"
-          >
+          <Badge className="mb-4 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
             Key Benefits
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            What You&apos;ll Experience
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight">
+            <span className="gold-gradient-text">WHAT YOU&apos;LL</span>{" "}
+            <span className="text-foreground">EXPERIENCE</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-lg">
-            Our premium supplement is formulated to deliver real, noticeable
-            results that transform your daily life.
+          <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
+            Real results. No compromises. Our formula delivers transformational
+            benefits you can feel from day one.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {benefits.map((benefit, i) => (
             <motion.div
               key={benefit.title}
@@ -365,15 +394,20 @@ function BenefitsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
             >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-br from-white to-amber-50/50 group">
-                <CardHeader>
-                  <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
-                    <benefit.icon className="h-7 w-7 text-amber-600" />
+              <Card className="h-full bg-[#111110] border border-gold/10 hover:border-gold/30 transition-all duration-300 group gold-glow">
+                <CardHeader className="pb-4">
+                  <div className="w-14 h-14 rounded-none bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                    <benefit.icon className="h-7 w-7 text-gold" />
                   </div>
-                  <CardTitle className="text-xl">{benefit.title}</CardTitle>
+                  <p className="text-xs text-gold/60 font-bold tracking-widest uppercase mb-1">
+                    {benefit.subtitle}
+                  </p>
+                  <CardTitle className="text-xl font-black tracking-wider text-foreground">
+                    {benefit.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-foreground/50 leading-relaxed font-light">
                     {benefit.description}
                   </p>
                 </CardContent>
@@ -388,31 +422,32 @@ function BenefitsSection() {
 
 function WhyChooseSection() {
   return (
-    <section className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 lg:py-32 bg-[#0d0d0a] texture-overlay relative overflow-hidden">
+      {/* Diagonal light beam */}
+      <div className="light-beam" style={{ top: "50%", left: "-20%" }} />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <Badge
-            variant="outline"
-            className="mb-4 border-amber-300 text-amber-700"
-          >
-            Why Us
+          <Badge className="mb-4 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
+            The Standard
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Why Choose Our Supplement?
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight">
+            <span className="text-foreground">WHY CHOOSE</span>{" "}
+            <span className="gold-gradient-text">OURS?</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-lg">
-            We don&apos;t compromise on quality. Every aspect of our supplement
-            is designed with your well-being in mind.
+          <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
+            We don&apos;t compromise. Every element of our supplement is
+            engineered for men who demand the best.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {whyChoose.map((item, i) => (
             <motion.div
               key={item.title}
@@ -421,15 +456,17 @@ function WhyChooseSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
             >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 group">
+              <Card className="h-full bg-[#111110] border border-gold/10 hover:border-gold/30 transition-all duration-300 group gold-glow">
                 <CardHeader>
-                  <div className="w-14 h-14 rounded-2xl bg-orange-100 flex items-center justify-center mb-4 group-hover:bg-orange-200 transition-colors">
-                    <item.icon className="h-7 w-7 text-orange-600" />
+                  <div className="w-14 h-14 rounded-none bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                    <item.icon className="h-7 w-7 text-gold" />
                   </div>
-                  <CardTitle className="text-xl">{item.title}</CardTitle>
+                  <CardTitle className="text-xl font-black tracking-wider text-foreground">
+                    {item.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-foreground/50 leading-relaxed font-light">
                     {item.description}
                   </p>
                 </CardContent>
@@ -444,31 +481,32 @@ function WhyChooseSection() {
 
 function IngredientsSection() {
   return (
-    <section id="ingredients" className="py-20 lg:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="ingredients"
+      className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative"
+    >
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <Badge
-            variant="outline"
-            className="mb-4 border-amber-300 text-amber-700"
-          >
-            Ingredients
+          <Badge className="mb-4 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
+            The Arsenal
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Powered by Nature&apos;s Best
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight">
+            <span className="gold-gradient-text">POWERED BY</span>{" "}
+            <span className="text-foreground">NATURE&apos;S BEST</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-lg">
-            Every ingredient is hand-picked for its proven benefits and
+          <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
+            Every ingredient hand-picked for its proven benefits and
             synergistic effects within our formula.
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {ingredients.map((ingredient, i) => (
             <motion.div
               key={ingredient.name}
@@ -477,17 +515,17 @@ function IngredientsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <Card className="h-full border border-border/50 hover:border-amber-300 transition-colors duration-300 group hover:shadow-md">
+              <Card className="h-full bg-[#111110] border border-gold/10 hover:border-gold/25 transition-all duration-300 group">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 group-hover:bg-amber-200 transition-colors">
-                      <ingredient.icon className="h-6 w-6 text-amber-600" />
+                    <div className="w-12 h-12 rounded-none bg-gold/10 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors border border-gold/15">
+                      <ingredient.icon className="h-5 w-5 text-gold" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg text-foreground">
+                      <h3 className="font-black text-sm tracking-wider text-foreground">
                         {ingredient.name}
                       </h3>
-                      <p className="mt-1 text-muted-foreground text-sm leading-relaxed">
+                      <p className="mt-2 text-foreground/45 text-sm leading-relaxed font-light">
                         {ingredient.description}
                       </p>
                     </div>
@@ -531,37 +569,37 @@ function QuizSection() {
 
     if (lowCount >= 3) {
       return {
-        title: "Your Vitality Needs a Boost!",
+        title: "YOUR VITALITY NEEDS A BOOST",
         description:
           "Based on your answers, you could greatly benefit from our premium supplement. The combination of L-Arginine, Tribulus Terrestris, and Maca Root is specifically designed to address the areas where you need the most support — energy, confidence, and overall satisfaction.",
-        match: "Very High Match",
+        match: "EXTREMELY HIGH MATCH",
         matchPercent: 97,
-        color: "text-green-600",
-        bgColor: "bg-green-50",
-        borderColor: "border-green-200",
+        color: "text-emerald-400",
+        bgColor: "bg-emerald-500/10",
+        borderColor: "border-emerald-500/30",
       };
     }
     if (lowCount >= 1 || medCount >= 2) {
       return {
-        title: "You're on the Right Track — Let's Optimize!",
+        title: "YOU'RE ON THE RIGHT TRACK — LET'S OPTIMIZE",
         description:
           "You have a solid foundation, but there's room to elevate your vitality. Our supplement's blend of Ginseng Extract, Zinc, and Fenugreek can help you break through plateaus and achieve the peak performance you're striving for.",
-        match: "High Match",
+        match: "HIGH MATCH",
         matchPercent: 85,
-        color: "text-amber-600",
-        bgColor: "bg-amber-50",
-        borderColor: "border-amber-200",
+        color: "text-gold",
+        bgColor: "bg-gold/10",
+        borderColor: "border-gold/30",
       };
     }
     return {
-      title: "Great Foundation — Maintain Your Edge!",
+      title: "STRONG FOUNDATION — MAINTAIN YOUR EDGE",
       description:
-        "You're already performing well! Our supplement can help you maintain and protect your vitality long-term. Think of it as an insurance policy for your energy, confidence, and wellness — keeping you at your peak for years to come.",
-      match: "Good Match",
+        "You're already performing well! Our supplement can help you maintain and protect your vitality long-term. Think of it as insurance for your energy, confidence, and wellness — keeping you at your peak for years to come.",
+      match: "GOOD MATCH",
       matchPercent: 72,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200",
+      color: "text-sky-400",
+        bgColor: "bg-sky-500/10",
+        borderColor: "border-sky-500/30",
     };
   };
 
@@ -575,9 +613,15 @@ function QuizSection() {
   return (
     <section
       id="quiz"
-      className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/30"
+      className="py-24 lg:py-32 bg-[#0d0d0a] texture-overlay relative overflow-hidden"
     >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Diagonal light beams */}
+      <div className="light-beam" style={{ top: "30%", left: "-20%" }} />
+      <div className="light-beam" style={{ top: "70%", left: "-20%", opacity: 0.3 }} />
+
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gold/3 rounded-full blur-[150px]" />
+
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -585,15 +629,17 @@ function QuizSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <Badge className="mb-4 bg-amber-200 text-amber-900 hover:bg-amber-200 border-amber-300">
-            <Trophy className="h-3.5 w-3.5 mr-1" />
+          <Badge className="mb-4 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
+            <Trophy className="h-3.5 w-3.5 mr-1.5" />
             Free Assessment
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Find Out If Our Supplement Is Right for You
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight">
+            <span className="gold-gradient-text">DISCOVER YOUR</span>
+            <br />
+            <span className="text-foreground">VITALITY SCORE</span>
           </h2>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-lg">
-            Take this quick 5-question quiz and get a personalized
+          <p className="mt-6 text-foreground/50 max-w-xl mx-auto text-lg font-light">
+            Take this quick 5-question assessment and get a personalized
             recommendation based on your unique needs.
           </p>
         </motion.div>
@@ -604,47 +650,46 @@ function QuizSection() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Card className="border-0 shadow-xl bg-white">
+            <Card className="bg-[#111110] border border-gold/20 gold-glow-strong">
               <CardContent className="p-8 sm:p-12 text-center">
-                <div className="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-6">
-                  <Target className="h-10 w-10 text-amber-600" />
+                <div className="w-20 h-20 rounded-none bg-gold/10 flex items-center justify-center mx-auto mb-6 border border-gold/20">
+                  <Target className="h-10 w-10 text-gold" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">
-                  Ready to Discover Your Vitality Score?
+                <h3 className="text-2xl font-black tracking-wide text-foreground mb-3">
+                  READY TO RECLAIM YOUR EDGE?
                 </h3>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                <p className="text-foreground/50 mb-8 max-w-md mx-auto font-light">
                   Answer 5 quick questions about your energy, confidence, and
-                  wellness goals. It takes less than 2 minutes.
+                  wellness goals. Takes less than 2 minutes.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button
-                    size="lg"
-                    className="rounded-full bg-amber-600 hover:bg-amber-700 text-white text-base px-8"
-                    onClick={() => setStarted(true)}
-                  >
-                    Start the Quiz <ChevronRight className="ml-1 h-5 w-5" />
-                  </Button>
-                </div>
-                <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
+                <Button
+                  size="lg"
+                  className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-10"
+                  onClick={() => setStarted(true)}
+                >
+                  Start The Assessment{" "}
+                  <ChevronRight className="ml-1 h-5 w-5" />
+                </Button>
+                <div className="mt-8 flex items-center justify-center gap-6 text-xs text-foreground/30 font-bold tracking-widest uppercase">
                   <span className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4" /> 2 min
+                    <Clock className="h-3.5 w-3.5" /> 2 Min
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Shield className="h-4 w-4" /> 100% Private
+                    <Fingerprint className="h-3.5 w-3.5" /> 100% Private
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Award className="h-4 w-4" /> Free
+                    <Award className="h-3.5 w-3.5" /> Free
                   </span>
                 </div>
               </CardContent>
             </Card>
           </motion.div>
         ) : (
-          <Card className="border-0 shadow-xl bg-white overflow-hidden">
+          <Card className="bg-[#111110] border border-gold/20 gold-glow overflow-hidden">
             {/* Progress bar */}
-            <div className="h-1.5 bg-muted">
+            <div className="h-1.5 bg-[#1a1a15]">
               <motion.div
-                className="h-full bg-amber-500"
+                className="h-full bg-gradient-to-r from-gold-dark via-gold to-gold-light"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
@@ -661,32 +706,35 @@ function QuizSection() {
                     exit={{ opacity: 0, x: -40 }}
                     transition={{ duration: 0.35 }}
                   >
-                    <div className="mb-2 text-sm font-medium text-amber-600">
-                      Question {currentQuestion + 1} of {quizQuestions.length}
+                    <div className="mb-2 text-xs font-black tracking-widest text-gold/60 uppercase">
+                      Question {currentQuestion + 1} of{" "}
+                      {quizQuestions.length}
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-8">
+                    <h3 className="text-xl sm:text-2xl font-black tracking-wide text-foreground mb-8">
                       {quizQuestions[currentQuestion].question}
                     </h3>
 
                     <div className="space-y-3">
-                      {quizQuestions[currentQuestion].options.map((option) => (
-                        <motion.button
-                          key={option.value}
-                          whileHover={{ scale: 1.01 }}
-                          whileTap={{ scale: 0.99 }}
-                          onClick={() => handleAnswer(option.value)}
-                          className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer
-                            ${
-                              answers[currentQuestion] === option.value
-                                ? "border-amber-500 bg-amber-50"
-                                : "border-border hover:border-amber-300 hover:bg-amber-50/50"
-                            }`}
-                        >
-                          <span className="text-foreground font-medium">
-                            {option.label}
-                          </span>
-                        </motion.button>
-                      ))}
+                      {quizQuestions[currentQuestion].options.map(
+                        (option) => (
+                          <motion.button
+                            key={option.value}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            onClick={() => handleAnswer(option.value)}
+                            className={`w-full text-left p-4 sm:p-5 border transition-all duration-200 cursor-pointer rounded-none
+                              ${
+                                answers[currentQuestion] === option.value
+                                  ? "border-gold bg-gold/10 text-gold"
+                                  : "border-gold/10 bg-[#0d0d0a] text-foreground/60 hover:border-gold/30 hover:bg-gold/5 hover:text-foreground"
+                              }`}
+                          >
+                            <span className="font-bold text-sm tracking-wider">
+                              {option.label}
+                            </span>
+                          </motion.button>
+                        )
+                      )}
                     </div>
                   </motion.div>
                 ) : (
@@ -701,40 +749,45 @@ function QuizSection() {
                       return (
                         <div className="text-center">
                           <div
-                            className={`w-20 h-20 rounded-full ${rec.bgColor} flex items-center justify-center mx-auto mb-6`}
+                            className={`w-20 h-20 rounded-none ${rec.bgColor} flex items-center justify-center mx-auto mb-6 border ${rec.borderColor}`}
                           >
-                            <Trophy className="h-10 w-10 text-amber-600" />
+                            <Trophy className="h-10 w-10 text-gold" />
                           </div>
 
                           <Badge
-                            className={`${rec.bgColor} ${rec.color} border ${rec.borderColor} mb-4`}
+                            className={`${rec.bgColor} ${rec.color} border ${rec.borderColor} rounded-none font-black tracking-widest uppercase text-xs mb-4`}
                           >
                             {rec.match}
                           </Badge>
 
-                          <h3 className="text-2xl font-bold text-foreground mb-3">
+                          <h3 className="text-2xl sm:text-3xl font-black tracking-wide text-foreground mb-4">
                             {rec.title}
                           </h3>
 
-                          <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto mb-8">
+                          <p className="text-foreground/50 leading-relaxed max-w-lg mx-auto mb-8 font-light">
                             {rec.description}
                           </p>
 
                           {/* Match meter */}
-                          <div className="max-w-sm mx-auto mb-8">
-                            <div className="flex justify-between text-sm mb-2">
-                              <span className="font-medium">Your Match</span>
-                              <span className={`font-bold ${rec.color}`}>
+                          <div className="max-w-sm mx-auto mb-10">
+                            <div className="flex justify-between text-xs mb-2 font-black tracking-widest uppercase">
+                              <span className="text-foreground/40">
+                                Your Match
+                              </span>
+                              <span className={`font-black ${rec.color}`}>
                                 {rec.matchPercent}%
                               </span>
                             </div>
-                            <Progress value={rec.matchPercent} className="h-3" />
+                            <Progress
+                              value={rec.matchPercent}
+                              className="h-3 bg-[#1a1a15]"
+                            />
                           </div>
 
                           <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Button
                               size="lg"
-                              className="rounded-full bg-amber-600 hover:bg-amber-700 text-white text-base px-8"
+                              className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-10"
                             >
                               <Package className="mr-2 h-5 w-5" />
                               Order Now — R 850.00
@@ -742,7 +795,7 @@ function QuizSection() {
                             <Button
                               size="lg"
                               variant="outline"
-                              className="rounded-full text-base px-8"
+                              className="rounded-none border-gold/20 text-gold/70 font-bold tracking-wider uppercase text-sm hover:bg-gold/5 hover:border-gold/40 h-14 px-10"
                               onClick={resetQuiz}
                             >
                               Retake Quiz
@@ -764,43 +817,50 @@ function QuizSection() {
 
 function CTASection() {
   return (
-    <section className="py-20 lg:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 lg:py-32 bg-[#0a0a08] texture-overlay relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.03] to-transparent" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/5 rounded-full blur-[120px]" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="border-0 shadow-2xl bg-gradient-to-br from-amber-600 to-orange-600 text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <Card className="bg-[#111110] border border-gold/20 gold-glow-strong overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-gold/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gold/3 rounded-full translate-y-1/2 -translate-x-1/2 blur-[60px]" />
             <CardContent className="relative p-8 sm:p-16 text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Elevate Your Vitality Today
+              <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+                <span className="gold-gradient-text">ELEVATE YOUR</span>
+                <br />
+                <span className="gold-gradient-text">VITALITY TODAY</span>
               </h2>
-              <p className="text-amber-100 max-w-2xl mx-auto text-lg mb-8">
+              <p className="text-foreground/50 max-w-2xl mx-auto text-lg mb-10 font-light">
                 Join thousands of men who have already transformed their energy,
-                confidence, and satisfaction. Your best self is just one
-                supplement away.
+                confidence, and satisfaction. Your best self is one decision
+                away.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  className="rounded-full bg-white text-amber-700 hover:bg-amber-50 text-base px-8 font-semibold"
-                >
-                  Order Now — R 850.00 <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </div>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-amber-100 text-sm">
+              <Button
+                size="lg"
+                className="rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-14 px-12"
+              >
+                Order Now — R 850.00{" "}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-foreground/30 font-bold tracking-widest uppercase">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-4 w-4" /> Free Shipping
+                  <CheckCircle className="h-4 w-4 text-gold/40" /> Free
+                  Shipping
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-4 w-4" /> 30-Day Guarantee
+                  <CheckCircle className="h-4 w-4 text-gold/40" /> 30-Day
+                  Guarantee
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle className="h-4 w-4" /> Discreet Packaging
+                  <CheckCircle className="h-4 w-4 text-gold/40" /> Discreet
+                  Packaging
                 </span>
               </div>
             </CardContent>
@@ -813,84 +873,102 @@ function CTASection() {
 
 function Footer() {
   return (
-    <footer className="bg-foreground text-background/70 py-12">
+    <footer className="bg-[#050504] border-t border-gold/10 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Flame className="h-6 w-6 text-amber-400" />
-              <span className="text-lg font-bold text-background">
+            <div className="flex items-center gap-2.5 mb-4">
+              <Flame className="h-6 w-6 text-gold" />
+              <span className="text-lg font-black tracking-widest text-gold uppercase">
                 Male Vitamine
               </span>
             </div>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm text-foreground/30 leading-relaxed font-light">
               Premium men&apos;s vitality supplement crafted with high-quality,
               safe ingredients for peak performance.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-background mb-3">Product</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
+              Product
+            </h4>
+            <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <a href="#benefits" className="hover:text-background transition-colors">
+                <a
+                  href="#benefits"
+                  className="hover:text-gold transition-colors"
+                >
                   Benefits
                 </a>
               </li>
               <li>
-                <a href="#ingredients" className="hover:text-background transition-colors">
+                <a
+                  href="#ingredients"
+                  className="hover:text-gold transition-colors"
+                >
                   Ingredients
                 </a>
               </li>
               <li>
-                <a href="#quiz" className="hover:text-background transition-colors">
+                <a
+                  href="#quiz"
+                  className="hover:text-gold transition-colors"
+                >
                   Vitality Quiz
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-background mb-3">Support</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
+              Support
+            </h4>
+            <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   FAQs
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Shipping
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Returns
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-background mb-3">Legal</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
+              Legal
+            </h4>
+            <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-background transition-colors">
+                <a href="#" className="hover:text-gold transition-colors">
                   Disclaimer
                 </a>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-10 pt-6 border-t border-background/10 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Male Vitamine. All rights reserved.</p>
+        <div className="mt-10 pt-6 border-t border-gold/5 text-center text-xs text-foreground/20 font-bold tracking-widest uppercase">
+          <p>
+            &copy; {new Date().getFullYear()} Male Vitamine. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>
@@ -903,7 +981,7 @@ function Footer() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0a0a08]">
       <Navbar />
       <main className="flex-1">
         <HeroSection />
