@@ -42,24 +42,24 @@ import {
 const benefits = [
   {
     icon: Zap,
-    title: "ENHANCED ENERGY",
-    subtitle: "Dominate Your Day",
+    title: "RELENTLESS STAMINA",
+    subtitle: "Go The Distance",
     description:
-      "Power through with sustained, relentless energy. Our formula obliterates fatigue at its source so you stay sharp and unstoppable from morning to night — no crashes, no excuses.",
+      "When the moment demands more, you deliver more. Our formula fuels the blood flow and staying power you need to perform at your strongest — in the bedroom and beyond. No more finishing before you're ready. No more excuses.",
   },
   {
     icon: Swords,
-    title: "UNSHAKEABLE CONFIDENCE",
-    subtitle: "Own Every Room",
+    title: "ROCK-SOLID CONFIDENCE",
+    subtitle: "Stand Tall When It Counts",
     description:
-      "When your body gets what it craves, confidence isn't optional — it's automatic. Step into every situation knowing you're at your peak, in the boardroom, the gym, and beyond.",
+      "There's nothing more crippling than doubting your own body. Our blend supports firm, reliable performance so you never have to second-guess yourself again. Walk into every moment knowing you'll deliver — no hesitation, no doubt.",
   },
   {
     icon: Heart,
-    title: "TOTAL SATISFACTION",
-    subtitle: "No Compromises",
+    title: "STRONGER PERFORMANCE",
+    subtitle: "Be The Man She Remembers",
     description:
-      "Balanced hormones and maximized circulation deliver a level of satisfaction most men only dream about. Experience what it means to be truly fulfilled — in every area of life.",
+      "Enhanced circulation and optimized testosterone don't just make you feel alive — they make you undeniable. Experience stronger drive, harder stamina, and the kind of satisfaction that keeps her coming back. Real results. No compromises.",
   },
 ];
 
@@ -68,19 +68,19 @@ const whyChoose = [
     icon: Crown,
     title: "PREMIUM INGREDIENTS",
     description:
-      "Every ingredient is meticulously selected for maximum purity and potency. We source only pharmaceutical-grade raw materials that pass the most rigorous quality standards — because you deserve nothing less.",
+      "Every ingredient is meticulously selected for maximum purity and potency. We source only pharmaceutical-grade raw materials that pass the most rigorous quality standards — because what you put in your body determines what you get out of it.",
   },
   {
     icon: Shield,
     title: "PROVEN & SAFE",
     description:
-      "Engineered with your health as the top priority. Every batch is third-party tested to guarantee safety, consistency, and results. No shortcuts, no compromises, no exceptions.",
+      "Engineered with your health as the top priority. Every batch is third-party tested to guarantee safety, consistency, and results. No dangerous chemicals, no sketchy fillers — just powerful, natural ingredients you can trust with your most important performance.",
   },
   {
     icon: Flame,
-    title: "TOTAL OPTIMIZATION",
+    title: "REAL RESULTS WHERE IT MATTERS",
     description:
-      "This isn't a band-aid solution. Our holistic approach optimizes your entire system — energy, hormones, circulation, and vitality — for lasting, transformational results you can feel.",
+      "This isn't a band-aid solution. Our formula targets the root causes — blood flow, testosterone, and stamina — so you get harder, last longer, and feel stronger. Not just in the gym, but where it matters most. Lasting, transformational results you can feel.",
   },
 ];
 
@@ -88,37 +88,37 @@ const ingredients = [
   {
     name: "L-ARGININE",
     description:
-      "An amino acid that supports blood flow and overall circulation, promoting improved performance and stamina.",
+      "The cornerstone of performance. This amino acid boosts nitric oxide production, increasing blood flow where you need it most — for stronger, firmer, longer-lasting results when it counts.",
     icon: TrendingUp,
   },
   {
     name: "TRIBULUS TERRESTRIS",
     description:
-      "A powerful plant extract traditionally used to enhance vitality and overall well-being.",
+      "A powerful plant extract used for centuries to ignite male drive, enhance libido, and support the raw sexual vitality every man was born with.",
     icon: Dumbbell,
   },
   {
     name: "MACA ROOT",
     description:
-      "Known for its energy-boosting properties, this root increases endurance and supports hormonal balance.",
+      "The ancient stamina secret. Known for supercharging endurance, fueling your sex drive, and keeping your hormones in the zone that makes you feel unstoppable.",
     icon: Zap,
   },
   {
     name: "GINSENG EXTRACT",
     description:
-      "A natural adaptogen that reduces fatigue and enhances physical performance under pressure.",
+      "A battle-tested adaptogen that fights fatigue, sharpens performance under pressure, and keeps you going strong — round after round.",
     icon: Target,
   },
   {
     name: "ZINC",
     description:
-      "An essential mineral crucial for supporting immune function and maintaining healthy testosterone levels.",
+      "The testosterone fuel. This essential mineral is the backbone of male hormonal health, keeping your drive, strength, and performance at peak levels.",
     icon: Atom,
   },
   {
     name: "FENUGREEK EXTRACT",
     description:
-      "Known to support hormonal health, boost vitality, and enhance overall male performance.",
+      "A proven testosterone supporter that ramps up your sex drive, enhances stamina, and helps you perform like the man you know you can be.",
     icon: Pill,
   },
 ];
@@ -126,47 +126,47 @@ const ingredients = [
 const quizQuestions = [
   {
     id: 1,
-    question: "HOW WOULD YOU RATE YOUR CURRENT ENERGY LEVELS?",
+    question: "HOW WOULD YOU RATE YOUR STAMINA IN THE BEDROOM?",
     options: [
-      { label: "LOW — I'M RUNNING ON EMPTY", value: "low" },
-      { label: "MODERATE — INCONSISTENT AT BEST", value: "medium" },
-      { label: "HIGH — I'M CHARGED UP", value: "high" },
+      { label: "LOW — I DON'T LAST AS LONG AS I WANT TO", value: "low" },
+      { label: "MODERATE — SOMETIMES I STRUGGLE", value: "medium" },
+      { label: "STRONG — I GO THE DISTANCE", value: "high" },
     ],
   },
   {
     id: 2,
-    question: "HOW CONFIDENT ARE YOU IN YOUR DAILY PERFORMANCE?",
+    question: "DO YOU EVER STRUGGLE TO GET OR STAY FIRM?",
     options: [
-      { label: "NOT CONFIDENT — I KNOW I CAN DO BETTER", value: "low" },
-      { label: "SOMEWHAT — ROOM FOR IMPROVEMENT", value: "medium" },
-      { label: "VERY CONFIDENT — I'M AT MY PEAK", value: "high" },
+      { label: "OFTEN — IT'S A REAL PROBLEM FOR ME", value: "low" },
+      { label: "SOMETIMES — UNDER STRESS OR PRESSURE", value: "medium" },
+      { label: "RARELY — I'M ROCK SOLID", value: "high" },
     ],
   },
   {
     id: 3,
-    question: "HOW SATISFIED ARE YOU WITH YOUR OVERALL WELLNESS?",
+    question: "HOW'S YOUR SEX DRIVE COMPARED TO A FEW YEARS AGO?",
     options: [
-      { label: "UNSATISFIED — I NEED REAL CHANGE", value: "low" },
-      { label: "IT'S OKAY — BUT I WANT MORE", value: "medium" },
-      { label: "VERY SATISFIED — I FEEL GREAT", value: "high" },
+      { label: "WAY DOWN — I BARELY THINK ABOUT IT", value: "low" },
+      { label: "SOMEWHAT LOWER — NOT WHAT IT USED TO BE", value: "medium" },
+      { label: "STRONG — MY DRIVE IS STILL INTACT", value: "high" },
     ],
   },
   {
     id: 4,
-    question: "DOES STRESS AFFECT YOUR PERFORMANCE?",
+    question: "DOES STRESS OR FATIGUE KILL YOUR PERFORMANCE?",
     options: [
-      { label: "OFTEN — STRESS CRUSHES ME", value: "low" },
-      { label: "SOMETIMES — I MANAGE BUT NEED SUPPORT", value: "medium" },
-      { label: "RARELY — I HANDLE IT", value: "high" },
+      { label: "ALWAYS — STRESS DESTROYS MY PERFORMANCE", value: "low" },
+      { label: "SOMETIMES — IT DEPENDS ON THE DAY", value: "medium" },
+      { label: "RARELY — I PERFORM NO MATTER WHAT", value: "high" },
     ],
   },
   {
     id: 5,
-    question: "ARE YOU READY FOR A NATURAL VITALITY SOLUTION?",
+    question: "ARE YOU READY TO TAKE BACK CONTROL IN THE BEDROOM?",
     options: [
-      { label: "ABSOLUTELY — I'M READY TO DOMINATE", value: "low" },
-      { label: "MAYBE — I WANT TO LEARN MORE", value: "medium" },
-      { label: "NOT REALLY — I PREFER OTHER WAYS", value: "high" },
+      { label: "ABSOLUTELY — I'M DONE SETTLING", value: "low" },
+      { label: "MAYBE — I WANT TO SEE WHAT'S POSSIBLE", value: "medium" },
+      { label: "I'M GOOD — BUT I WANT TO LEVEL UP", value: "high" },
     ],
   },
 ];
@@ -274,10 +274,9 @@ function HeroSection() {
             <span className="gold-gradient-text">YOUR EDGE</span>
           </h1>
           <p className="mt-8 text-lg text-foreground/60 leading-relaxed max-w-xl font-light">
-            Discover our unique formula for men&apos;s vitality, libido and
-            wellness. Crafted with high-quality, safe ingredients to ensure you
-            feel your best and achieve peak performance — even under
-            pressure.
+            Stop letting weak performance define you. Our formula is engineered
+            for men who refuse to settle — stronger stamina, harder performance,
+            and the confidence to back it up. In the bedroom and everywhere else.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4">
@@ -380,8 +379,8 @@ function BenefitsSection() {
             <span className="text-foreground">EXPERIENCE</span>
           </h2>
           <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
-            Real results. No compromises. Our formula delivers transformational
-            benefits you can feel from day one.
+            Real results where they matter most. Our formula doesn't just make
+            promises — it delivers transformation you can feel from day one.
           </p>
         </motion.div>
 
@@ -501,8 +500,8 @@ function IngredientsSection() {
             <span className="text-foreground">NATURE&apos;S BEST</span>
           </h2>
           <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
-            Every ingredient hand-picked for its proven benefits and
-            synergistic effects within our formula.
+            Every ingredient chosen for one purpose: to make you stronger,
+            harder, and more unstoppable where it counts.
           </p>
         </motion.div>
 
@@ -569,9 +568,9 @@ function QuizSection() {
 
     if (lowCount >= 3) {
       return {
-        title: "YOUR VITALITY NEEDS A BOOST",
+        title: "YOUR PERFORMANCE NEEDS REINFORCEMENT",
         description:
-          "Based on your answers, you could greatly benefit from our premium supplement. The combination of L-Arginine, Tribulus Terrestris, and Maca Root is specifically designed to address the areas where you need the most support — energy, confidence, and overall satisfaction.",
+          "Based on your answers, you're not where you want to be — and that ends now. L-Arginine supercharges blood flow for stronger, firmer results. Tribulus and Maca reignite your drive and stamina. This is the exact stack to get you performing like you were built to.",
         match: "EXTREMELY HIGH MATCH",
         matchPercent: 97,
         color: "text-emerald-400",
@@ -581,9 +580,9 @@ function QuizSection() {
     }
     if (lowCount >= 1 || medCount >= 2) {
       return {
-        title: "YOU'RE ON THE RIGHT TRACK — LET'S OPTIMIZE",
+        title: "YOU'VE GOT THE BASE — NOW UNLOCK YOUR PEAK",
         description:
-          "You have a solid foundation, but there's room to elevate your vitality. Our supplement's blend of Ginseng Extract, Zinc, and Fenugreek can help you break through plateaus and achieve the peak performance you're striving for.",
+          "You're not struggling, but you're not dominating either. Ginseng Extract fights the fatigue that kills your second wind. Zinc and Fenugreek push your testosterone and stamina into the zone where you perform on command — not just when the stars align.",
         match: "HIGH MATCH",
         matchPercent: 85,
         color: "text-gold",
@@ -592,14 +591,14 @@ function QuizSection() {
       };
     }
     return {
-      title: "STRONG FOUNDATION — MAINTAIN YOUR EDGE",
+      title: "STRONG BASE — NOW MAKE IT UNSTOPPABLE",
       description:
-        "You're already performing well! Our supplement can help you maintain and protect your vitality long-term. Think of it as insurance for your energy, confidence, and wellness — keeping you at your peak for years to come.",
+        "You're already performing well, but why settle for good? Our formula keeps your edge razor-sharp for the long haul — protecting your drive, your stamina, and your ability to deliver every single time. Think of it as armor for your performance.",
       match: "GOOD MATCH",
       matchPercent: 72,
       color: "text-sky-400",
-        bgColor: "bg-sky-500/10",
-        borderColor: "border-sky-500/30",
+      bgColor: "bg-sky-500/10",
+      borderColor: "border-sky-500/30",
     };
   };
 
@@ -639,8 +638,8 @@ function QuizSection() {
             <span className="text-foreground">VITALITY SCORE</span>
           </h2>
           <p className="mt-6 text-foreground/50 max-w-xl mx-auto text-lg font-light">
-            Take this quick 5-question assessment and get a personalized
-            recommendation based on your unique needs.
+            Answer 5 honest questions about your bedroom performance and
+            get a personalized recommendation — no judgment, just results.
           </p>
         </motion.div>
 
@@ -659,8 +658,8 @@ function QuizSection() {
                   READY TO RECLAIM YOUR EDGE?
                 </h3>
                 <p className="text-foreground/50 mb-8 max-w-md mx-auto font-light">
-                  Answer 5 quick questions about your energy, confidence, and
-                  wellness goals. Takes less than 2 minutes.
+                  5 honest questions about your stamina, performance, and
+                  drive. Completely private. Takes less than 2 minutes.
                 </p>
                 <Button
                   size="lg"
@@ -838,9 +837,9 @@ function CTASection() {
                 <span className="gold-gradient-text">VITALITY TODAY</span>
               </h2>
               <p className="text-foreground/50 max-w-2xl mx-auto text-lg mb-10 font-light">
-                Join thousands of men who have already transformed their energy,
-                confidence, and satisfaction. Your best self is one decision
-                away.
+                Join thousands of men who stopped accepting mediocre performance.
+                Stronger stamina. Harder results. The confidence of knowing
+                you'll deliver every time. One decision changes everything.
               </p>
               <Button
                 size="lg"
@@ -884,8 +883,8 @@ function Footer() {
               </span>
             </div>
             <p className="text-sm text-foreground/30 leading-relaxed font-light">
-              Premium men&apos;s vitality supplement crafted with high-quality,
-              safe ingredients for peak performance.
+              Premium men&apos;s performance supplement — stronger stamina,
+              harder results, and the confidence to back it up.
             </p>
           </div>
           <div>
