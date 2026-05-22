@@ -14,13 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Male Vitamine - Premium Men's Vitality Supplement",
+  title: "Male Vitamine - Erectile Dysfunction & Libido Supplement South Africa",
   description:
-    "Discover our unique formula for men's vitality, libido and wellness. Crafted with high-quality, safe ingredients for peak performance.",
+    "Struggling with erectile dysfunction or low libido? Male Vitamine's natural supplement uses L-Arginine, Tribulus, Maca Root & Ginseng for harder erections, stronger libido and lasting stamina. R 850.00 — South Africa.",
   keywords: [
+    "erectile dysfunction supplement",
+    "ED supplement South Africa",
+    "libido enhancer",
+    "low libido treatment",
+    "male performance supplement",
     "men's vitality",
-    "supplement",
-    "libido",
+    "harder erections",
+    "sex drive booster",
+    "natural ED treatment",
+    "testosterone booster South Africa",
+    "stamina supplement",
+    "male enhancement",
     "wellness",
     "energy",
     "confidence",

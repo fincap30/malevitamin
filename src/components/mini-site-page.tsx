@@ -133,6 +133,9 @@ export interface MiniSitePageProps {
 
   currentSlug: string;
 
+  /** Optional alt text for the product image (useful for town-based SEO pages) */
+  productImageAlt?: string;
+
   jsonLd: object;
 }
 
@@ -258,11 +261,13 @@ function HeroSection({
   heroSubheadline,
   heroBadge,
   onOrderNow,
+  productImageAlt,
 }: {
   heroH1: string;
   heroSubheadline: string;
   heroBadge: string;
   onOrderNow: () => void;
+  productImageAlt?: string;
 }) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -348,7 +353,7 @@ function HeroSection({
           <div className="relative bg-gradient-to-br from-[#1a1a15] to-[#0d0d0a] rounded-2xl p-8 sm:p-12 border border-gold/15 gold-glow-strong">
             <img
               src="/product-image.webp"
-              alt="Male Vitamine Premium Supplement"
+              alt={productImageAlt ?? "Male Vitamine Premium Supplement"}
               className="w-72 h-72 sm:w-80 sm:h-80 object-contain drop-shadow-2xl"
             />
             <div className="mt-8 text-center">
@@ -951,6 +956,7 @@ export function MiniSitePage(props: MiniSitePageProps) {
           heroSubheadline={props.heroSubheadline}
           heroBadge={props.heroBadge}
           onOrderNow={onOrderNow}
+          productImageAlt={props.productImageAlt}
         />
         <ProblemSection
           problemTitle={props.problemTitle}

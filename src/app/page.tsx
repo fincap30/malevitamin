@@ -48,21 +48,21 @@ const benefits = [
     title: "RELENTLESS STAMINA",
     subtitle: "Go The Distance",
     description:
-      "When the moment demands more, you deliver more. Our formula fuels the blood flow and staying power you need to perform at your strongest — in the bedroom and beyond. No more finishing before you're ready. No more excuses.",
+      "When the moment demands more, you deliver more. Our formula fuels the blood flow and staying power you need to perform at your strongest — in the bedroom and beyond. Whether you're fighting erectile dysfunction or just want to last longer, no more finishing before you're ready. No more excuses.",
   },
   {
     icon: Swords,
     title: "ROCK-SOLID CONFIDENCE",
-    subtitle: "Stand Tall When It Counts",
+    subtitle: "Beat Erectile Dysfunction",
     description:
-      "There's nothing more crippling than doubting your own body. Our blend supports firm, reliable performance so you never have to second-guess yourself again. Walk into every moment knowing you'll deliver — no hesitation, no doubt.",
+      "There's nothing more crippling than doubting your own body. Our blend supports firm, reliable erections so you never have to second-guess yourself again. Walk into every moment knowing you'll deliver — no hesitation, no doubt. L-Arginine and Ginseng work together to overcome ED naturally.",
   },
   {
     icon: Heart,
-    title: "STRONGER PERFORMANCE",
-    subtitle: "Be The Man She Remembers",
+    title: "LIBIDO BOOST",
+    subtitle: "Reignite Your Desire",
     description:
-      "Enhanced circulation and optimized testosterone don't just make you feel alive — they make you undeniable. Experience stronger drive, harder stamina, and the kind of satisfaction that keeps her coming back. Real results. No compromises.",
+      "Lost your libido? Enhanced circulation and optimized testosterone don't just make you feel alive — they reignite the desire you thought was gone. Tribulus and Maca Root boost your sex drive naturally. Experience stronger libido, harder stamina, and the kind of satisfaction that keeps her coming back. Real results. No compromises.",
   },
 ];
 
@@ -83,7 +83,7 @@ const whyChoose = [
     icon: Flame,
     title: "REAL RESULTS WHERE IT MATTERS",
     description:
-      "This isn't a band-aid solution. Our formula targets the root causes — blood flow, testosterone, and stamina — so you get harder, last longer, and feel stronger. Not just in the gym, but where it matters most. Lasting, transformational results you can feel.",
+      "This isn't a band-aid solution. Our formula targets the root causes of erectile dysfunction and low libido — blood flow, testosterone, and stamina — so you get harder, last longer, and feel stronger. Not just in the gym, but where it matters most. Lasting, transformational results you can feel.",
   },
 ];
 
@@ -129,7 +129,7 @@ const ingredients = [
 const quizQuestions = [
   {
     id: 1,
-    question: "HOW WOULD YOU RATE YOUR STAMINA IN THE BEDROOM?",
+    question: "HOW WOULD YOU RATE YOUR STAMINA AND LIBIDO IN THE BEDROOM?",
     options: [
       { label: "LOW — I DON'T LAST AS LONG AS I WANT TO", value: "low" },
       { label: "MODERATE — SOMETIMES I STRUGGLE", value: "medium" },
@@ -138,7 +138,7 @@ const quizQuestions = [
   },
   {
     id: 2,
-    question: "DO YOU EVER STRUGGLE TO GET OR STAY FIRM?",
+    question: "DO YOU EVER STRUGGLE WITH ERECTILE DYSFUNCTION — GETTING OR STAYING FIRM?",
     options: [
       { label: "OFTEN — IT'S A REAL PROBLEM FOR ME", value: "low" },
       { label: "SOMETIMES — UNDER STRESS OR PRESSURE", value: "medium" },
@@ -147,7 +147,7 @@ const quizQuestions = [
   },
   {
     id: 3,
-    question: "HOW'S YOUR SEX DRIVE COMPARED TO A FEW YEARS AGO?",
+    question: "HOW'S YOUR LIBIDO AND SEX DRIVE COMPARED TO A FEW YEARS AGO?",
     options: [
       { label: "WAY DOWN — I BARELY THINK ABOUT IT", value: "low" },
       { label: "SOMEWHAT LOWER — NOT WHAT IT USED TO BE", value: "medium" },
@@ -271,17 +271,15 @@ function HeroSection({ onOrderNow }: { onOrderNow: () => void }) {
         >
           <Badge className="mb-6 bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs">
             <Crown className="h-3.5 w-3.5 mr-1.5" />
-            Premium Performance Supplement
+            Libido & Erectile Dysfunction Supplement
           </Badge>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.95]">
             <span className="gold-gradient-text">RECLAIM</span>
             <br />
-            <span className="gold-gradient-text">YOUR EDGE</span>
+            <span className="gold-gradient-text">YOUR LIBIDO</span>
           </h1>
           <p className="mt-8 text-lg text-foreground/60 leading-relaxed max-w-xl font-light">
-            Stop letting weak performance define you. Our formula is engineered
-            for men who refuse to settle — stronger stamina, harder performance,
-            and the confidence to back it up. In the bedroom and everywhere else.
+            Struggling with erectile dysfunction or lost libido? You're not alone — and it doesn't have to be this way. Our formula is engineered for men who refuse to settle — harder erections, stronger libido, lasting stamina, and the confidence to back it up. In the bedroom and everywhere else.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4">
