@@ -1,5 +1,5 @@
 // Flutterwave Split Payment Integration
-// Handles payment initialization, split configuration, and verification
+// Handles payment initialization, split configuration, verification, and notifications
 // Docs: https://developer.flutterwave.com/v3.0/docs/split-payments
 
 declare global {
@@ -58,6 +58,21 @@ export interface FlutterwaveResponse {
   };
 }
 
+export interface PaymentVerificationResult {
+  verified: boolean;
+  amount?: number;
+  currency?: string;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  txRef?: string;
+  transactionId?: number;
+  paymentType?: string;
+  splitBreakdown?: ReturnType<typeof calculateSplitBreakdown>;
+  data?: unknown;
+  demo?: boolean;
+}
+
 /* ------------------------------------------------------------------ */
 /*  PRODUCT CONFIG                                                     */
 /* ------------------------------------------------------------------ */
@@ -102,7 +117,7 @@ function getSplitRecipients(): SplitRecipient[] {
     recipients.push({
       subaccountId: ownerSub,
       percentage: ownerPct,
-      label: "Owner",
+      label: process.env.SPLIT_OWNER_LABEL || "Owner",
     });
   }
 
@@ -113,7 +128,7 @@ function getSplitRecipients(): SplitRecipient[] {
     recipients.push({
       subaccountId: partnerSub,
       percentage: partnerPct,
-      label: "Partner",
+      label: process.env.SPLIT_PARTNER_LABEL || "Partner",
     });
   }
 
@@ -124,7 +139,18 @@ function getSplitRecipients(): SplitRecipient[] {
     recipients.push({
       subaccountId: partner2Sub,
       percentage: partner2Pct,
-      label: "Partner 2",
+      label: process.env.SPLIT_PARTNER_2_LABEL || "Partner 2",
+    });
+  }
+
+  // Partner 3 (optional, for 4-way splits)
+  const partner3Sub = process.env.FLUTTERWAVE_PARTNER_3_SUBACCOUNT_ID;
+  const partner3Pct = Number(process.env.SPLIT_PARTNER_3_PERCENTAGE || 0);
+  if (partner3Sub && partner3Pct > 0) {
+    recipients.push({
+      subaccountId: partner3Sub,
+      percentage: partner3Pct,
+      label: process.env.SPLIT_PARTNER_3_LABEL || "Partner 3",
     });
   }
 
@@ -180,6 +206,7 @@ function buildSubaccounts(): FlutterwaveSubaccount[] {
  * This is an estimate — actual split may vary based on Flutterwave fees.
  */
 export function calculateSplitBreakdown(totalAmount: number): {
+  totalAmount: number;
   flutterwaveFee: number;
   settlementAmount: number;
   splits: { label: string; percentage: number; amount: number }[];
@@ -195,7 +222,7 @@ export function calculateSplitBreakdown(totalAmount: number): {
     amount: settlementAmount * (r.percentage / 100),
   }));
 
-  return { flutterwaveFee, settlementAmount, splits };
+  return { totalAmount, flutterwaveFee, settlementAmount, splits };
 }
 
 /* ------------------------------------------------------------------ */
@@ -204,9 +231,12 @@ export function calculateSplitBreakdown(totalAmount: number): {
 
 // Generate a unique transaction reference
 export function generateTxRef(): string {
+  const prefix = (process.env.NEXT_PUBLIC_BUSINESS_NAME || "PAY")
+    .substring(0, 2)
+    .toUpperCase();
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 8);
-  return `MV-${timestamp}-${random}`.toUpperCase();
+  return `${prefix}-${timestamp}-${random}`.toUpperCase();
 }
 
 // Check if Flutterwave script is loaded
@@ -246,11 +276,19 @@ export function isDemoMode(): boolean {
  *
  * The subaccounts array tells Flutterwave how to split the money.
  * Flutterwave handles the actual division and settlement automatically.
+ *
+ * After payment, the callback triggers verification, which then:
+ * 1. Confirms the payment amount with the customer
+ * 2. Sends WhatsApp notification (if phone provided)
+ * 3. Sends email confirmation
+ * 4. Tells customer product will be sent and they will be informed
  */
 export async function initiatePayment(customer: {
   email: string;
   name: string;
   phone?: string;
+  onSuccess?: (result: PaymentVerificationResult) => void;
+  onError?: (error: string) => void;
 }): Promise<void> {
   await loadFlutterwaveScript();
 
@@ -280,9 +318,36 @@ export async function initiatePayment(customer: {
       logo: `${window.location.origin}/product-image.webp`,
     },
     subaccounts,
-    callback: (response) => {
+    callback: async (response) => {
       if (response.status === "successful") {
-        verifyPayment(response.data.id, response.data.tx_ref);
+        console.log("[Flutterwave] Payment successful, verifying...", {
+          txRef: response.data.tx_ref,
+          amount: response.data.amount,
+          currency: response.data.currency,
+        });
+
+        // Verify the payment server-side
+        const result = await verifyPayment(response.data.id, response.data.tx_ref);
+
+        if (result.verified) {
+          // Send notifications (WhatsApp + email)
+          await sendPaymentNotification({
+            customerName: customer.name,
+            customerEmail: customer.email,
+            customerPhone: customer.phone,
+            amount: result.amount || PRODUCT.price,
+            currency: result.currency || PRODUCT.currency,
+            txRef: result.txRef || txRef,
+            transactionId: result.transactionId || response.data.id,
+          });
+
+          // Call the success callback
+          customer.onSuccess?.(result);
+        } else {
+          customer.onError?.("Payment verification failed");
+        }
+      } else {
+        customer.onError?.("Payment was not successful");
       }
     },
     onclose: () => {
@@ -291,6 +356,7 @@ export async function initiatePayment(customer: {
     meta: {
       product_id: PRODUCT.id,
       quantity: 1,
+      customer_phone: customer.phone,
       split_config: getSplitRecipients().map((r) => ({
         label: r.label,
         percentage: r.percentage,
@@ -300,7 +366,7 @@ export async function initiatePayment(customer: {
 
   if (subaccounts.length > 0) {
     console.log(
-      "Flutterwave: Initiating split payment",
+      "[Flutterwave] Initiating split payment:",
       getSplitRecipients().map((r) => `${r.label}: ${r.percentage}%`)
     );
   }
@@ -309,16 +375,13 @@ export async function initiatePayment(customer: {
 }
 
 /**
- * Verify payment on the backend and log split details.
+ * Verify payment on the backend and return full verification result.
+ * The backend verifies with Flutterwave's servers and calculates split breakdown.
  */
 export async function verifyPayment(
   transactionId: number,
   txRef: string
-): Promise<{
-  verified: boolean;
-  splitBreakdown?: ReturnType<typeof calculateSplitBreakdown>;
-  data?: unknown;
-}> {
+): Promise<PaymentVerificationResult> {
   try {
     const response = await fetch("/api/payment/verify", {
       method: "POST",
@@ -332,13 +395,49 @@ export async function verifyPayment(
       const breakdown = calculateSplitBreakdown(
         result.data?.amount || PRODUCT.price
       );
-      console.log("Payment verified. Split breakdown:", breakdown);
-      return { verified: true, splitBreakdown: breakdown, data: result.data };
+      console.log("[Payment] Verified. Split breakdown:", breakdown);
+      return {
+        verified: true,
+        amount: result.data?.amount,
+        currency: result.data?.currency,
+        txRef,
+        transactionId,
+        paymentType: result.data?.payment_type,
+        splitBreakdown: breakdown,
+        data: result.data,
+        demo: result.demo,
+      };
     }
 
     return { verified: false };
   } catch (error) {
-    console.error("Payment verification failed:", error);
+    console.error("[Payment] Verification failed:", error);
     return { verified: false };
+  }
+}
+
+/**
+ * Send payment notification to customer via WhatsApp and email.
+ * Called automatically after successful payment verification.
+ */
+async function sendPaymentNotification(details: {
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  amount: number;
+  currency: string;
+  txRef: string;
+  transactionId: number;
+}): Promise<void> {
+  try {
+    await fetch("/api/payment/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(details),
+    });
+    console.log("[Payment] Notification sent successfully");
+  } catch (error) {
+    console.error("[Payment] Notification failed:", error);
+    // Don't throw — notification failure shouldn't break the flow
   }
 }

@@ -1,0 +1,72 @@
+{
+  "skill": "payment",
+  "description": "Split payment system using Flutterwave with automatic distribution, WhatsApp/email confirmations",
+  "evals": [
+    {
+      "id": "eval-1",
+      "name": "Two-way split payment site",
+      "input": "Build a website for a fitness supplement brand called 'PowerMax' at R 599.00. Split payments 30% to me and 70% to my partner FitCorp. Use Flutterwave for payments.",
+      "expected_behavior": [
+        "Ask user for Flutterwave subaccount IDs and WhatsApp agent before proceeding",
+        "Create .env with NEXT_PUBLIC_BUSINESS_NAME=PowerMax, NEXT_PUBLIC_AMOUNT=59900, SPLIT_OWNER_PERCENTAGE=30, SPLIT_PARTNER_PERCENTAGE=70, SPLIT_PARTNER_LABEL=FitCorp",
+        "Create src/lib/flutterwave.ts with split payment logic",
+        "Create src/components/payment-modal.tsx with required phone field",
+        "Create src/app/api/payment/verify/route.ts with notification triggers",
+        "Create src/app/api/payment/notify/route.ts for WhatsApp/email",
+        "Payment confirmation shows amount paid and 'product will be sent' message",
+        "Phone number is required for WhatsApp notifications"
+      ]
+    },
+    {
+      "id": "eval-2",
+      "name": "Three-way split payment site",
+      "input": "Build a consulting website called 'BizGrowth' at $299 USD. Split payments 40% to me, 35% to partner Alex, 25% to partner Sam. Use Flutterwave.",
+      "expected_behavior": [
+        "Ask user for Flutterwave subaccount IDs for all three recipients",
+        "Create .env with SPLIT_OWNER_PERCENTAGE=40, SPLIT_PARTNER_PERCENTAGE=35, SPLIT_PARTNER_2_PERCENTAGE=25",
+        "Set NEXT_PUBLIC_CURRENCY=USD and NEXT_PUBLIC_AMOUNT=29900",
+        "Split calculation uses transaction_split_ratio for three recipients",
+        "Confirmation shows all three split recipients with their percentages",
+        "All three subaccount IDs configured in .env"
+      ]
+    },
+    {
+      "id": "eval-3",
+      "name": "Adding payment to existing site",
+      "input": "I already have a website built. I need to add Flutterwave split payments to it. The product is a course called 'Digital Marketing Masterclass' at R 2,500. Split 50/50 between me and my co-creator.",
+      "expected_behavior": [
+        "Ask for existing project directory structure",
+        "Ask for Flutterwave subaccount IDs and WhatsApp agent",
+        "Add payment files to existing project without overwriting other code",
+        "Create .env additions (not overwrite) for payment configuration",
+        "Set NEXT_PUBLIC_AMOUNT=250000, SPLIT_OWNER_PERCENTAGE=50, SPLIT_PARTNER_PERCENTAGE=50",
+        "Show user how to add PaymentModal to their existing page",
+        "Verify existing site's design is not broken by new components"
+      ]
+    },
+    {
+      "id": "eval-4",
+      "name": "WhatsApp agent connection",
+      "input": "My WhatsApp agent endpoint is https://wa-agent.mybiz.com/api/send with API key sk-whatsapp-12345. Connect it to my payment system.",
+      "expected_behavior": [
+        "Set WHATSAPP_API_URL=https://wa-agent.mybiz.com/api/send in .env",
+        "Set WHATSAPP_API_KEY=sk-whatsapp-12345 in .env",
+        "Notification API sends Authorization: Bearer header with the key",
+        "WhatsApp message includes business name, customer name, amount, and shipping notice",
+        "Test notification can be triggered via /api/payment/notify with type=whatsapp"
+      ]
+    },
+    {
+      "id": "eval-5",
+      "name": "Split without WhatsApp",
+      "input": "Build a skincare product site at R 450. Split 60% to me and 40% to GlowBrands. I don't have a WhatsApp agent yet.",
+      "expected_behavior": [
+        "Still require phone number in payment form",
+        "Leave WHATSAPP_API_URL empty in .env",
+        "Notifications are logged to console instead of sent",
+        "Payment confirmation still shows 'product will be sent' message",
+        "User can add WhatsApp agent later without code changes"
+      ]
+    }
+  ]
+}

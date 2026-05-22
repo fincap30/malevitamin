@@ -12,7 +12,9 @@ import {
   Lock,
   CheckCircle,
   Loader2,
-  Info,
+  MessageCircle,
+  Package,
+  Truck,
 } from "lucide-react";
 import {
   initiatePayment,
@@ -20,6 +22,7 @@ import {
   loadFlutterwaveScript,
   calculateSplitBreakdown,
   PRODUCT,
+  type PaymentVerificationResult,
 } from "@/lib/flutterwave";
 
 interface PaymentModalProps {
@@ -27,7 +30,11 @@ interface PaymentModalProps {
   onClose: () => void;
 }
 
-type PaymentState = "form" | "processing" | "success" | "demo-success";
+type PaymentState =
+  | "form"
+  | "processing"
+  | "success"
+  | "demo-success";
 
 export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const [state, setState] = useState<PaymentState>("form");
@@ -37,6 +44,8 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [verificationResult, setVerificationResult] =
+    useState<PaymentVerificationResult | null>(null);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -44,6 +53,10 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     if (!form.email.trim()) newErrors.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       newErrors.email = "Enter a valid email";
+    if (!form.phone.trim())
+      newErrors.phone = "Phone number is required for order updates";
+    else if (form.phone.replace(/\D/g, "").length < 10)
+      newErrors.phone = "Enter a valid phone number";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -57,20 +70,41 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     try {
       if (isDemoMode()) {
         await loadFlutterwaveScript();
+        // Simulate the full flow: processing → verification → confirmation
         setTimeout(() => {
+          const demoResult: PaymentVerificationResult = {
+            verified: true,
+            amount: PRODUCT.price,
+            currency: PRODUCT.currency,
+            customerName: form.name,
+            customerEmail: form.email,
+            customerPhone: form.phone,
+            txRef: `DEMO-${Date.now().toString(36).toUpperCase()}`,
+            transactionId: Math.floor(Math.random() * 1000000),
+            paymentType: "demo",
+            splitBreakdown: calculateSplitBreakdown(PRODUCT.price),
+            demo: true,
+          };
+          setVerificationResult(demoResult);
           setState("demo-success");
         }, 2000);
         return;
       }
 
-      // Real Flutterwave split payment
+      // Real Flutterwave split payment with callback
       await initiatePayment({
         email: form.email,
         name: form.name,
-        phone: form.phone || undefined,
+        phone: form.phone,
+        onSuccess: (result) => {
+          setVerificationResult(result);
+          setState("success");
+        },
+        onError: (error) => {
+          setState("form");
+          setErrors({ submit: error || "Payment failed. Please try again." });
+        },
       });
-
-      setState("success");
     } catch {
       setState("form");
       setErrors({ submit: "Payment failed. Please try again." });
@@ -80,11 +114,15 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const handleClose = () => {
     setState("form");
     setErrors({});
+    setVerificationResult(null);
     onClose();
   };
 
   // Calculate split breakdown for display
   const breakdown = calculateSplitBreakdown(PRODUCT.price);
+
+  // Currency symbol helper
+  const currencySymbol = PRODUCT.currency === "ZAR" ? "R" : PRODUCT.currency;
 
   return (
     <AnimatePresence>
@@ -112,9 +150,9 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
             transition={{ duration: 0.3 }}
             className="relative w-full max-w-md"
           >
-            <div className="bg-[#111110] border border-gold/20 gold-glow-strong overflow-hidden">
+            <div className="bg-[#111110] border border-gold/20 gold-glow-strong overflow-hidden max-h-[90vh] overflow-y-auto">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gold/10">
+              <div className="flex items-center justify-between p-6 border-b border-gold/10 sticky top-0 bg-[#111110] z-10">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gold/10 flex items-center justify-center border border-gold/20">
                     <CreditCard className="h-5 w-5 text-gold" />
@@ -163,7 +201,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                               Premium Performance Supplement
                             </p>
                             <p className="text-lg font-black text-gold mt-1">
-                              R {PRODUCT.price.toFixed(2)}
+                              {currencySymbol} {PRODUCT.price.toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -211,9 +249,9 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
 
                         <div>
                           <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
-                            Phone Number{" "}
-                            <span className="text-foreground/30">
-                              (optional)
+                            WhatsApp / Phone Number{" "}
+                            <span className="text-gold/60">
+                              (required for order updates)
                             </span>
                           </label>
                           <Input
@@ -225,6 +263,16 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                             placeholder="+27 82 123 4567"
                             className="bg-[#0a0a08] border-gold/15 focus-visible:border-gold/40 focus-visible:ring-gold/20 rounded-none h-11"
                           />
+                          {errors.phone && (
+                            <p className="text-xs text-red-400 mt-1">
+                              {errors.phone}
+                            </p>
+                          )}
+                          <p className="text-xs text-foreground/25 mt-1 flex items-center gap-1">
+                            <MessageCircle className="h-3 w-3" />
+                            Order confirmation &amp; shipping updates sent via
+                            WhatsApp
+                          </p>
                         </div>
 
                         {errors.submit && (
@@ -238,7 +286,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           className="w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-12 mt-2"
                         >
                           <Lock className="mr-2 h-4 w-4" />
-                          Pay R {PRODUCT.price.toFixed(2)}
+                          Pay {currencySymbol} {PRODUCT.price.toFixed(2)}
                         </Button>
                       </form>
 
@@ -289,69 +337,224 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         Processing Payment
                       </p>
                       <p className="text-sm text-foreground/40 font-light mt-2">
-                        Please wait while we confirm your order...
+                        Verifying your payment and preparing your order...
                       </p>
+                      <div className="mt-6 space-y-2">
+                        <div className="flex items-center justify-center gap-2 text-xs text-foreground/30">
+                          <CheckCircle className="h-3 w-3 text-emerald-500/50" />
+                          Confirming payment with Flutterwave
+                        </div>
+                        <div className="flex items-center justify-center gap-2 text-xs text-foreground/30">
+                          <CheckCircle className="h-3 w-3 text-emerald-500/50" />
+                          Calculating split distribution
+                        </div>
+                        <div className="flex items-center justify-center gap-2 text-xs text-foreground/30">
+                          <MessageCircle className="h-3 w-3 text-gold/30" />
+                          Sending WhatsApp confirmation
+                        </div>
+                      </div>
                     </motion.div>
                   )}
 
-                  {/* SUCCESS STATE (Real Payment) */}
-                  {state === "success" && (
+                  {/* SUCCESS STATE (Real Payment Verified) */}
+                  {state === "success" && verificationResult && (
                     <motion.div
                       key="success"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
-                      className="py-8 text-center"
+                      className="py-6"
                     >
+                      {/* Big checkmark */}
                       <div className="w-16 h-16 bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
                         <CheckCircle className="h-8 w-8 text-emerald-400" />
                       </div>
-                      <h4 className="font-black tracking-wider uppercase text-foreground text-lg">
-                        Payment Initiated!
+
+                      <h4 className="font-black tracking-wider uppercase text-foreground text-lg text-center">
+                        Payment Confirmed!
                       </h4>
-                      <p className="text-sm text-foreground/50 font-light mt-2 max-w-xs mx-auto">
-                        Complete your payment in the Flutterwave window. Your
-                        order will be confirmed once payment is verified.
-                      </p>
+
+                      {/* Payment details confirmation */}
+                      <div className="mt-4 bg-[#0a0a08] border border-emerald-500/20 p-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Amount Paid
+                            </span>
+                            <span className="text-lg font-black text-gold">
+                              {currencySymbol}{" "}
+                              {(verificationResult.amount || PRODUCT.price).toFixed(
+                                2
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Customer
+                            </span>
+                            <span className="text-sm text-foreground font-medium">
+                              {verificationResult.customerName || form.name}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Reference
+                            </span>
+                            <span className="text-xs text-foreground/60 font-mono">
+                              {verificationResult.txRef}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Product will be sent message */}
+                      <div className="mt-4 bg-gold/5 border border-gold/20 p-4">
+                        <div className="flex items-start gap-3">
+                          <Package className="h-5 w-5 text-gold mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm text-foreground font-bold">
+                              Your product will be sent shortly
+                            </p>
+                            <p className="text-xs text-foreground/50 mt-1">
+                              You will receive a WhatsApp message with tracking
+                              details once your order ships.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* WhatsApp notification indicator */}
+                      <div className="mt-3 flex items-center justify-center gap-2 text-xs text-foreground/30">
+                        <MessageCircle className="h-3 w-3 text-green-400" />
+                        <span>
+                          WhatsApp confirmation sent to {form.phone}
+                        </span>
+                      </div>
+
+                      {/* Split breakdown (informational) */}
+                      {verificationResult.splitBreakdown &&
+                        verificationResult.splitBreakdown.splits.length > 0 && (
+                          <div className="mt-4 bg-[#0a0a08] border border-gold/5 p-3">
+                            <p className="text-xs text-foreground/25 font-bold tracking-widest uppercase mb-2">
+                              Payment Distribution
+                            </p>
+                            {verificationResult.splitBreakdown.splits.map(
+                              (s) => (
+                                <div
+                                  key={s.label}
+                                  className="flex justify-between text-xs text-foreground/40 py-1"
+                                >
+                                  <span>
+                                    {s.label} ({s.percentage}%)
+                                  </span>
+                                  <span className="text-gold/60 font-medium">
+                                    {currencySymbol} {s.amount.toFixed(2)}
+                                  </span>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
+
                       <Button
                         onClick={handleClose}
-                        className="mt-6 rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11 px-8"
+                        className="mt-6 w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11"
                       >
-                        Done
+                        <Truck className="mr-2 h-4 w-4" />
+                        Done — Track My Order
                       </Button>
                     </motion.div>
                   )}
 
                   {/* DEMO SUCCESS STATE */}
-                  {state === "demo-success" && (
+                  {state === "demo-success" && verificationResult && (
                     <motion.div
                       key="demo-success"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
-                      className="py-8 text-center"
+                      className="py-6"
                     >
+                      {/* Big checkmark */}
                       <div className="w-16 h-16 bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
                         <CheckCircle className="h-8 w-8 text-emerald-400" />
                       </div>
+
                       <Badge className="bg-gold/10 text-gold border border-gold/30 rounded-none font-bold tracking-widest uppercase text-xs mb-3">
                         Demo Mode
                       </Badge>
-                      <h4 className="font-black tracking-wider uppercase text-foreground text-lg">
+
+                      <h4 className="font-black tracking-wider uppercase text-foreground text-lg text-center">
                         Payment Simulated!
                       </h4>
-                      <p className="text-sm text-foreground/50 font-light mt-2 max-w-xs mx-auto">
-                        This was a demo payment. To accept real payments with
-                        automatic splitting, add your Flutterwave API keys and
-                        subaccount IDs to the{" "}
-                        <code className="text-gold/60">.env</code> file.
-                      </p>
+
+                      {/* Payment confirmation details */}
+                      <div className="mt-4 bg-[#0a0a08] border border-emerald-500/20 p-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Amount
+                            </span>
+                            <span className="text-lg font-black text-gold">
+                              {currencySymbol} {PRODUCT.price.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Customer
+                            </span>
+                            <span className="text-sm text-foreground font-medium">
+                              {form.name}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              WhatsApp
+                            </span>
+                            <span className="text-xs text-foreground/60">
+                              {form.phone}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Reference
+                            </span>
+                            <span className="text-xs text-foreground/60 font-mono">
+                              {verificationResult.txRef}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Product will be sent message */}
+                      <div className="mt-4 bg-gold/5 border border-gold/20 p-4">
+                        <div className="flex items-start gap-3">
+                          <Package className="h-5 w-5 text-gold mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-sm text-foreground font-bold">
+                              Your product will be sent shortly
+                            </p>
+                            <p className="text-xs text-foreground/50 mt-1">
+                              You will receive a WhatsApp message with tracking
+                              details once your order ships.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* WhatsApp notification indicator */}
+                      <div className="mt-3 flex items-center justify-center gap-2 text-xs text-foreground/30">
+                        <MessageCircle className="h-3 w-3 text-green-400" />
+                        <span>
+                          WhatsApp confirmation would be sent to {form.phone}
+                        </span>
+                      </div>
 
                       {/* Show what the split would look like */}
                       {breakdown.splits.length > 0 && (
                         <div className="mt-4 bg-[#0a0a08] border border-gold/10 p-3 text-left">
                           <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mb-2">
-                            Split Preview
+                            Split Preview (After Flutterwave Fees)
                           </p>
                           {breakdown.splits.map((s) => (
                             <div
@@ -362,20 +565,37 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                                 {s.label} ({s.percentage}%)
                               </span>
                               <span className="text-gold font-bold">
-                                R {s.amount.toFixed(2)}
+                                {currencySymbol} {s.amount.toFixed(2)}
                               </span>
                             </div>
                           ))}
                           <div className="flex justify-between text-xs text-foreground/25 pt-1 border-t border-gold/5 mt-1">
                             <span>Flutterwave Fee (est.)</span>
-                            <span>-R {breakdown.flutterwaveFee.toFixed(2)}</span>
+                            <span>
+                              -{currencySymbol}{" "}
+                              {breakdown.flutterwaveFee.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-xs text-foreground/30 pt-1">
+                            <span>Amount Settled</span>
+                            <span>
+                              {currencySymbol}{" "}
+                              {breakdown.settlementAmount.toFixed(2)}
+                            </span>
                           </div>
                         </div>
                       )}
 
+                      <p className="text-xs text-foreground/30 text-center mt-4">
+                        To accept real payments with automatic splitting and
+                        WhatsApp notifications, add your Flutterwave API keys
+                        and subaccount IDs to the{" "}
+                        <code className="text-gold/60">.env</code> file.
+                      </p>
+
                       <Button
                         onClick={handleClose}
-                        className="mt-6 rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11 px-8"
+                        className="mt-4 w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11 px-8"
                       >
                         Got It
                       </Button>
