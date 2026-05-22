@@ -262,7 +262,7 @@ async function triggerNotifications(details: {
 
 /**
  * Build WhatsApp message for CUSTOMER.
- * Shows payment confirmation + split + delivery details.
+ * Shows payment confirmation + money split + delivery details.
  * Gateway prepends: 🔔 malevitamine:
  */
 function buildCustomerWhatsAppMessage(params: {
@@ -278,17 +278,25 @@ function buildCustomerWhatsAppMessage(params: {
 }): string {
   const deliveryLabel =
     params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
-  const jvlAmount = params.amount - params.ownerShare;
+  const jvlGrossShare = params.amount - params.ownerShare;
+  const jvlNetShare = jvlGrossShare - params.deliveryFee;
+  const flutterwaveFee = params.amount * 0.029 + 1;
   return [
-    `Payment Confirmed!`,
+    `✅ Payment Confirmed!`,
     ``,
     `Hi ${params.customerName},`,
     ``,
     `Your payment of *${params.currencySymbol} ${params.amount.toFixed(2)}* has been received and confirmed.`,
     ``,
-    `📦 Deliver to:`,
-    `${params.address}`,
+    `--- DELIVERY ---`,
+    `📦 Address: ${params.address}`,
     `🚚 ${deliveryLabel}`,
+    ``,
+    `--- PAYMENT BREAKDOWN ---`,
+    `Total Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
+    `  → ${params.ownerLabel} (25%): ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
+    `  → JVL (75%): ${params.currencySymbol} ${jvlNetShare.toFixed(2)}`,
+    `     (after Flutterwave fee -${params.currencySymbol} ${flutterwaveFee.toFixed(2)} & delivery -${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
     ``,
     `You will be informed with tracking details once it ships.`,
     ``,
@@ -301,7 +309,8 @@ function buildCustomerWhatsAppMessage(params: {
 /**
  * Build WhatsApp message for JVL with FULL details.
  * Shows client name, phone, email, address, product, delivery,
- * exact split amounts, and bank account info.
+ * exact split amounts, what JVL will receive in their account,
+ * and bank account info for both parties.
  * Gateway prepends: 🔔 malevitamine:
  */
 function buildJVLWhatsAppMessage(params: {
@@ -331,36 +340,44 @@ function buildJVLWhatsAppMessage(params: {
   const partnerAccNo = process.env.PARTNER_ACCOUNT_NUMBER || "";
   const partnerBranch = process.env.PARTNER_BRANCH || "";
 
+  const totalCosts = params.flutterwaveFee + params.deliveryFee;
+  const jvlAccountPayment = params.jvlNet;
+
   return [
     `🛒 NEW ORDER — ${params.productName}`,
     ``,
-    `--- CLIENT DETAILS ---`,
-    `Name: ${params.customerName}`,
-    `Phone: ${params.customerPhone}`,
-    `Email: ${params.customerEmail}`,
-    `Address: ${params.address}`,
+    `━━━ CLIENT PARTICULARS ━━━`,
+    `👤 Name: ${params.customerName}`,
+    `📞 Phone: ${params.customerPhone}`,
+    `📧 Email: ${params.customerEmail}`,
+    `📍 Address: ${params.address}`,
     ``,
-    `--- ORDER DETAILS ---`,
+    `━━━ ORDER DETAILS ━━━`,
     `Product: ${params.productName}`,
-    `Amount Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
+    `Total Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
     `Delivery: ${deliveryLabel} (${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
     `Reference: ${params.txRef}`,
     ``,
-    `--- MONEY SPLIT ---`,
+    `━━━ MONEY SPLIT BREAKDOWN ━━━`,
     `Total Received: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
     ``,
-    `TJ Schoeman (25% clean):`,
-    `  → ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
-    `  → ${ownerBank} | ${ownerAccName} | Acc: ${ownerAccNo}`,
+    `TJ Schoeman (25% — clean, no deductions):`,
+    `  ➤ ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
+    `  ➤ Bank: ${ownerBank} | ${ownerAccName} | Acc: ${ownerAccNo}`,
     ``,
-    `JVL (75% minus costs):`,
-    `  → Gross: ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
-    `  → Flutterwave fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
-    `  → Delivery fee: -${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
-    `  → JVL NET: ${params.currencySymbol} ${params.jvlNet.toFixed(2)}`,
-    `  → ${partnerBank} | ${partnerAccName} | Acc: ${partnerAccNo} | Branch: ${partnerBranch}`,
+    `JVL Headquarters PTY Ltd (75% minus costs):`,
+    `  ➤ 75% of Gross: ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
+    `  ➤ Flutterwave fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
+    `  ➤ Delivery fee: -${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
+    `  ➤ Total costs deducted: -${params.currencySymbol} ${totalCosts.toFixed(2)}`,
     ``,
-    `Please ship to customer at the above address.`,
+    `💰 AMOUNT TO JVL ACCOUNT: ${params.currencySymbol} ${jvlAccountPayment.toFixed(2)}`,
+    `  ➤ Bank: ${partnerBank} | ${partnerAccName}`,
+    `  ➤ Account: ${partnerAccNo} | Branch: ${partnerBranch}`,
+    ``,
+    `━━━ ACTION REQUIRED ━━━`,
+    `Please ship to the client at the address above.`,
+    `Reply to this message to confirm shipment.`,
   ].join("\n");
 }
 

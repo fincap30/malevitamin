@@ -42,3 +42,24 @@ Stage Summary:
 - Delivery options: Normal (R89, 5-7 days) or Speed (R119, 2-3 days)
 - Delivery address collected at checkout and forwarded to JVL
 - Bank details stored in .env for Flutterwave subaccount creation
+
+---
+Task ID: 1
+Agent: Main
+Task: Update JVL notification phone and fix WhatsApp messages with full split breakdown and client particulars
+
+Work Log:
+- Verified .env already has JVL_NOTIFICATION_PHONE=+27664735597
+- Updated buildCustomerWhatsAppMessage() to include payment breakdown showing TJ 25%, JVL 75%, Flutterwave fee, and delivery fee deductions
+- Updated buildJVLWhatsAppMessage() with enhanced format showing:
+  - CLIENT PARTICULARS section with name, phone, email, address
+  - MONEY SPLIT BREAKDOWN with full itemized costs
+  - AMOUNT TO JVL ACCOUNT prominently displayed with bank details
+  - ACTION REQUIRED section prompting shipment confirmation
+- Sent test WhatsApp to JVL reception (+27664735597) with full order notification format
+- Sent test WhatsApp to TJ (+27833907059) with customer confirmation format including split breakdown
+
+Stage Summary:
+- JVL WhatsApp now shows: client name/particulars, full money split, exact amount to JVL account with bank details
+- Customer WhatsApp now shows: payment breakdown with both parties' shares and costs deducted
+- Both messages successfully delivered via WhatsApp gateway
