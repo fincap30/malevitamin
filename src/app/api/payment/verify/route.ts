@@ -299,10 +299,10 @@ function buildCustomerWhatsAppMessage(params: {
 }
 
 /**
- * Build WhatsApp message for JVL with FULL details.
- * Shows client name, phone, email, address, product, delivery,
- * exact split amounts, what JVL will receive in their account,
- * and bank account info for both parties.
+ * Build WhatsApp message for JVL.
+ * Shows client particulars, order details, and ONLY JVL's share.
+ * No other party's figures shown. "Sitewizard" used as agent name.
+ * "Payment gateway" used instead of Flutterwave.
  * Gateway prepends: 🔔 malevitamine:
  */
 function buildJVLWhatsAppMessage(params: {
@@ -324,9 +324,6 @@ function buildJVLWhatsAppMessage(params: {
   const deliveryLabel =
     params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
 
-  const ownerBank = process.env.OWNER_BANK || "";
-  const ownerAccName = process.env.OWNER_ACCOUNT_NAME || "";
-  const ownerAccNo = process.env.OWNER_ACCOUNT_NUMBER || "";
   const partnerBank = process.env.PARTNER_BANK || "";
   const partnerAccName = process.env.PARTNER_ACCOUNT_NAME || "";
   const partnerAccNo = process.env.PARTNER_ACCOUNT_NUMBER || "";
@@ -346,22 +343,17 @@ function buildJVLWhatsAppMessage(params: {
     ``,
     `━━━ ORDER DETAILS ━━━`,
     `Product: ${params.productName}`,
-    `Total Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
-    `Delivery: ${deliveryLabel} (${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
+    `Amount Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
+    `Delivery: ${deliveryLabel}`,
     `Reference: ${params.txRef}`,
+    `Processed by: Sitewizard`,
     ``,
-    `━━━ MONEY SPLIT BREAKDOWN ━━━`,
-    `Total Received: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
-    ``,
-    `TJ Schoeman (25% — clean, no deductions):`,
-    `  ➤ ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
-    `  ➤ Bank: ${ownerBank} | ${ownerAccName} | Acc: ${ownerAccNo}`,
-    ``,
-    `JVL Headquarters PTY Ltd (75% minus costs):`,
-    `  ➤ 75% of Gross: ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
-    `  ➤ Flutterwave fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
+    `━━━ JVL SETTLEMENT ━━━`,
+    `JVL Share (75%): ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
+    `Less costs deducted:`,
+    `  ➤ Payment gateway fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
     `  ➤ Delivery fee: -${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
-    `  ➤ Total costs deducted: -${params.currencySymbol} ${totalCosts.toFixed(2)}`,
+    `  ➤ Total costs: -${params.currencySymbol} ${totalCosts.toFixed(2)}`,
     ``,
     `💰 AMOUNT TO JVL ACCOUNT: ${params.currencySymbol} ${jvlAccountPayment.toFixed(2)}`,
     `  ➤ Bank: ${partnerBank} | ${partnerAccName}`,
