@@ -262,7 +262,8 @@ async function triggerNotifications(details: {
 
 /**
  * Build WhatsApp message for CUSTOMER.
- * Shows payment confirmation + money split + delivery details.
+ * Shows payment confirmation + delivery details only.
+ * Money split is PRIVATE — only shown to TJ and JVL.
  * Gateway prepends: 🔔 malevitamine:
  */
 function buildCustomerWhatsAppMessage(params: {
@@ -278,9 +279,6 @@ function buildCustomerWhatsAppMessage(params: {
 }): string {
   const deliveryLabel =
     params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
-  const jvlGrossShare = params.amount - params.ownerShare;
-  const jvlNetShare = jvlGrossShare - params.deliveryFee;
-  const flutterwaveFee = params.amount * 0.029 + 1;
   return [
     `✅ Payment Confirmed!`,
     ``,
@@ -288,17 +286,11 @@ function buildCustomerWhatsAppMessage(params: {
     ``,
     `Your payment of *${params.currencySymbol} ${params.amount.toFixed(2)}* has been received and confirmed.`,
     ``,
-    `--- DELIVERY ---`,
-    `📦 Address: ${params.address}`,
+    `📦 Deliver to:`,
+    `${params.address}`,
     `🚚 ${deliveryLabel}`,
     ``,
-    `--- PAYMENT BREAKDOWN ---`,
-    `Total Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
-    `  → ${params.ownerLabel} (25%): ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
-    `  → JVL (75%): ${params.currencySymbol} ${jvlNetShare.toFixed(2)}`,
-    `     (after Flutterwave fee -${params.currencySymbol} ${flutterwaveFee.toFixed(2)} & delivery -${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
-    ``,
-    `You will be informed with tracking details once it ships.`,
+    `Your product will be sent to you shortly. You will be informed with tracking details once it ships.`,
     ``,
     `Ref: ${params.txRef}`,
     ``,
