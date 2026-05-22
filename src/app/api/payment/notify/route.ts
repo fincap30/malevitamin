@@ -4,20 +4,16 @@ import { NextRequest, NextResponse } from "next/server";
  * POST /api/payment/notify
  *
  * Handles post-payment notifications:
- * - WhatsApp messages to customers (via WhatsApp Business API)
+ * - WhatsApp messages to customers (via Universal WhatsApp Gateway)
  * - Email confirmations to customers
  *
- * When a payment is verified, the verify route calls this endpoint
- * to send notifications automatically.
- *
- * WHATSAPP INTEGRATION:
- * ====================
- * Set the WHATSAPP_API_URL environment variable to your WhatsApp agent endpoint.
- * The endpoint should accept:
- *   { phone: string, message: string, customerName: string, ... }
- *
- * If WHATSAPP_API_URL is not set, WhatsApp notifications are logged but not sent.
- * This allows the system to work without WhatsApp until you connect your agent.
+ * WHATSAPP GATEWAY:
+ * ================
+ * Uses the Universal WhatsApp Gateway on CodeWords.
+ * - Sends from +27769379301 (Sitewizard)
+ * - Messages appear as: 🔔 {product}: {message}
+ * - Replies are smart-routed back to this site's webhook
+ * - Product name MUST match the registered site name in .env
  *
  * Request body:
  *   {
@@ -63,10 +59,17 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Handle WhatsApp notification.
+ * Handle WhatsApp notification via Universal WhatsApp Gateway.
  *
- * If WHATSAPP_API_URL is set, sends the message via the WhatsApp agent.
- * Otherwise, logs the message for development/testing.
+ * Gateway: https://runtime.codewords.ai/run/wa_universal_gateway_438e963b
+ * Sends from: +27769379301 (Sitewizard)
+ * Format: 🔔 {product}: {message}
+ * Smart routing: Replies go only to this site's webhook
+ *
+ * Env vars:
+ *   WHATSAPP_GATEWAY_URL - Gateway endpoint
+ *   WHATSAPP_GATEWAY_KEY - Bearer token for auth
+ *   WHATSAPP_PRODUCT_NAME - Registered site name (must match gateway registration)
  */
 async function handleWhatsAppNotification(body: {
   phone?: string;
@@ -77,8 +80,9 @@ async function handleWhatsAppNotification(body: {
   txRef?: string;
   transactionId?: number;
 }): Promise<NextResponse> {
-  const whatsappApiUrl = process.env.WHATSAPP_API_URL;
-  const whatsappApiKey = process.env.WHATSAPP_API_KEY;
+  const gatewayUrl = process.env.WHATSAPP_GATEWAY_URL;
+  const gatewayKey = process.env.WHATSAPP_GATEWAY_KEY;
+  const productName = process.env.WHATSAPP_PRODUCT_NAME;
 
   if (!body.phone) {
     console.log(
@@ -91,59 +95,56 @@ async function handleWhatsAppNotification(body: {
     });
   }
 
-  // If WhatsApp agent is configured, send the message
-  if (whatsappApiUrl) {
+  // If WhatsApp gateway is configured, send the message
+  if (gatewayUrl && gatewayKey && productName) {
     try {
-      const response = await fetch(whatsappApiUrl, {
+      const response = await fetch(gatewayUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(whatsappApiKey
-            ? { Authorization: `Bearer ${whatsappApiKey}` }
-            : {}),
+          Authorization: `Bearer ${gatewayKey}`,
         },
         body: JSON.stringify({
           phone: body.phone,
+          product: productName,
           message: body.message,
-          customerName: body.customerName,
-          amount: body.amount,
-          currency: body.currency,
-          txRef: body.txRef,
-          transactionId: body.transactionId,
         }),
       });
 
       const result = await response.json();
 
       console.log("[WhatsApp] Message sent to", body.phone, {
-        status: response.status,
-        result,
+        success: result.success,
+        detail: result.detail,
+        product: productName,
       });
 
       return NextResponse.json({
-        success: true,
+        success: result.success,
         channel: "whatsapp",
         phone: body.phone,
-        sent: true,
+        sent: result.success,
+        detail: result.detail,
       });
     } catch (error) {
-      console.error("[WhatsApp] Failed to send message:", error);
+      console.error("[WhatsApp] Gateway call failed:", error);
       // Log the message so it's not lost
       console.log("[WhatsApp] Message that would have been sent:", {
         to: body.phone,
+        product: productName,
         message: body.message,
       });
       return NextResponse.json({
         success: false,
         channel: "whatsapp",
-        error: "WhatsApp API call failed",
+        error: "WhatsApp Gateway call failed",
         logged: true,
       });
     }
   }
 
-  // No WhatsApp agent configured — log the notification
-  console.log("[WhatsApp] Agent not configured — logging notification:", {
+  // No WhatsApp gateway configured — log the notification
+  console.log("[WhatsApp] Gateway not configured — logging notification:", {
     to: body.phone,
     customerName: body.customerName,
     amount: body.amount,
@@ -158,7 +159,7 @@ async function handleWhatsAppNotification(body: {
     phone: body.phone,
     sent: false,
     reason:
-      "WhatsApp agent not configured. Set WHATSAPP_API_URL in .env to enable.",
+      "WhatsApp gateway not configured. Set WHATSAPP_GATEWAY_URL, WHATSAPP_GATEWAY_KEY, and WHATSAPP_PRODUCT_NAME in .env to enable.",
     logged: true,
   });
 }
@@ -188,15 +189,21 @@ async function handleEmailNotification(body: {
     });
   }
 
-  const businessName = body.businessName || process.env.NEXT_PUBLIC_BUSINESS_NAME || "Our Store";
-  const currencySymbol = body.currency === "ZAR" ? "R" : body.currency || "R";
+  const businessName =
+    body.businessName ||
+    process.env.NEXT_PUBLIC_BUSINESS_NAME ||
+    "Our Store";
+  const currencySymbol =
+    body.currency === "ZAR" ? "R" : body.currency || "R";
 
   const emailContent = {
     to: body.email,
     subject: `${businessName} — Payment Confirmed`,
     body: `Hi ${body.customerName},
 
-Your payment of ${currencySymbol} ${(body.amount || 0).toFixed(2)} has been received and confirmed.
+Your payment of ${currencySymbol} ${(body.amount || 0).toFixed(
+      2
+    )} has been received and confirmed.
 
 Your product will be sent to you shortly. You will be informed with tracking details once it ships.
 
@@ -215,7 +222,9 @@ Thank you for your order!
         body: JSON.stringify(emailContent),
       });
 
-      console.log("[Email] Sent to", body.email, { status: response.status });
+      console.log("[Email] Sent to", body.email, {
+        status: response.status,
+      });
       return NextResponse.json({
         success: true,
         channel: "email",
@@ -224,7 +233,10 @@ Thank you for your order!
       });
     } catch (error) {
       console.error("[Email] Failed:", error);
-      console.log("[Email] Content that would have been sent:", emailContent);
+      console.log(
+        "[Email] Content that would have been sent:",
+        emailContent
+      );
       return NextResponse.json({
         success: false,
         channel: "email",
@@ -235,14 +247,18 @@ Thank you for your order!
   }
 
   // No email service configured — log it
-  console.log("[Email] Service not configured — logging notification:", emailContent);
+  console.log(
+    "[Email] Service not configured — logging notification:",
+    emailContent
+  );
 
   return NextResponse.json({
     success: true,
     channel: "email",
     email: body.email,
     sent: false,
-    reason: "Email service not configured. Set EMAIL_API_URL in .env to enable.",
+    reason:
+      "Email service not configured. Set EMAIL_API_URL in .env to enable.",
     logged: true,
   });
 }

@@ -6,23 +6,15 @@ const FLUTTERWAVE_VERIFY_URL = "https://api.flutterwave.com/v3/transactions";
  * POST /api/payment/verify
  *
  * Verifies a Flutterwave transaction server-side and calculates the split breakdown.
- * This prevents tampering with payment results on the client side.
- *
  * After successful verification, triggers notifications:
- * - WhatsApp message to customer (if phone provided)
+ * - WhatsApp message to customer (via Universal WhatsApp Gateway)
  * - Email confirmation to customer
  * - Internal logging of split breakdown
- *
- * Request body:
- *   { transactionId: number, txRef: string, customerPhone?: string }
- *
- * Response:
- *   { verified: boolean, data?: object, splitBreakdown?: object }
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { transactionId, txRef, customerPhone } = body;
+    const { transactionId, txRef, customerPhone, customerName, customerEmail } = body;
 
     if (!transactionId || !txRef) {
       return NextResponse.json(
@@ -43,10 +35,10 @@ export async function POST(request: NextRequest) {
 
       const splitBreakdown = calculateSplitBreakdown(850);
 
-      // Still trigger notifications in demo mode (for testing)
+      // Trigger notifications in demo mode (for testing the full flow)
       await triggerNotifications({
-        customerName: "Demo Customer",
-        customerEmail: "demo@test.com",
+        customerName: customerName || "Demo Customer",
+        customerEmail: customerEmail || "demo@test.com",
         customerPhone: customerPhone || undefined,
         amount: 850,
         currency: "ZAR",
@@ -103,10 +95,14 @@ export async function POST(request: NextRequest) {
 
       // Trigger notifications (WhatsApp + email)
       await triggerNotifications({
-        customerName: verifyData.data.customer?.name || "Customer",
-        customerEmail: verifyData.data.customer?.email || "",
+        customerName:
+          customerName || verifyData.data.customer?.name || "Customer",
+        customerEmail:
+          customerEmail || verifyData.data.customer?.email || "",
         customerPhone:
-          customerPhone || verifyData.data.customer?.phone_number || undefined,
+          customerPhone ||
+          verifyData.data.customer?.phone_number ||
+          undefined,
         amount,
         currency,
         txRef,
@@ -137,9 +133,6 @@ export async function POST(request: NextRequest) {
 
 /**
  * Trigger all notifications after a verified payment.
- * - WhatsApp to customer
- * - Email to customer
- * - Internal logging
  */
 async function triggerNotifications(details: {
   customerName: string;
@@ -152,6 +145,7 @@ async function triggerNotifications(details: {
   splitBreakdown: ReturnType<typeof calculateSplitBreakdown>;
 }): Promise<void> {
   const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "Our Store";
+  const baseUrl = getBaseUrl();
 
   // 1. Send WhatsApp notification to customer
   if (details.customerPhone) {
@@ -160,11 +154,10 @@ async function triggerNotifications(details: {
         customerName: details.customerName,
         amount: details.amount,
         currency: details.currency,
-        businessName,
         txRef: details.txRef,
       });
 
-      await fetch(`${getBaseUrl()}/api/payment/notify`, {
+      await fetch(`${baseUrl}/api/payment/notify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -179,17 +172,19 @@ async function triggerNotifications(details: {
         }),
       });
 
-      console.log("[Payment] WhatsApp notification sent to", details.customerPhone);
+      console.log(
+        "[Payment] WhatsApp notification sent to",
+        details.customerPhone
+      );
     } catch (error) {
       console.error("[Payment] WhatsApp notification failed:", error);
-      // Don't fail the whole flow if notification fails
     }
   }
 
-  // 2. Send email confirmation (placeholder — integrate with your email service)
+  // 2. Send email confirmation
   if (details.customerEmail) {
     try {
-      await fetch(`${getBaseUrl()}/api/payment/notify`, {
+      await fetch(`${baseUrl}/api/payment/notify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -203,7 +198,10 @@ async function triggerNotifications(details: {
         }),
       });
 
-      console.log("[Payment] Email notification sent to", details.customerEmail);
+      console.log(
+        "[Payment] Email notification sent to",
+        details.customerEmail
+      );
     } catch (error) {
       console.error("[Payment] Email notification failed:", error);
     }
@@ -220,17 +218,21 @@ async function triggerNotifications(details: {
 
 /**
  * Build the WhatsApp message for customer confirmation.
+ *
+ * IMPORTANT: The WhatsApp Gateway prepends "🔔 {product}: " to the message.
+ * So the customer sees: "🔔 malevitamine: Payment confirmed! ..."
+ *
+ * Therefore the message should NOT include the business name again at the top.
  */
 function buildWhatsAppMessage(params: {
   customerName: string;
   amount: number;
   currency: string;
-  businessName: string;
   txRef: string;
 }): string {
   const currencySymbol = params.currency === "ZAR" ? "R" : params.currency;
   return [
-    `✅ *${params.businessName} - Payment Confirmed!*`,
+    `Payment Confirmed!`,
     ``,
     `Hi ${params.customerName},`,
     ``,
@@ -241,24 +243,19 @@ function buildWhatsAppMessage(params: {
     `Reference: ${params.txRef}`,
     ``,
     `Thank you for your order!`,
-    ``,
-    `— ${params.businessName}`,
   ].join("\n");
 }
 
 /**
  * Calculate the split breakdown for a given amount.
- * Matches the client-side calculation in lib/flutterwave.ts
  */
 function calculateSplitBreakdown(totalAmount: number) {
-  // Flutterwave SA fee estimate: 2.9% + R1 for local cards
   const flutterwaveFee = totalAmount * 0.029 + 1;
   const settlementAmount = totalAmount - flutterwaveFee;
 
   const recipients: { label: string; percentage: number; amount: number }[] =
     [];
 
-  // Owner
   const ownerPct = Number(process.env.SPLIT_OWNER_PERCENTAGE || 0);
   if (ownerPct > 0) {
     recipients.push({
@@ -268,7 +265,6 @@ function calculateSplitBreakdown(totalAmount: number) {
     });
   }
 
-  // Partner 1
   const partnerPct = Number(process.env.SPLIT_PARTNER_PERCENTAGE || 0);
   if (partnerPct > 0) {
     recipients.push({
@@ -278,7 +274,6 @@ function calculateSplitBreakdown(totalAmount: number) {
     });
   }
 
-  // Partner 2 (optional)
   const partner2Pct = Number(process.env.SPLIT_PARTNER_2_PERCENTAGE || 0);
   if (partner2Pct > 0) {
     recipients.push({
@@ -288,7 +283,6 @@ function calculateSplitBreakdown(totalAmount: number) {
     });
   }
 
-  // Partner 3 (optional)
   const partner3Pct = Number(process.env.SPLIT_PARTNER_3_PERCENTAGE || 0);
   if (partner3Pct > 0) {
     recipients.push({
@@ -309,9 +303,6 @@ function calculateSplitBreakdown(totalAmount: number) {
   };
 }
 
-/**
- * Get the base URL for internal API calls.
- */
 function getBaseUrl(): string {
   const port = process.env.PORT || "3000";
   return `http://localhost:${port}`;

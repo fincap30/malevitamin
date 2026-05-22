@@ -326,21 +326,18 @@ export async function initiatePayment(customer: {
           currency: response.data.currency,
         });
 
-        // Verify the payment server-side
-        const result = await verifyPayment(response.data.id, response.data.tx_ref);
-
-        if (result.verified) {
-          // Send notifications (WhatsApp + email)
-          await sendPaymentNotification({
+        // Verify the payment server-side (also triggers WhatsApp + email notifications)
+        const result = await verifyPayment(
+          response.data.id,
+          response.data.tx_ref,
+          {
             customerName: customer.name,
             customerEmail: customer.email,
             customerPhone: customer.phone,
-            amount: result.amount || PRODUCT.price,
-            currency: result.currency || PRODUCT.currency,
-            txRef: result.txRef || txRef,
-            transactionId: result.transactionId || response.data.id,
-          });
+          }
+        );
 
+        if (result.verified) {
           // Call the success callback
           customer.onSuccess?.(result);
         } else {
@@ -376,17 +373,29 @@ export async function initiatePayment(customer: {
 
 /**
  * Verify payment on the backend and return full verification result.
- * The backend verifies with Flutterwave's servers and calculates split breakdown.
+ * The backend verifies with Flutterwave's servers, calculates split breakdown,
+ * and triggers WhatsApp + email notifications automatically.
  */
 export async function verifyPayment(
   transactionId: number,
-  txRef: string
+  txRef: string,
+  customerInfo?: {
+    customerName?: string;
+    customerEmail?: string;
+    customerPhone?: string;
+  }
 ): Promise<PaymentVerificationResult> {
   try {
     const response = await fetch("/api/payment/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ transactionId, txRef }),
+      body: JSON.stringify({
+        transactionId,
+        txRef,
+        customerName: customerInfo?.customerName,
+        customerEmail: customerInfo?.customerEmail,
+        customerPhone: customerInfo?.customerPhone,
+      }),
     });
 
     const result = await response.json();
@@ -416,28 +425,4 @@ export async function verifyPayment(
   }
 }
 
-/**
- * Send payment notification to customer via WhatsApp and email.
- * Called automatically after successful payment verification.
- */
-async function sendPaymentNotification(details: {
-  customerName: string;
-  customerEmail: string;
-  customerPhone?: string;
-  amount: number;
-  currency: string;
-  txRef: string;
-  transactionId: number;
-}): Promise<void> {
-  try {
-    await fetch("/api/payment/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(details),
-    });
-    console.log("[Payment] Notification sent successfully");
-  } catch (error) {
-    console.error("[Payment] Notification failed:", error);
-    // Don't throw — notification failure shouldn't break the flow
-  }
-}
+

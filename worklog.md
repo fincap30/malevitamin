@@ -1,51 +1,33 @@
 ---
-Task ID: 1
+Task ID: 2
 Agent: Main Agent
-Task: Build payment splitting system with Flutterwave, WhatsApp notifications, and client confirmation
+Task: Integrate Universal WhatsApp Gateway with payment system
 
 Work Log:
-- Reviewed current project structure and existing payment code
-- Updated src/lib/flutterwave.ts with:
-  - PaymentVerificationResult type for full verification flow
-  - onSuccess/onError callbacks in initiatePayment()
-  - Automatic notification triggering after verification
-  - Support for up to 4 split recipients
-  - Customizable split labels (SPLIT_OWNER_LABEL, SPLIT_PARTNER_LABEL)
-- Updated src/app/api/payment/verify/route.ts with:
-  - Automatic WhatsApp notification after verification
-  - Automatic email notification after verification
-  - buildWhatsAppMessage() for customer confirmation messages
-  - Support for custom split labels
-- Created src/app/api/payment/notify/route.ts with:
-  - WhatsApp notification handler (sends to WHATSAPP_API_URL if configured)
-  - Email notification handler (sends to EMAIL_API_URL if configured)
-  - Graceful fallback: logs notifications if agent not configured
-  - Full message content logged for development
-- Updated src/components/payment-modal.tsx with:
-  - Phone number now REQUIRED (for WhatsApp notifications)
-  - Phone validation (minimum 10 digits)
-  - WhatsApp indicator in form
-  - Success state shows: amount paid, customer name, reference, "product will be sent" message
-  - Demo success state shows same confirmation with split preview
-  - WhatsApp confirmation indicator in success states
-  - Package/Truck icons for shipping message
-- Updated .env with:
-  - SPLIT_OWNER_LABEL and SPLIT_PARTNER_LABEL
-  - WHATSAPP_API_URL and WHATSAPP_API_KEY
-  - EMAIL_API_URL
-- Created payment.skill package:
-  - SKILL.md: Full build instructions with "always ask for split config" rule
-  - references/flutterwave-subaccount-setup.md: Subaccount creation guide
-  - references/split-calculation-examples.md: Worked examples for different countries/splits
-  - references/api-reference.md: Full Flutterwave API reference
-  - references/whatsapp-integration.md: WhatsApp agent connection guide
-  - evals/evals.json: 5 test cases covering different scenarios
-- Verified build compiles successfully with no errors
+- Registered "malevitamine" site on the Universal WhatsApp Gateway at CodeWords
+  - Response: {"status":"registered","name":"malevitamine","total_sites":3}
+- Updated /api/payment/notify/route.ts to use the Universal WhatsApp Gateway
+  - Uses WHATSAPP_GATEWAY_URL, WHATSAPP_GATEWAY_KEY, WHATSAPP_PRODUCT_NAME env vars
+  - Sends { phone, product, message } to the gateway
+  - Gateway prepends "🔔 malevitamine:" to messages
+- Updated /api/payment/verify/route.ts to pass customer details through
+  - Now accepts customerName, customerEmail, customerPhone in request body
+  - WhatsApp message format adjusted (no business name at top since gateway adds it)
+- Created /api/whatsapp-webhook/route.ts for receiving customer replies
+  - Accepts incoming { phone, message, messageId, timestamp, from_name }
+  - Handles common reply patterns (delivery confirmation, order status, complaints)
+  - Returns {"received": true} as required by gateway
+- Updated /src/lib/flutterwave.ts verifyPayment() to pass customer info to verify endpoint
+- Removed old sendPaymentNotification() (verify API handles notifications directly now)
+- Updated .env with WhatsApp gateway credentials
+- Tested WhatsApp gateway: sent test message successfully
+- Updated payment.skill SKILL.md with full WhatsApp gateway documentation
+- Updated payment.skill references/whatsapp-integration.md with gateway details
+- Build verified clean with all routes working
 
 Stage Summary:
-- Payment splitting system fully implemented with Flutterwave Subaccounts
-- Every transaction tells Flutterwave the split configuration
-- Customer receives confirmation showing amount paid + "product will be sent" message
-- WhatsApp notification system ready for agent connection (placeholder when not configured)
-- Phone number is required for order updates via WhatsApp
-- Payment skill packaged at /home/z/my-project/download/payment.skill/
+- WhatsApp gateway fully integrated and tested (message sent successfully)
+- Site "malevitamine" registered as 3rd site on gateway (after dryeyepro, callsync)
+- Smart routing active: customer replies only come back to this site's webhook
+- Payment flow: Pay → Verify → WhatsApp confirmation to customer + Email
+- All gateway credentials in .env (WHATSAPP_GATEWAY_URL, WHATSAPP_GATEWAY_KEY, WHATSAPP_PRODUCT_NAME)
