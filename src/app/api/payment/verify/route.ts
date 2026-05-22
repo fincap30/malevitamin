@@ -7,14 +7,22 @@ const FLUTTERWAVE_VERIFY_URL = "https://api.flutterwave.com/v3/transactions";
  *
  * Verifies a Flutterwave transaction server-side and calculates the split breakdown.
  * After successful verification, triggers notifications:
- * - WhatsApp message to customer (via Universal WhatsApp Gateway)
- * - Email confirmation to customer
- * - Internal logging of split breakdown
+ * - WhatsApp to customer: "Payment confirmed, product will be sent"
+ * - WhatsApp to JVL: Order details + delivery address + split breakdown
+ * - Email to customer: Payment confirmation
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { transactionId, txRef, customerPhone, customerName, customerEmail } = body;
+    const {
+      transactionId,
+      txRef,
+      customerName,
+      customerEmail,
+      customerPhone,
+      customerAddress,
+      deliveryOption,
+    } = body;
 
     if (!transactionId || !txRef) {
       return NextResponse.json(
@@ -33,13 +41,18 @@ export async function POST(request: NextRequest) {
     ) {
       console.log("[Payment Verify] Demo mode — simulating success");
 
-      const splitBreakdown = calculateSplitBreakdown(850);
+      const splitBreakdown = calculateSplitBreakdown(
+        850,
+        deliveryOption || "normal"
+      );
 
-      // Trigger notifications in demo mode (for testing the full flow)
+      // Trigger all notifications (customer + JVL)
       await triggerNotifications({
         customerName: customerName || "Demo Customer",
         customerEmail: customerEmail || "demo@test.com",
         customerPhone: customerPhone || undefined,
+        customerAddress: customerAddress || "123 Demo Street, Pretoria",
+        deliveryOption: deliveryOption || "normal",
         amount: 850,
         currency: "ZAR",
         txRef,
@@ -81,9 +94,11 @@ export async function POST(request: NextRequest) {
     ) {
       const amount = verifyData.data.amount;
       const currency = verifyData.data.currency;
-      const splitBreakdown = calculateSplitBreakdown(amount);
+      const splitBreakdown = calculateSplitBreakdown(
+        amount,
+        deliveryOption || "normal"
+      );
 
-      // Log the split for your records
       console.log("[Payment Verified]", {
         txRef,
         transactionId,
@@ -93,7 +108,7 @@ export async function POST(request: NextRequest) {
         splitBreakdown,
       });
 
-      // Trigger notifications (WhatsApp + email)
+      // Trigger all notifications (customer + JVL)
       await triggerNotifications({
         customerName:
           customerName || verifyData.data.customer?.name || "Customer",
@@ -103,6 +118,8 @@ export async function POST(request: NextRequest) {
           customerPhone ||
           verifyData.data.customer?.phone_number ||
           undefined,
+        customerAddress: customerAddress || "Address not provided",
+        deliveryOption: deliveryOption || "normal",
         amount,
         currency,
         txRef,
@@ -133,11 +150,16 @@ export async function POST(request: NextRequest) {
 
 /**
  * Trigger all notifications after a verified payment.
+ * 1. WhatsApp to customer: Payment confirmed + product will be sent
+ * 2. WhatsApp to JVL: Full order details + delivery address + split
+ * 3. Email to customer: Payment confirmation
  */
 async function triggerNotifications(details: {
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
+  customerAddress: string;
+  deliveryOption: string;
   amount: number;
   currency: string;
   txRef: string;
@@ -146,15 +168,19 @@ async function triggerNotifications(details: {
 }): Promise<void> {
   const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "Our Store";
   const baseUrl = getBaseUrl();
+  const currencySymbol = details.currency === "ZAR" ? "R" : details.currency;
 
-  // 1. Send WhatsApp notification to customer
+  // 1. WhatsApp to CUSTOMER
   if (details.customerPhone) {
     try {
-      const whatsappMessage = buildWhatsAppMessage({
+      const customerMessage = buildCustomerWhatsAppMessage({
         customerName: details.customerName,
         amount: details.amount,
-        currency: details.currency,
+        currencySymbol,
+        deliveryOption: details.deliveryOption,
+        deliveryFee: details.splitBreakdown.deliveryFee,
         txRef: details.txRef,
+        address: details.customerAddress,
       });
 
       await fetch(`${baseUrl}/api/payment/notify`, {
@@ -163,25 +189,55 @@ async function triggerNotifications(details: {
         body: JSON.stringify({
           type: "whatsapp",
           phone: details.customerPhone,
-          message: whatsappMessage,
-          customerName: details.customerName,
-          amount: details.amount,
-          currency: details.currency,
-          txRef: details.txRef,
-          transactionId: details.transactionId,
+          message: customerMessage,
         }),
       });
 
       console.log(
-        "[Payment] WhatsApp notification sent to",
+        "[Payment] Customer WhatsApp sent to",
         details.customerPhone
       );
     } catch (error) {
-      console.error("[Payment] WhatsApp notification failed:", error);
+      console.error("[Payment] Customer WhatsApp failed:", error);
     }
   }
 
-  // 2. Send email confirmation
+  // 2. WhatsApp to JVL — Order details with delivery address
+  const jvlPhone = process.env.JVL_NOTIFICATION_PHONE;
+  if (jvlPhone) {
+    try {
+      const jvlMessage = buildJVLWhatsAppMessage({
+        customerName: details.customerName,
+        customerPhone: details.customerPhone || "Not provided",
+        amount: details.amount,
+        currencySymbol,
+        deliveryOption: details.deliveryOption,
+        deliveryFee: details.splitBreakdown.deliveryFee,
+        address: details.customerAddress,
+        txRef: details.txRef,
+        productName: businessName,
+        jvlShare: details.splitBreakdown.partnerNetShare,
+        ownerShare: details.splitBreakdown.ownerShare,
+        flutterwaveFee: details.splitBreakdown.flutterwaveFee,
+      });
+
+      await fetch(`${baseUrl}/api/payment/notify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "whatsapp",
+          phone: jvlPhone,
+          message: jvlMessage,
+        }),
+      });
+
+      console.log("[Payment] JVL WhatsApp sent to", jvlPhone);
+    } catch (error) {
+      console.error("[Payment] JVL WhatsApp failed:", error);
+    }
+  }
+
+  // 3. Email to customer
   if (details.customerEmail) {
     try {
       await fetch(`${baseUrl}/api/payment/notify`, {
@@ -199,46 +255,53 @@ async function triggerNotifications(details: {
       });
 
       console.log(
-        "[Payment] Email notification sent to",
+        "[Payment] Email sent to",
         details.customerEmail
       );
     } catch (error) {
-      console.error("[Payment] Email notification failed:", error);
+      console.error("[Payment] Email failed:", error);
     }
   }
 
-  // 3. Log the full split breakdown
+  // 4. Log the full split breakdown
   console.log("[Payment] Split breakdown:", {
     totalAmount: details.splitBreakdown.totalAmount,
     flutterwaveFee: details.splitBreakdown.flutterwaveFee,
-    settlementAmount: details.splitBreakdown.settlementAmount,
-    splits: details.splitBreakdown.splits,
+    ownerShare: details.splitBreakdown.ownerShare,
+    partnerGrossShare: details.splitBreakdown.partnerGrossShare,
+    deliveryFee: details.splitBreakdown.deliveryFee,
+    partnerNetShare: details.splitBreakdown.partnerNetShare,
   });
 }
 
 /**
- * Build the WhatsApp message for customer confirmation.
- *
- * IMPORTANT: The WhatsApp Gateway prepends "🔔 {product}: " to the message.
- * So the customer sees: "🔔 malevitamine: Payment confirmed! ..."
- *
- * Therefore the message should NOT include the business name again at the top.
+ * Build WhatsApp message for CUSTOMER.
+ * Gateway prepends: 🔔 malevitamine:
  */
-function buildWhatsAppMessage(params: {
+function buildCustomerWhatsAppMessage(params: {
   customerName: string;
   amount: number;
-  currency: string;
+  currencySymbol: string;
+  deliveryOption: string;
+  deliveryFee: number;
   txRef: string;
+  address: string;
 }): string {
-  const currencySymbol = params.currency === "ZAR" ? "R" : params.currency;
+  const deliveryLabel =
+    params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
   return [
     `Payment Confirmed!`,
     ``,
     `Hi ${params.customerName},`,
     ``,
-    `Your payment of *${currencySymbol} ${params.amount.toFixed(2)}* has been received and confirmed.`,
+    `Your payment of *${params.currencySymbol} ${params.amount.toFixed(2)}* has been received and confirmed.`,
     ``,
-    `📦 Your product will be sent to you shortly. You will be informed with tracking details once it ships.`,
+    `📦 Your product will be sent to:`,
+    `${params.address}`,
+    ``,
+    `🚚 Delivery: ${deliveryLabel}`,
+    ``,
+    `You will be informed with tracking details once it ships.`,
     ``,
     `Reference: ${params.txRef}`,
     ``,
@@ -247,59 +310,106 @@ function buildWhatsAppMessage(params: {
 }
 
 /**
- * Calculate the split breakdown for a given amount.
+ * Build WhatsApp message for JVL with full order details.
+ * Gateway prepends: 🔔 malevitamine:
+ *
+ * JVL needs: customer name, address, product, delivery details, their share.
  */
-function calculateSplitBreakdown(totalAmount: number) {
+function buildJVLWhatsAppMessage(params: {
+  customerName: string;
+  customerPhone: string;
+  amount: number;
+  currencySymbol: string;
+  deliveryOption: string;
+  deliveryFee: number;
+  address: string;
+  txRef: string;
+  productName: string;
+  jvlShare: number;
+  ownerShare: number;
+  flutterwaveFee: number;
+}): string {
+  const deliveryLabel =
+    params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
+  return [
+    `NEW ORDER — ${params.productName}`,
+    ``,
+    `Customer: ${params.customerName}`,
+    `Phone: ${params.customerPhone}`,
+    `Address: ${params.address}`,
+    ``,
+    `Product: ${params.productName}`,
+    `Amount: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
+    `Delivery: ${deliveryLabel} (${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
+    ``,
+    `Reference: ${params.txRef}`,
+    ``,
+    `--- PAYMENT SPLIT ---`,
+    `TJ (25% clean): ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
+    `Flutterwave fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
+    `Delivery fee: -${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
+    `JVL (net): ${params.currencySymbol} ${params.jvlShare.toFixed(2)}`,
+    ``,
+    `Please ship to customer at the above address.`,
+  ].join("\n");
+}
+
+/**
+ * Calculate the split breakdown.
+ *
+ * JVL PAYMENT LOGIC:
+ * - TJ gets 25% of GROSS (clean, no deductions)
+ * - JVL gets the REMAINING after TJ's share and Flutterwave fee
+ * - Delivery fee is deducted from JVL's share
+ */
+function calculateSplitBreakdown(
+  totalAmount: number,
+  deliveryOption: string = "normal"
+) {
+  // Flutterwave SA fee: 2.9% + R1 (local card estimate)
   const flutterwaveFee = totalAmount * 0.029 + 1;
+
+  // Owner (TJ) gets 25% of GROSS — clean
+  const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
+  const ownerShare = totalAmount * (ownerPercentage / 100);
+
+  // JVL gets the remaining after TJ's share and Flutterwave fee
+  const partnerGrossShare = totalAmount - ownerShare - flutterwaveFee;
+
+  // Delivery fee
+  const normalFee = Number(process.env.DELIVERY_FEE_NORMAL || 8900) / 100;
+  const speedFee = Number(process.env.DELIVERY_FEE_SPEED || 11900) / 100;
+  const deliveryFee = deliveryOption === "speed" ? speedFee : normalFee;
+
+  // JVL net after delivery
+  const partnerNetShare = partnerGrossShare - deliveryFee;
+
   const settlementAmount = totalAmount - flutterwaveFee;
 
-  const recipients: { label: string; percentage: number; amount: number }[] =
-    [];
-
-  const ownerPct = Number(process.env.SPLIT_OWNER_PERCENTAGE || 0);
-  if (ownerPct > 0) {
-    recipients.push({
+  const splits = [
+    {
       label: process.env.SPLIT_OWNER_LABEL || "Owner",
-      percentage: ownerPct,
-      amount: settlementAmount * (ownerPct / 100),
-    });
-  }
-
-  const partnerPct = Number(process.env.SPLIT_PARTNER_PERCENTAGE || 0);
-  if (partnerPct > 0) {
-    recipients.push({
+      percentage: ownerPercentage,
+      amount: Math.round(ownerShare * 100) / 100,
+      note: "Clean — no deductions",
+    },
+    {
       label: process.env.SPLIT_PARTNER_LABEL || "Partner",
-      percentage: partnerPct,
-      amount: settlementAmount * (partnerPct / 100),
-    });
-  }
-
-  const partner2Pct = Number(process.env.SPLIT_PARTNER_2_PERCENTAGE || 0);
-  if (partner2Pct > 0) {
-    recipients.push({
-      label: process.env.SPLIT_PARTNER_2_LABEL || "Partner 2",
-      percentage: partner2Pct,
-      amount: settlementAmount * (partner2Pct / 100),
-    });
-  }
-
-  const partner3Pct = Number(process.env.SPLIT_PARTNER_3_PERCENTAGE || 0);
-  if (partner3Pct > 0) {
-    recipients.push({
-      label: process.env.SPLIT_PARTNER_3_LABEL || "Partner 3",
-      percentage: partner3Pct,
-      amount: settlementAmount * (partner3Pct / 100),
-    });
-  }
+      percentage: 100 - ownerPercentage,
+      amount: Math.round(partnerNetShare * 100) / 100,
+      note: `After Flutterwave fee (-R ${flutterwaveFee.toFixed(2)}) and delivery (-R ${deliveryFee.toFixed(2)})`,
+    },
+  ];
 
   return {
     totalAmount,
     flutterwaveFee: Math.round(flutterwaveFee * 100) / 100,
+    ownerShare: Math.round(ownerShare * 100) / 100,
+    partnerGrossShare: Math.round(partnerGrossShare * 100) / 100,
+    deliveryFee: Math.round(deliveryFee * 100) / 100,
+    partnerNetShare: Math.round(partnerNetShare * 100) / 100,
     settlementAmount: Math.round(settlementAmount * 100) / 100,
-    splits: recipients.map((r) => ({
-      ...r,
-      amount: Math.round(r.amount * 100) / 100,
-    })),
+    splits,
   };
 }
 

@@ -1,33 +1,44 @@
 ---
-Task ID: 2
+Task ID: 3
 Agent: Main Agent
-Task: Integrate Universal WhatsApp Gateway with payment system
+Task: Implement JVL payment skill with bank accounts, delivery fees, and JVL order notifications
 
 Work Log:
-- Registered "malevitamine" site on the Universal WhatsApp Gateway at CodeWords
-  - Response: {"status":"registered","name":"malevitamine","total_sites":3}
-- Updated /api/payment/notify/route.ts to use the Universal WhatsApp Gateway
-  - Uses WHATSAPP_GATEWAY_URL, WHATSAPP_GATEWAY_KEY, WHATSAPP_PRODUCT_NAME env vars
-  - Sends { phone, product, message } to the gateway
-  - Gateway prepends "🔔 malevitamine:" to messages
-- Updated /api/payment/verify/route.ts to pass customer details through
-  - Now accepts customerName, customerEmail, customerPhone in request body
-  - WhatsApp message format adjusted (no business name at top since gateway adds it)
-- Created /api/whatsapp-webhook/route.ts for receiving customer replies
-  - Accepts incoming { phone, message, messageId, timestamp, from_name }
-  - Handles common reply patterns (delivery confirmation, order status, complaints)
-  - Returns {"received": true} as required by gateway
-- Updated /src/lib/flutterwave.ts verifyPayment() to pass customer info to verify endpoint
-- Removed old sendPaymentNotification() (verify API handles notifications directly now)
-- Updated .env with WhatsApp gateway credentials
-- Tested WhatsApp gateway: sent test message successfully
-- Updated payment.skill SKILL.md with full WhatsApp gateway documentation
-- Updated payment.skill references/whatsapp-integration.md with gateway details
+- Updated .env with:
+  - TJ Schoeman bank details (Capitec, 2084281365)
+  - JVL bank details (Standard Bank, 253215811, Menlyn)
+  - Delivery fees (R89 normal, R119 speed)
+  - JVL_NOTIFICATION_PHONE configuration
+- Rewrote src/lib/flutterwave.ts with new JVL split logic:
+  - TJ gets 25% of GROSS amount (clean, no deductions)
+  - JVL gets remaining after TJ's share and Flutterwave fee
+  - Delivery fee deducted from JVL's share
+  - Added DeliveryOption type and DELIVERY config
+  - Added deliveryAddress and deliveryOption to initiatePayment and verifyPayment
+- Rewrote src/components/payment-modal.tsx:
+  - Added delivery address field (required)
+  - Added delivery speed selector (Normal R89 / Speed R119)
+  - Updated confirmation screens with delivery details
+  - Split breakdown now shows TJ clean + JVL net after costs
+- Rewrote src/app/api/payment/verify/route.ts:
+  - Added JVL WhatsApp notification with full order details
+  - Customer gets: payment confirmed + delivery address + tracking promise
+  - JVL gets: customer name, phone, address, product, delivery option, payment split
+  - Both notifications go through /api/payment/notify → WhatsApp Gateway
+- Updated payment.skill/SKILL.md with:
+  - JVL-specific payment logic (25% TJ clean, JVL bears costs)
+  - Bank account details for both parties
+  - Delivery fee configuration
+  - Example WhatsApp messages for both customer and JVL
+  - Split calculation examples
+- Tested JVL WhatsApp notification — message delivered successfully
 - Build verified clean with all routes working
 
 Stage Summary:
-- WhatsApp gateway fully integrated and tested (message sent successfully)
-- Site "malevitamine" registered as 3rd site on gateway (after dryeyepro, callsync)
-- Smart routing active: customer replies only come back to this site's webhook
-- Payment flow: Pay → Verify → WhatsApp confirmation to customer + Email
-- All gateway credentials in .env (WHATSAPP_GATEWAY_URL, WHATSAPP_GATEWAY_KEY, WHATSAPP_PRODUCT_NAME)
+- JVL payment skill fully implemented
+- Payment logic: TJ gets 25% clean, JVL gets remainder minus Flutterwave fee and delivery
+- JVL receives WhatsApp with order details for shipping
+- Customer receives WhatsApp with delivery confirmation
+- Delivery options: Normal (R89, 5-7 days) or Speed (R119, 2-3 days)
+- Delivery address collected at checkout and forwarded to JVL
+- Bank details stored in .env for Flutterwave subaccount creation

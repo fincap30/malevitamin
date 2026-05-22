@@ -1,65 +1,73 @@
-# Payment Skill
+# Payment Skill — JVL Payment System
 
-Split payment system using Flutterwave. Automatically divides payments between multiple recipients after deducting Flutterwave transaction fees, sends customer confirmations via WhatsApp (Universal WhatsApp Gateway) and email.
+Split payment system using Flutterwave with automatic distribution after deducting Flutterwave fees and delivery costs. Sends customer confirmations via WhatsApp and email. Sends order details to JVL for shipping.
 
 ## When to Use This Skill
 
 Use this skill whenever the user needs to:
 - Accept payments online with Flutterwave
-- Split payments between multiple parties (e.g., owner gets 25%, partner gets 75%)
+- Split payments between TJ (25% clean) and JVL (75% minus costs)
 - Send WhatsApp/email confirmations after payment
-- Build a checkout flow for any product or service
+- Forward delivery details to JVL for shipping
+- Build a checkout flow for any JVL product or service
 
-## CRITICAL: Always Ask the User for Split Configuration
+## CRITICAL: Always Ask the User for Configuration
 
 When using this skill on a new site, you MUST ask the user:
 
-1. **"How should payments be split?"** — Get the percentage breakdown and recipient names
-   - Example: "25% to me, 75% to JVL" or "50/50 between me and my partner"
+1. **"What is the product name, price, and currency?"**
+2. **"What should the WhatsApp product name be?"** (lowercase, for the gateway registration)
+3. **"What are the delivery fees?"** (normal and speed, if different from default R89/R119)
+4. **"What is the JVL notification phone number?"** (for order details + shipping)
 
-2. **"What are the Flutterwave subaccount IDs for each recipient?"** — If they don't have them yet, help them create subaccounts
+The 25/75 split between TJ and JVL is STANDARD for all JVL sites. Do not change it unless explicitly asked.
 
-3. **"What is the product name, price, and currency?"** — This goes into the .env configuration
+## Payment Logic (IMPORTANT)
 
-4. **"What should the WhatsApp product name be?"** — This is the name registered on the Universal WhatsApp Gateway. Must be lowercase, unique. E.g., "malevitamine", "dryeyepro"
-
-NEVER hardcode split percentages — always configure via environment variables so they can be changed without touching code.
-
-## Architecture
+The split works as follows:
 
 ```
-Customer pays R 850.00
+Customer pays: R 850.00
     │
     ▼
-Flutterwave Checkout (inline popup)
+Flutterwave deducts fee (≈2.9% + R1 = R 25.65)
+    │  ← JVL bears this cost
+    ▼
+TJ gets 25% of GROSS: R 212.50 (CLEAN — no deductions)
     │
     ▼
-Flutterwave deducts transaction fee (≈2.9% + R1 for South Africa)
+JVL gets the remaining: R 850 - R 212.50 - R 25.65 = R 611.85
     │
     ▼
-Remaining amount is split according to .env configuration:
-    ├── 25% → Owner subaccount (settled automatically)
-    └── 75% → Partner subaccount (settled automatically)
-    │
-    ▼
-Server-side verification → Customer confirmation:
-    ├── WhatsApp: "🔔 malevitamine: Payment confirmed, product will be sent"
-    └── Email: "Payment confirmed, you'll be informed with tracking"
+JVL deducts delivery fee:
+    ├── Normal: -R 89.00 → JVL net: R 522.85
+    └── Speed:  -R 119.00 → JVL net: R 492.85
 ```
+
+**Key rules:**
+1. TJ gets 25% of the PRODUCT PRICE — clean, no deductions
+2. JVL bears the Flutterwave transaction fee
+3. JVL bears the delivery fee (customer does NOT pay extra for delivery)
+4. JVL receives order details via WhatsApp (name, address, product, delivery option)
+
+## Bank Accounts (for Flutterwave Subaccounts)
+
+These are used for ALL JVL sites:
+
+### TJ Schoeman (Owner — 25%)
+- Bank: Capitec
+- Account Name: TJ Schoeman
+- Account Number: 2084281365
+
+### JVL Headquarters (Partner — 75%)
+- Bank: Standard Bank
+- Account Name: JVL Headquarters PTY Ltd
+- Account Number: 253215811
+- Branch: Menlyn
 
 ## Step-by-Step Build Instructions
 
-### Step 1: Ask the User for Configuration
-
-Before writing any code, ask:
-- Split percentages and recipient names
-- Product name, price (in cents), currency
-- Whether they have Flutterwave subaccount IDs already
-- What WhatsApp product name to use (lowercase, for the gateway)
-
-### Step 2: Register on the Universal WhatsApp Gateway
-
-Do this ONCE per site. Register the site's product name and webhook URL:
+### Step 1: Register on WhatsApp Gateway
 
 ```bash
 curl --request POST 'https://runtime.codewords.ai/run/wa_universal_gateway_438e963b/sites/register' \
@@ -71,11 +79,7 @@ curl --request POST 'https://runtime.codewords.ai/run/wa_universal_gateway_438e9
   }'
 ```
 
-Response: `{"status":"registered","name":"yoursitename","total_sites":N}`
-
-Already registered sites: dryeyepro, callsync, malevitamine
-
-### Step 3: Create the .env Configuration
+### Step 2: Create the .env Configuration
 
 ```env
 # Flutterwave Payment Gateway
@@ -83,89 +87,99 @@ NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY=FLWPUBK_TEST-xxxxx
 FLUTTERWAVE_SECRET_KEY=FLWSECK_TEST-xxxxx
 
 # Business Info
-NEXT_PUBLIC_BUSINESS_NAME=Your Business Name
-NEXT_PUBLIC_BUSINESS_EMAIL=payments@yourbusiness.co.za
+NEXT_PUBLIC_BUSINESS_NAME=Your Product Name
+NEXT_PUBLIC_BUSINESS_EMAIL=orders@yoursite.co.za
 NEXT_PUBLIC_CURRENCY=ZAR
 NEXT_PUBLIC_AMOUNT=85000
 
-# Split Payment Configuration
-# Percentages must add up to 100
+# ──── SPLIT PAYMENT ────
 SPLIT_OWNER_PERCENTAGE=25
 SPLIT_PARTNER_PERCENTAGE=75
-
-# Split Labels (shown in confirmation messages and logs)
-SPLIT_OWNER_LABEL=Owner
+SPLIT_OWNER_LABEL=TJ Schoeman
 SPLIT_PARTNER_LABEL=JVL
 
-# For 3+ recipients, add:
-# SPLIT_PARTNER_2_PERCENTAGE=25
-# SPLIT_PARTNER_2_LABEL=Partner 2
-# FLUTTERWAVE_PARTNER_2_SUBACCOUNT_ID=RS_xxxxx
+# ──── BANK DETAILS ────
+OWNER_BANK=Capitec
+OWNER_ACCOUNT_NAME=TJ Schoeman
+OWNER_ACCOUNT_NUMBER=2084281365
 
-# Flutterwave Subaccount IDs (create once via API or Dashboard)
+PARTNER_BANK=Standard Bank
+PARTNER_ACCOUNT_NAME=JVL Headquarters PTY Ltd
+PARTNER_ACCOUNT_NUMBER=253215811
+PARTNER_BRANCH=Menlyn
+
+# Flutterwave Subaccount IDs
 FLUTTERWAVE_OWNER_SUBACCOUNT_ID=RS_xxxxx
 FLUTTERWAVE_PARTNER_SUBACCOUNT_ID=RS_xxxxx
 
-# Universal WhatsApp Gateway (CodeWords)
-# Sends from +27769379301 (Sitewizard)
-# Messages appear as: 🔔 {product}: {message}
-# Replies are smart-routed to /api/whatsapp-webhook
+# ──── DELIVERY ────
+DELIVERY_FEE_NORMAL=8900
+DELIVERY_FEE_SPEED=11900
+DELIVERY_CURRENCY=ZAR
+
+# ──── JVL NOTIFICATION ────
+JVL_NOTIFICATION_PHONE=+27XXXXXXXXX
+
+# ──── WHATSAPP GATEWAY ────
 WHATSAPP_GATEWAY_URL=https://runtime.codewords.ai/run/wa_universal_gateway_438e963b
 WHATSAPP_GATEWAY_KEY=***REMOVED-WHATSAPP-GATEWAY-KEY***
 WHATSAPP_PRODUCT_NAME=yoursitename
 
-# Email Notification Service (leave empty to log instead of send)
 EMAIL_API_URL=
 ```
 
-### Step 4: Create Flutterwave Subaccounts
+### Step 3: Create Flutterwave Subaccounts
 
-Each recipient needs a Flutterwave subaccount. Create them ONCE:
+Create subaccounts for TJ and JVL ONCE using their bank details above:
 
-**Option A: Using the setup script**
 ```bash
-npx tsx scripts/setup-subaccounts.ts
-```
-
-**Option B: Using cURL**
-```bash
+# TJ Schoeman (Capitec)
 curl --request POST 'https://api.flutterwave.com/v3/subaccounts' \
-  --header 'Authorization: Bearer FLWSECK_TEST-your-secret-key' \
+  --header 'Authorization: Bearer YOUR_SECRET_KEY' \
   --header 'Content-Type: application/json' \
   --data-raw '{
-    "account_bank": "050001",
-    "account_number": "0690000037",
-    "business_name": "Your Name",
-    "business_mobile": "08012345678",
+    "account_bank": "470010",
+    "account_number": "2084281365",
+    "business_name": "TJ Schoeman",
     "country": "ZA",
     "split_type": "percentage",
     "split_value": 0.25
   }'
+
+# JVL Headquarters (Standard Bank - Menlyn)
+curl --request POST 'https://api.flutterwave.com/v3/subaccounts' \
+  --header 'Authorization: Bearer YOUR_SECRET_KEY' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "account_bank": "051001",
+    "account_number": "253215811",
+    "business_name": "JVL Headquarters PTY Ltd",
+    "business_mobile": "0123456789",
+    "country": "ZA",
+    "split_type": "percentage",
+    "split_value": 0.75
+  }'
 ```
 
-Save the `subaccount_id` from each response to your `.env`.
+Save the `subaccount_id` (starts with `RS_`) from each response to `.env`.
 
-### Step 5: Install the Payment Module Files
-
-Copy these files into the Next.js project:
+### Step 4: Install the Payment Module Files
 
 | File | Destination | Purpose |
 |------|------------|---------|
-| `lib/flutterwave.ts` | `src/lib/flutterwave.ts` | Core payment library with split logic |
-| `components/payment-modal.tsx` | `src/components/payment-modal.tsx` | Checkout modal with form + confirmation |
-| `app/api/payment/verify/route.ts` | `src/app/api/payment/verify/route.ts` | Server-side payment verification + notifications |
-| `app/api/payment/notify/route.ts` | `src/app/api/payment/notify/route.ts` | WhatsApp/email notification handler (uses Universal Gateway) |
-| `app/api/whatsapp-webhook/route.ts` | `src/app/api/whatsapp-webhook/route.ts` | Receives WhatsApp replies from customers |
-| `scripts/setup-subaccounts.ts` | `scripts/setup-subaccounts.ts` | Helper to create subaccounts |
+| `lib/flutterwave.ts` | `src/lib/flutterwave.ts` | Core payment library with JVL split logic |
+| `components/payment-modal.tsx` | `src/components/payment-modal.tsx` | Checkout with delivery address + speed options |
+| `app/api/payment/verify/route.ts` | `src/app/api/payment/verify/route.ts` | Verification + JVL/customer notifications |
+| `app/api/payment/notify/route.ts` | `src/app/api/payment/notify/route.ts` | WhatsApp gateway handler |
+| `app/api/whatsapp-webhook/route.ts` | `src/app/api/whatsapp-webhook/route.ts` | Receives customer replies |
 
-### Step 6: Add the Payment Modal to Your Page
+### Step 5: Add the Payment Modal to Your Page
 
 ```tsx
 import { PaymentModal } from "@/components/payment-modal";
 
 function MyPage() {
   const [showPayment, setShowPayment] = useState(false);
-  
   return (
     <>
       <Button onClick={() => setShowPayment(true)}>Order Now</Button>
@@ -175,88 +189,81 @@ function MyPage() {
 }
 ```
 
-### Step 7: Customize the UI Theme
+## WhatsApp Notifications After Payment
 
-The PaymentModal uses these CSS custom properties for theming:
-- `gold` / `gold-light` — accent color (change in tailwind.config.ts)
-- `text-foreground` — text color (adapts to dark/light mode)
-- `bg-[#111110]` / `bg-[#0a0a08]` — card backgrounds
+After every verified payment, TWO WhatsApp messages are sent:
 
-Match these to your site's design system.
+### 1. Customer Message
+```
+🔔 malevitamine: Payment Confirmed!
 
-### Step 8: Go Live Checklist
+Hi John,
 
-- [ ] Replace test API keys with live keys (`FLWPUBK_LIVE-` and `FLWSECK_LIVE-`)
-- [ ] Create subaccounts with real bank account details
-- [ ] Verify subaccount IDs are correct in `.env`
-- [ ] Register site on WhatsApp Gateway
-- [ ] Verify WHATSAPP_PRODUCT_NAME matches the registered name
-- [ ] Test with a small real transaction
-- [ ] Confirm both recipients receive their share in Flutterwave dashboard
-- [ ] Verify customer receives WhatsApp confirmation (appears as 🔔 {product}: {message})
+Your payment of *R 850.00* has been received and confirmed.
 
-## WhatsApp Gateway Details
+📦 Your product will be sent to:
+123 Main Street, Pretoria
 
-### How It Works
+🚚 Delivery: Normal (5-7 days)
 
-The Universal WhatsApp Gateway on CodeWords:
-- Sends messages from **+27769379301 (Sitewizard)** on behalf of any registered site
-- Messages appear as: `🔔 {product}: {message}`
-- **Smart routing**: When a site sends a message to a phone number, the gateway tags that number to that site (30-day memory). When the person replies, the gateway forwards the reply ONLY to the site that sent the original message. No cross-site mixing.
+You will be informed with tracking details once it ships.
 
-### Sending a Message
+Reference: MV-ABC123
 
-```javascript
-const res = await fetch("https://runtime.codewords.ai/run/wa_universal_gateway_438e963b", {
-  method: "POST",
-  headers: {
-    "Authorization": "Bearer ***REMOVED-WHATSAPP-GATEWAY-KEY***",
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    phone: "+27831234567",
-    product: "yoursitename",  // Must match registered name!
-    message: "Your order has shipped!",
-  }),
-});
+Thank you for your order!
 ```
 
-### Receiving Replies
+### 2. JVL Message (Order Details for Shipping)
+```
+🔔 malevitamine: NEW ORDER — Male Vitamine
 
-The webhook at `/api/whatsapp-webhook` receives:
+Customer: John Doe
+Phone: +27831234567
+Address: 123 Main Street, Pretoria
 
-```json
-{
-  "phone": "+27831234567",
-  "message": "Yes I want to book",
-  "messageId": "3EB0487AF93A...",
-  "timestamp": "2026-05-22T08:15:00Z",
-  "from_name": "Johan Botha"
-}
+Product: Male Vitamine
+Amount: R 850.00
+Delivery: Normal 5-7 days (R 89.00)
+
+Reference: MV-ABC123
+
+--- PAYMENT SPLIT ---
+TJ (25% clean): R 212.50
+Flutterwave fee: -R 25.65
+Delivery fee: -R 89.00
+JVL (net): R 522.85
+
+Please ship to customer at the above address.
 ```
 
-### Gateway Management
+## Split Calculation Examples
 
-| Action | Endpoint | Body |
-|--------|----------|------|
-| Register / update | POST `/sites/register` | `{"name": "mysite", "webhook_url": "https://..."}` |
-| Remove | POST `/sites/remove` | `{"name": "mysite"}` |
-| List all | POST `/sites/list` | `{}` |
+### R 850.00 — Normal Delivery (R 89)
+| Item | Amount |
+|------|--------|
+| Customer pays | R 850.00 |
+| TJ (25% clean) | R 212.50 |
+| Flutterwave fee (from JVL) | -R 25.65 |
+| Delivery fee (from JVL) | -R 89.00 |
+| **JVL net** | **R 522.85** |
 
-All endpoints use base URL `https://runtime.codewords.ai/run/wa_universal_gateway_438e963b` + path.
+### R 850.00 — Speed Delivery (R 119)
+| Item | Amount |
+|------|--------|
+| Customer pays | R 850.00 |
+| TJ (25% clean) | R 212.50 |
+| Flutterwave fee (from JVL) | -R 25.65 |
+| Delivery fee (from JVL) | -R 119.00 |
+| **JVL net** | **R 492.85** |
 
-## Split Calculation
+## Checkout Form Fields
 
-The split is calculated AFTER Flutterwave deducts its transaction fee:
-
-```
-Customer pays: R 850.00
-Flutterwave fee (2.9% + R1): -R 25.65
-Settlement amount: R 824.35
-
-Owner (25%): R 206.09
-Partner (75%): R 618.26
-```
+The checkout form collects:
+1. **Full Name** (required)
+2. **Email Address** (required)
+3. **WhatsApp / Phone Number** (required — for order updates)
+4. **Delivery Address** (required — forwarded to JVL for shipping)
+5. **Delivery Speed** — Normal (R 89, 5-7 days) or Speed (R 119, 2-3 days)
 
 ## Flutterwave Fee Reference
 
@@ -267,14 +274,14 @@ Partner (75%): R 618.26
 | Ghana | 2.6% | 4.8% |
 | Kenya | 3.2% | 4.8% |
 
-## Key Design Decisions
+## Go Live Checklist
 
-1. **Subaccounts, not manual transfers** — Flutterwave splits at payment time, so money goes directly to each party's bank account.
-
-2. **Percentage-based splits** — Safer than flat amounts because they work regardless of payment amount.
-
-3. **Phone number required** — WhatsApp is the primary notification channel for order confirmations and shipping updates.
-
-4. **Universal WhatsApp Gateway** — One shared number (+27769379301) for all sites, with smart routing to keep conversations isolated per site.
-
-5. **Demo mode** — When Flutterwave keys are placeholders, the system simulates the full flow (including notifications) so you can test the UI without real transactions.
+- [ ] Replace test API keys with live keys
+- [ ] Create Flutterwave subaccounts with TJ and JVL bank details
+- [ ] Verify subaccount IDs in `.env`
+- [ ] Register site on WhatsApp Gateway
+- [ ] Set JVL_NOTIFICATION_PHONE to JVL's WhatsApp number
+- [ ] Test with a small real transaction
+- [ ] Confirm both TJ and JVL receive their share
+- [ ] Verify JVL receives WhatsApp with order details
+- [ ] Verify customer receives WhatsApp confirmation

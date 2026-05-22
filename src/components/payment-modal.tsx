@@ -15,6 +15,7 @@ import {
   MessageCircle,
   Package,
   Truck,
+  Zap,
 } from "lucide-react";
 import {
   initiatePayment,
@@ -22,7 +23,9 @@ import {
   loadFlutterwaveScript,
   calculateSplitBreakdown,
   PRODUCT,
+  DELIVERY,
   type PaymentVerificationResult,
+  type DeliveryOption,
 } from "@/lib/flutterwave";
 
 interface PaymentModalProps {
@@ -30,11 +33,7 @@ interface PaymentModalProps {
   onClose: () => void;
 }
 
-type PaymentState =
-  | "form"
-  | "processing"
-  | "success"
-  | "demo-success";
+type PaymentState = "form" | "processing" | "success" | "demo-success";
 
 export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const [state, setState] = useState<PaymentState>("form");
@@ -42,6 +41,8 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     name: "",
     email: "",
     phone: "",
+    address: "",
+    deliveryOption: "normal" as DeliveryOption,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [verificationResult, setVerificationResult] =
@@ -57,6 +58,10 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
       newErrors.phone = "Phone number is required for order updates";
     else if (form.phone.replace(/\D/g, "").length < 10)
       newErrors.phone = "Enter a valid phone number";
+    if (!form.address.trim())
+      newErrors.address = "Delivery address is required";
+    else if (form.address.trim().length < 10)
+      newErrors.address = "Please enter a full delivery address";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -70,8 +75,11 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     try {
       if (isDemoMode()) {
         await loadFlutterwaveScript();
-        // Simulate the full flow: processing → verification → confirmation
         setTimeout(() => {
+          const breakdown = calculateSplitBreakdown(
+            PRODUCT.price,
+            form.deliveryOption
+          );
           const demoResult: PaymentVerificationResult = {
             verified: true,
             amount: PRODUCT.price,
@@ -79,10 +87,13 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
             customerName: form.name,
             customerEmail: form.email,
             customerPhone: form.phone,
+            customerAddress: form.address,
+            deliveryOption: form.deliveryOption,
+            deliveryFee: breakdown.deliveryFee,
             txRef: `DEMO-${Date.now().toString(36).toUpperCase()}`,
             transactionId: Math.floor(Math.random() * 1000000),
             paymentType: "demo",
-            splitBreakdown: calculateSplitBreakdown(PRODUCT.price),
+            splitBreakdown: breakdown,
             demo: true,
           };
           setVerificationResult(demoResult);
@@ -91,11 +102,12 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
         return;
       }
 
-      // Real Flutterwave split payment with callback
       await initiatePayment({
         email: form.email,
         name: form.name,
         phone: form.phone,
+        address: form.address,
+        deliveryOption: form.deliveryOption,
         onSuccess: (result) => {
           setVerificationResult(result);
           setState("success");
@@ -118,11 +130,10 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     onClose();
   };
 
-  // Calculate split breakdown for display
-  const breakdown = calculateSplitBreakdown(PRODUCT.price);
-
-  // Currency symbol helper
+  const breakdown = calculateSplitBreakdown(PRODUCT.price, form.deliveryOption);
   const currencySymbol = PRODUCT.currency === "ZAR" ? "R" : PRODUCT.currency;
+  const selectedDeliveryFee =
+    form.deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
 
   return (
     <AnimatePresence>
@@ -177,7 +188,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
               {/* Content */}
               <div className="p-6">
                 <AnimatePresence mode="wait">
-                  {/* FORM STATE */}
+                  {/* ========== FORM STATE ========== */}
                   {state === "form" && (
                     <motion.div
                       key="form"
@@ -208,6 +219,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                       </div>
 
                       <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Name */}
                         <div>
                           <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
                             Full Name
@@ -227,6 +239,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           )}
                         </div>
 
+                        {/* Email */}
                         <div>
                           <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
                             Email Address
@@ -247,12 +260,11 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           )}
                         </div>
 
+                        {/* Phone */}
                         <div>
                           <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
                             WhatsApp / Phone Number{" "}
-                            <span className="text-gold/60">
-                              (required for order updates)
-                            </span>
+                            <span className="text-gold/60">(required)</span>
                           </label>
                           <Input
                             type="tel"
@@ -275,12 +287,91 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           </p>
                         </div>
 
+                        {/* Delivery Address */}
+                        <div>
+                          <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-1.5">
+                            Delivery Address{" "}
+                            <span className="text-gold/60">(required)</span>
+                          </label>
+                          <Input
+                            value={form.address}
+                            onChange={(e) =>
+                              setForm({ ...form, address: e.target.value })
+                            }
+                            placeholder="123 Main Street, Pretoria, Gauteng, 0001"
+                            className="bg-[#0a0a08] border-gold/15 focus-visible:border-gold/40 focus-visible:ring-gold/20 rounded-none h-11"
+                          />
+                          {errors.address && (
+                            <p className="text-xs text-red-400 mt-1">
+                              {errors.address}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Delivery Option */}
+                        <div>
+                          <label className="block text-xs font-bold tracking-widest uppercase text-foreground/60 mb-2">
+                            Delivery Speed
+                          </label>
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setForm({ ...form, deliveryOption: "normal" })
+                              }
+                              className={`p-3 border text-left transition-all ${
+                                form.deliveryOption === "normal"
+                                  ? "border-gold/50 bg-gold/10"
+                                  : "border-gold/10 bg-[#0a0a08] hover:border-gold/20"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <Truck className="h-4 w-4 text-gold" />
+                                <span className="text-xs font-black tracking-wider uppercase text-foreground">
+                                  Normal
+                                </span>
+                              </div>
+                              <p className="text-sm font-black text-gold">
+                                {currencySymbol} {DELIVERY.normalFee.toFixed(2)}
+                              </p>
+                              <p className="text-xs text-foreground/30 mt-0.5">
+                                5-7 business days
+                              </p>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setForm({ ...form, deliveryOption: "speed" })
+                              }
+                              className={`p-3 border text-left transition-all ${
+                                form.deliveryOption === "speed"
+                                  ? "border-gold/50 bg-gold/10"
+                                  : "border-gold/10 bg-[#0a0a08] hover:border-gold/20"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <Zap className="h-4 w-4 text-gold" />
+                                <span className="text-xs font-black tracking-wider uppercase text-foreground">
+                                  Speed
+                                </span>
+                              </div>
+                              <p className="text-sm font-black text-gold">
+                                {currencySymbol} {DELIVERY.speedFee.toFixed(2)}
+                              </p>
+                              <p className="text-xs text-foreground/30 mt-0.5">
+                                2-3 business days
+                              </p>
+                            </button>
+                          </div>
+                        </div>
+
                         {errors.submit && (
                           <p className="text-sm text-red-400 text-center">
                             {errors.submit}
                           </p>
                         )}
 
+                        {/* Pay Button */}
                         <Button
                           type="submit"
                           className="w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-12 mt-2"
@@ -288,6 +379,12 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           <Lock className="mr-2 h-4 w-4" />
                           Pay {currencySymbol} {PRODUCT.price.toFixed(2)}
                         </Button>
+
+                        <p className="text-xs text-foreground/25 text-center">
+                          Delivery fee ({currencySymbol}{" "}
+                          {selectedDeliveryFee.toFixed(2)}) is included and
+                          handled separately
+                        </p>
                       </form>
 
                       {/* Payment methods */}
@@ -323,7 +420,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                     </motion.div>
                   )}
 
-                  {/* PROCESSING STATE */}
+                  {/* ========== PROCESSING STATE ========== */}
                   {state === "processing" && (
                     <motion.div
                       key="processing"
@@ -356,7 +453,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                     </motion.div>
                   )}
 
-                  {/* SUCCESS STATE (Real Payment Verified) */}
+                  {/* ========== SUCCESS STATE (Real Payment) ========== */}
                   {state === "success" && verificationResult && (
                     <motion.div
                       key="success"
@@ -365,7 +462,6 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                       exit={{ opacity: 0 }}
                       className="py-6"
                     >
-                      {/* Big checkmark */}
                       <div className="w-16 h-16 bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
                         <CheckCircle className="h-8 w-8 text-emerald-400" />
                       </div>
@@ -374,7 +470,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         Payment Confirmed!
                       </h4>
 
-                      {/* Payment details confirmation */}
+                      {/* Payment details */}
                       <div className="mt-4 bg-[#0a0a08] border border-emerald-500/20 p-4">
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
@@ -398,6 +494,16 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Delivery
+                            </span>
+                            <span className="text-sm text-foreground font-medium">
+                              {form.deliveryOption === "speed"
+                                ? "Speed (2-3 days)"
+                                : "Normal (5-7 days)"}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
                               Reference
                             </span>
                             <span className="text-xs text-foreground/60 font-mono">
@@ -407,7 +513,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         </div>
                       </div>
 
-                      {/* Product will be sent message */}
+                      {/* Product will be sent */}
                       <div className="mt-4 bg-gold/5 border border-gold/20 p-4">
                         <div className="flex items-start gap-3">
                           <Package className="h-5 w-5 text-gold mt-0.5 shrink-0" />
@@ -417,44 +523,23 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                             </p>
                             <p className="text-xs text-foreground/50 mt-1">
                               You will receive a WhatsApp message with tracking
-                              details once your order ships.
+                              details once your order ships to{" "}
+                              <span className="text-foreground/70">
+                                {form.address}
+                              </span>
+                              .
                             </p>
                           </div>
                         </div>
                       </div>
 
-                      {/* WhatsApp notification indicator */}
+                      {/* WhatsApp indicator */}
                       <div className="mt-3 flex items-center justify-center gap-2 text-xs text-foreground/30">
                         <MessageCircle className="h-3 w-3 text-green-400" />
                         <span>
                           WhatsApp confirmation sent to {form.phone}
                         </span>
                       </div>
-
-                      {/* Split breakdown (informational) */}
-                      {verificationResult.splitBreakdown &&
-                        verificationResult.splitBreakdown.splits.length > 0 && (
-                          <div className="mt-4 bg-[#0a0a08] border border-gold/5 p-3">
-                            <p className="text-xs text-foreground/25 font-bold tracking-widest uppercase mb-2">
-                              Payment Distribution
-                            </p>
-                            {verificationResult.splitBreakdown.splits.map(
-                              (s) => (
-                                <div
-                                  key={s.label}
-                                  className="flex justify-between text-xs text-foreground/40 py-1"
-                                >
-                                  <span>
-                                    {s.label} ({s.percentage}%)
-                                  </span>
-                                  <span className="text-gold/60 font-medium">
-                                    {currencySymbol} {s.amount.toFixed(2)}
-                                  </span>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        )}
 
                       <Button
                         onClick={handleClose}
@@ -466,7 +551,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                     </motion.div>
                   )}
 
-                  {/* DEMO SUCCESS STATE */}
+                  {/* ========== DEMO SUCCESS STATE ========== */}
                   {state === "demo-success" && verificationResult && (
                     <motion.div
                       key="demo-success"
@@ -475,7 +560,6 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                       exit={{ opacity: 0 }}
                       className="py-6"
                     >
-                      {/* Big checkmark */}
                       <div className="w-16 h-16 bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
                         <CheckCircle className="h-8 w-8 text-emerald-400" />
                       </div>
@@ -488,12 +572,12 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         Payment Simulated!
                       </h4>
 
-                      {/* Payment confirmation details */}
+                      {/* Payment confirmation */}
                       <div className="mt-4 bg-[#0a0a08] border border-emerald-500/20 p-4">
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
-                              Amount
+                              Amount Paid
                             </span>
                             <span className="text-lg font-black text-gold">
                               {currencySymbol} {PRODUCT.price.toFixed(2)}
@@ -517,6 +601,24 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Delivery
+                            </span>
+                            <span className="text-xs text-foreground/60">
+                              {form.deliveryOption === "speed"
+                                ? `Speed — ${currencySymbol} ${DELIVERY.speedFee.toFixed(2)} (2-3 days)`
+                                : `Normal — ${currencySymbol} ${DELIVERY.normalFee.toFixed(2)} (5-7 days)`}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
+                              Address
+                            </span>
+                            <span className="text-xs text-foreground/60 text-right max-w-[200px]">
+                              {form.address}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-foreground/50 font-bold tracking-widest uppercase">
                               Reference
                             </span>
                             <span className="text-xs text-foreground/60 font-mono">
@@ -526,7 +628,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         </div>
                       </div>
 
-                      {/* Product will be sent message */}
+                      {/* Product will be sent */}
                       <div className="mt-4 bg-gold/5 border border-gold/20 p-4">
                         <div className="flex items-start gap-3">
                           <Package className="h-5 w-5 text-gold mt-0.5 shrink-0" />
@@ -542,7 +644,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         </div>
                       </div>
 
-                      {/* WhatsApp notification indicator */}
+                      {/* WhatsApp indicator */}
                       <div className="mt-3 flex items-center justify-center gap-2 text-xs text-foreground/30">
                         <MessageCircle className="h-3 w-3 text-green-400" />
                         <span>
@@ -550,41 +652,58 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         </span>
                       </div>
 
-                      {/* Show what the split would look like */}
-                      {breakdown.splits.length > 0 && (
-                        <div className="mt-4 bg-[#0a0a08] border border-gold/10 p-3 text-left">
-                          <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mb-2">
-                            Split Preview (After Flutterwave Fees)
-                          </p>
-                          {breakdown.splits.map((s) => (
-                            <div
-                              key={s.label}
-                              className="flex justify-between text-xs text-foreground/50 py-1"
-                            >
+                      {/* Split breakdown preview */}
+                      {verificationResult.splitBreakdown &&
+                        verificationResult.splitBreakdown.splits.length > 0 && (
+                          <div className="mt-4 bg-[#0a0a08] border border-gold/10 p-3 text-left">
+                            <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mb-2">
+                              Payment Distribution
+                            </p>
+                            {verificationResult.splitBreakdown.splits.map(
+                              (s) => (
+                                <div key={s.label}>
+                                  <div className="flex justify-between text-xs text-foreground/50 py-1">
+                                    <span>
+                                      {s.label} ({s.percentage}%)
+                                    </span>
+                                    <span className="text-gold font-bold">
+                                      {currencySymbol} {s.amount.toFixed(2)}
+                                    </span>
+                                  </div>
+                                  {s.note && (
+                                    <p className="text-[10px] text-foreground/25 pb-1">
+                                      {s.note}
+                                    </p>
+                                  )}
+                                </div>
+                              )
+                            )}
+                            <div className="flex justify-between text-xs text-foreground/25 pt-1 border-t border-gold/5 mt-1">
+                              <span>Flutterwave Fee</span>
                               <span>
-                                {s.label} ({s.percentage}%)
-                              </span>
-                              <span className="text-gold font-bold">
-                                {currencySymbol} {s.amount.toFixed(2)}
+                                -{currencySymbol}{" "}
+                                {verificationResult.splitBreakdown.flutterwaveFee.toFixed(
+                                  2
+                                )}
                               </span>
                             </div>
-                          ))}
-                          <div className="flex justify-between text-xs text-foreground/25 pt-1 border-t border-gold/5 mt-1">
-                            <span>Flutterwave Fee (est.)</span>
-                            <span>
-                              -{currencySymbol}{" "}
-                              {breakdown.flutterwaveFee.toFixed(2)}
-                            </span>
+                            <div className="flex justify-between text-xs text-foreground/25 pt-1">
+                              <span>
+                                Delivery Fee (
+                                {form.deliveryOption === "speed"
+                                  ? "Speed"
+                                  : "Normal"}
+                                )
+                              </span>
+                              <span>
+                                -{currencySymbol}{" "}
+                                {verificationResult.splitBreakdown.deliveryFee.toFixed(
+                                  2
+                                )}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex justify-between text-xs text-foreground/30 pt-1">
-                            <span>Amount Settled</span>
-                            <span>
-                              {currencySymbol}{" "}
-                              {breakdown.settlementAmount.toFixed(2)}
-                            </span>
-                          </div>
-                        </div>
-                      )}
+                        )}
 
                       <p className="text-xs text-foreground/30 text-center mt-4">
                         To accept real payments with automatic splitting and
@@ -595,7 +714,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
 
                       <Button
                         onClick={handleClose}
-                        className="mt-4 w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11 px-8"
+                        className="mt-4 w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11"
                       >
                         Got It
                       </Button>
