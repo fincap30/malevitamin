@@ -12,12 +12,13 @@ import {
   Lock,
   CheckCircle,
   Loader2,
-  Package,
+  Info,
 } from "lucide-react";
 import {
   initiatePayment,
-  isFlutterwaveReady,
+  isDemoMode,
   loadFlutterwaveScript,
+  calculateSplitBreakdown,
   PRODUCT,
 } from "@/lib/flutterwave";
 
@@ -54,14 +55,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     setState("processing");
 
     try {
-      // Check if we're in demo mode (no real API key)
-      const isDemo =
-        !process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY ||
-        process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY ===
-          "FLWPUBK_TEST-your-public-key-here";
-
-      if (isDemo) {
-        // Simulate payment in demo mode
+      if (isDemoMode()) {
         await loadFlutterwaveScript();
         setTimeout(() => {
           setState("demo-success");
@@ -69,15 +63,13 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
         return;
       }
 
-      // Real Flutterwave payment
+      // Real Flutterwave split payment
       await initiatePayment({
         email: form.email,
         name: form.name,
         phone: form.phone || undefined,
       });
 
-      // The Flutterwave modal will handle the rest
-      // On callback, we verify server-side
       setState("success");
     } catch {
       setState("form");
@@ -90,6 +82,9 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     setErrors({});
     onClose();
   };
+
+  // Calculate split breakdown for display
+  const breakdown = calculateSplitBreakdown(PRODUCT.price);
 
   return (
     <AnimatePresence>
@@ -263,7 +258,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                             EFT
                           </span>
                           <span className="text-xs font-bold tracking-wider">
-                            BANK
+                            MOBILE
                           </span>
                         </div>
                       </div>
@@ -346,9 +341,38 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         Payment Simulated!
                       </h4>
                       <p className="text-sm text-foreground/50 font-light mt-2 max-w-xs mx-auto">
-                        This was a demo payment. To accept real payments, add
-                        your Flutterwave API keys to the <code className="text-gold/60">.env</code> file.
+                        This was a demo payment. To accept real payments with
+                        automatic splitting, add your Flutterwave API keys and
+                        subaccount IDs to the{" "}
+                        <code className="text-gold/60">.env</code> file.
                       </p>
+
+                      {/* Show what the split would look like */}
+                      {breakdown.splits.length > 0 && (
+                        <div className="mt-4 bg-[#0a0a08] border border-gold/10 p-3 text-left">
+                          <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mb-2">
+                            Split Preview
+                          </p>
+                          {breakdown.splits.map((s) => (
+                            <div
+                              key={s.label}
+                              className="flex justify-between text-xs text-foreground/50 py-1"
+                            >
+                              <span>
+                                {s.label} ({s.percentage}%)
+                              </span>
+                              <span className="text-gold font-bold">
+                                R {s.amount.toFixed(2)}
+                              </span>
+                            </div>
+                          ))}
+                          <div className="flex justify-between text-xs text-foreground/25 pt-1 border-t border-gold/5 mt-1">
+                            <span>Flutterwave Fee (est.)</span>
+                            <span>-R {breakdown.flutterwaveFee.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      )}
+
                       <Button
                         onClick={handleClose}
                         className="mt-6 rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-11 px-8"
