@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://malevitamine.co.za/sitemap.xml
+Sitemap: https://malevitamin.co.za/sitemap.xml

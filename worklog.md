@@ -88,3 +88,25 @@ Stage Summary:
 - 40 town-based SEO pages live: /pretoria/ed-supplement, /johannesburg/libido-enhancer, etc.
 - Sitemap includes all pages
 - Recommended: Register malevitamin.co.za and redirect to main site
+
+---
+Task ID: 4
+Agent: Main
+Task: Configure custom domain malevitamin.co.za — DNS A record → 47.57.242.119
+
+Work Log:
+- User confirmed DNS A record for malevitamin.co.za → 47.57.242.119 is set
+- Updated Caddyfile to add malevitamin.co.za and www.malevitamin.co.za server blocks for HTTPS/TLS
+- Fixed robots.txt sitemap URL: malevitamine.co.za → malevitamin.co.za (typo fix)
+- Updated next.config.ts with image remotePatterns for malevitamin.co.za and www.malevitamin.co.za
+- Verified all site URLs (sitemap, canonical, JSON-LD) already use https://malevitamin.co.za consistently
+- Build successful: 55 static pages generated
+- Caddy running on :81 serves all hostnames to Next.js on :3000
+
+Stage Summary:
+- DNS A record: malevitamin.co.za → 47.57.242.119 ✓
+- Caddyfile updated with domain blocks for automatic TLS
+- robots.txt sitemap URL fixed
+- All 55 pages reference malevitamin.co.za correctly
+- Site accessible locally (HTTP 200 confirmed)
+- HTTPS will activate once Caddy reloads with domain config and DNS propagates

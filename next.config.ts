@@ -7,6 +7,18 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "malevitamin.co.za",
+      },
+      {
+        protocol: "https",
+        hostname: "www.malevitamin.co.za",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
