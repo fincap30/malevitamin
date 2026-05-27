@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamine",
     description:
       "Lost your sex drive? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
-    url: "https://malevitamine.co.za/libido-enhancer",
+    url: "https://malevitamin.co.za/libido-enhancer",
   },
   alternates: {
-    canonical: "https://malevitamine.co.za/libido-enhancer",
+    canonical: "https://malevitamin.co.za/libido-enhancer",
   },
 };
 
@@ -31,14 +31,14 @@ const jsonLd = {
       name: "Male Vitamine — Libido Enhancer",
       description:
         "Natural libido enhancer with Tribulus Terrestris, Maca Root, Fenugreek Extract & Ginseng to reignite your desire and passion.",
-      image: "https://malevitamine.co.za/product-image.webp",
+      image: "https://malevitamin.co.za/product-image.webp",
       brand: { "@type": "Brand", name: "Male Vitamine" },
       offers: {
         "@type": "Offer",
         price: "850.00",
         priceCurrency: "ZAR",
         availability: "https://schema.org/InStock",
-        url: "https://malevitamine.co.za/libido-enhancer",
+        url: "https://malevitamin.co.za/libido-enhancer",
       },
     },
     {
@@ -89,8 +89,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-        { "@type": "ListItem", position: 2, name: "Libido Enhancer", item: "https://malevitamine.co.za/libido-enhancer" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+        { "@type": "ListItem", position: 2, name: "Libido Enhancer", item: "https://malevitamin.co.za/libido-enhancer" },
       ],
     },
   ],
@@ -101,7 +101,7 @@ export default function LibidoEnhancerPage() {
     <MiniSitePage
       pageTitle="Natural Libido Enhancer South Africa"
       pageDescription="Lost your sex drive? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion."
-      canonicalUrl="https://malevitamine.co.za/libido-enhancer"
+      canonicalUrl="https://malevitamin.co.za/libido-enhancer"
       heroH1="LIBIDO ENHANCER THAT REIGNITES YOUR DESIRE"
       heroSubheadline="Remember when you couldn't stop thinking about sex? When desire hit you like a wave and you actually acted on it? That fire doesn't have to be gone — it's just been smothered by stress, aging, and hormonal decline. Male Vitamine's libido formula combines Tribulus, Maca, Fenugreek, and Ginseng to wake up your desire from the inside out. Not a temporary stimulant — a genuine reignition of your natural drive."
       heroBadge="Desire Restorer"

@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     title: "Male Stamina Supplement South Africa | Last Longer in Bed | Male Vitamine",
     description:
       "Finish too soon? Male Vitamine's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger. R 850.00 — Order in South Africa.",
-    url: "https://malevitamine.co.za/stamina-supplement",
+    url: "https://malevitamin.co.za/stamina-supplement",
   },
   alternates: {
-    canonical: "https://malevitamine.co.za/stamina-supplement",
+    canonical: "https://malevitamin.co.za/stamina-supplement",
   },
 };
 
@@ -31,14 +31,14 @@ const jsonLd = {
       name: "Male Vitamine — Stamina Supplement",
       description:
         "Natural male stamina supplement with Maca Root, Ginseng Extract, L-Arginine & Fenugreek to help you last longer and perform stronger.",
-      image: "https://malevitamine.co.za/product-image.webp",
+      image: "https://malevitamin.co.za/product-image.webp",
       brand: { "@type": "Brand", name: "Male Vitamine" },
       offers: {
         "@type": "Offer",
         price: "850.00",
         priceCurrency: "ZAR",
         availability: "https://schema.org/InStock",
-        url: "https://malevitamine.co.za/stamina-supplement",
+        url: "https://malevitamin.co.za/stamina-supplement",
       },
     },
     {
@@ -89,8 +89,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-        { "@type": "ListItem", position: 2, name: "Stamina Supplement", item: "https://malevitamine.co.za/stamina-supplement" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+        { "@type": "ListItem", position: 2, name: "Stamina Supplement", item: "https://malevitamin.co.za/stamina-supplement" },
       ],
     },
   ],
@@ -101,7 +101,7 @@ export default function StaminaSupplementPage() {
     <MiniSitePage
       pageTitle="Male Stamina Supplement South Africa"
       pageDescription="Finish too soon? Male Vitamine's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger."
-      canonicalUrl="https://malevitamine.co.za/stamina-supplement"
+      canonicalUrl="https://malevitamin.co.za/stamina-supplement"
       heroH1="STAMINA SUPPLEMENT FOR MEN WHO GO THE DISTANCE"
       heroSubheadline="Finishing before you're ready is not just embarrassing — it's robbing you and your partner of the experience you both deserve. Male Vitamine's stamina formula combines Maca Root, Ginseng, L-Arginine, and Fenugreek to supercharge your endurance so you can last longer, go harder, and deliver the performance she'll remember. No numbing sprays, no band-aids — just real, natural stamina."
       heroBadge="Endurance Formula"

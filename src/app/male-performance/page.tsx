@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     title: "Male Performance Enhancement South Africa | Stronger Bedroom Performance | Male Vitamine",
     description:
       "Underperforming in the bedroom? Male Vitamine's all-in-one performance formula delivers harder stamina, stronger drive and rock-solid confidence. R 850.00.",
-    url: "https://malevitamine.co.za/male-performance",
+    url: "https://malevitamin.co.za/male-performance",
   },
   alternates: {
-    canonical: "https://malevitamine.co.za/male-performance",
+    canonical: "https://malevitamin.co.za/male-performance",
   },
 };
 
@@ -31,14 +31,14 @@ const jsonLd = {
       name: "Male Vitamine — Male Performance Enhancement",
       description:
         "All-in-one male performance supplement with L-Arginine, Tribulus Terrestris, Maca Root, Ginseng Extract, Zinc & Fenugreek for total bedroom dominance.",
-      image: "https://malevitamine.co.za/product-image.webp",
+      image: "https://malevitamin.co.za/product-image.webp",
       brand: { "@type": "Brand", name: "Male Vitamine" },
       offers: {
         "@type": "Offer",
         price: "850.00",
         priceCurrency: "ZAR",
         availability: "https://schema.org/InStock",
-        url: "https://malevitamine.co.za/male-performance",
+        url: "https://malevitamin.co.za/male-performance",
       },
     },
     {
@@ -89,8 +89,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-        { "@type": "ListItem", position: 2, name: "Male Performance", item: "https://malevitamine.co.za/male-performance" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+        { "@type": "ListItem", position: 2, name: "Male Performance", item: "https://malevitamin.co.za/male-performance" },
       ],
     },
   ],
@@ -101,7 +101,7 @@ export default function MalePerformancePage() {
     <MiniSitePage
       pageTitle="Male Performance Enhancement South Africa"
       pageDescription="Underperforming in the bedroom? Male Vitamine's all-in-one performance formula delivers harder stamina, stronger drive and rock-solid confidence."
-      canonicalUrl="https://malevitamine.co.za/male-performance"
+      canonicalUrl="https://malevitamin.co.za/male-performance"
       heroH1="MALE PERFORMANCE SUPPLEMENT FOR TOTAL DOMINANCE"
       heroSubheadline="You weren't built for mediocre performance — you were built to dominate. Male Vitamine is the all-in-one formula that addresses every factor that determines your bedroom performance: blood flow, testosterone, stamina, and desire. Six powerful ingredients working together in one supplement so you can perform at your absolute best, every single time. No more hoping for a good night — you make every night yours."
       heroBadge="Total Performance"

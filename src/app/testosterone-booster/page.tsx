@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     title: "Best Testosterone Booster for Men South Africa | Male Vitamine",
     description:
       "Low testosterone killing your drive? Male Vitamine's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence. R 850.00.",
-    url: "https://malevitamine.co.za/testosterone-booster",
+    url: "https://malevitamin.co.za/testosterone-booster",
   },
   alternates: {
-    canonical: "https://malevitamine.co.za/testosterone-booster",
+    canonical: "https://malevitamin.co.za/testosterone-booster",
   },
 };
 
@@ -31,14 +31,14 @@ const jsonLd = {
       name: "Male Vitamine — Testosterone Booster",
       description:
         "Natural testosterone booster with Zinc, Fenugreek Extract, Tribulus Terrestris & Maca Root to restore T-levels, stamina and confidence.",
-      image: "https://malevitamine.co.za/product-image.webp",
+      image: "https://malevitamin.co.za/product-image.webp",
       brand: { "@type": "Brand", name: "Male Vitamine" },
       offers: {
         "@type": "Offer",
         price: "850.00",
         priceCurrency: "ZAR",
         availability: "https://schema.org/InStock",
-        url: "https://malevitamine.co.za/testosterone-booster",
+        url: "https://malevitamin.co.za/testosterone-booster",
       },
     },
     {
@@ -89,8 +89,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-        { "@type": "ListItem", position: 2, name: "Testosterone Booster", item: "https://malevitamine.co.za/testosterone-booster" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+        { "@type": "ListItem", position: 2, name: "Testosterone Booster", item: "https://malevitamin.co.za/testosterone-booster" },
       ],
     },
   ],
@@ -101,7 +101,7 @@ export default function TestosteroneBoosterPage() {
     <MiniSitePage
       pageTitle="Testosterone Booster South Africa"
       pageDescription="Low testosterone killing your drive? Male Vitamine's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence."
-      canonicalUrl="https://malevitamine.co.za/testosterone-booster"
+      canonicalUrl="https://malevitamin.co.za/testosterone-booster"
       heroH1="TESTOSTERONE BOOSTER THAT RESTORES YOUR DRIVE"
       heroSubheadline="Low testosterone is silently destroying your energy, your sex drive, and your confidence — and you might not even realize it. Male Vitamine's natural testosterone booster combines Zinc, Fenugreek, Tribulus, and Maca Root to reignite your body's own T-production. No needles, no prescriptions, just real results you can feel."
       heroBadge="Testosterone Support"

@@ -26,7 +26,7 @@ const towns = [
 const slugs = ["ed-supplement", "libido-enhancer"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://malevitamine.co.za";
+  const baseUrl = "https://malevitamin.co.za";
 
   // Main pages
   const mainPages: MetadataRoute.Sitemap = [

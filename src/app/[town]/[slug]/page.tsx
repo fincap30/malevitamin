@@ -93,7 +93,7 @@ export async function generateMetadata({
         `boost sex drive ${town.name}`,
       ];
 
-  const canonicalUrl = `https://malevitamine.co.za/${townSlug}/${slug}`;
+  const canonicalUrl = `https://malevitamin.co.za/${townSlug}/${slug}`;
 
   return {
     title,
@@ -115,7 +115,7 @@ export async function generateMetadata({
 /* ------------------------------------------------------------------ */
 
 function getEdData(town: TownData) {
-  const canonicalUrl = `https://malevitamine.co.za/${town.slug}/ed-supplement`;
+  const canonicalUrl = `https://malevitamin.co.za/${town.slug}/ed-supplement`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -124,7 +124,7 @@ function getEdData(town: TownData) {
         "@type": "Product",
         name: `Male Vitamine — Erectile Dysfunction Supplement in ${town.name}`,
         description: `Natural erectile dysfunction supplement with L-Arginine, Ginseng Extract, Tribulus Terrestris & Zinc for stronger, firmer erections. Delivered to ${town.name}, ${town.province}.`,
-        image: "https://malevitamine.co.za/product-image.webp",
+        image: "https://malevitamin.co.za/product-image.webp",
         brand: { "@type": "Brand", name: "Male Vitamine" },
         offers: {
           "@type": "Offer",
@@ -198,8 +198,8 @@ function getEdData(town: TownData) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-          { "@type": "ListItem", position: 2, name: "ED Supplement", item: "https://malevitamine.co.za/ed-supplement" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+          { "@type": "ListItem", position: 2, name: "ED Supplement", item: "https://malevitamin.co.za/ed-supplement" },
           { "@type": "ListItem", position: 3, name: town.name, item: canonicalUrl },
         ],
       },
@@ -313,7 +313,7 @@ function getEdData(town: TownData) {
 /* ------------------------------------------------------------------ */
 
 function getLibidoData(town: TownData) {
-  const canonicalUrl = `https://malevitamine.co.za/${town.slug}/libido-enhancer`;
+  const canonicalUrl = `https://malevitamin.co.za/${town.slug}/libido-enhancer`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -322,7 +322,7 @@ function getLibidoData(town: TownData) {
         "@type": "Product",
         name: `Male Vitamine — Libido Enhancer in ${town.name}`,
         description: `Natural libido enhancer with Tribulus Terrestris, Maca Root, Fenugreek Extract & Ginseng to reignite your desire and passion. Delivered to ${town.name}, ${town.province}.`,
-        image: "https://malevitamine.co.za/product-image.webp",
+        image: "https://malevitamin.co.za/product-image.webp",
         brand: { "@type": "Brand", name: "Male Vitamine" },
         offers: {
           "@type": "Offer",
@@ -396,8 +396,8 @@ function getLibidoData(town: TownData) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-          { "@type": "ListItem", position: 2, name: "Libido Enhancer", item: "https://malevitamine.co.za/libido-enhancer" },
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+          { "@type": "ListItem", position: 2, name: "Libido Enhancer", item: "https://malevitamin.co.za/libido-enhancer" },
           { "@type": "ListItem", position: 3, name: town.name, item: canonicalUrl },
         ],
       },

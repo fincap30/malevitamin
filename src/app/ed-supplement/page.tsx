@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     title: "Natural ED Supplement South Africa | Get Harder, Firmer Erections | Male Vitamine",
     description:
       "Struggling with ED? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Order now in South Africa.",
-    url: "https://malevitamine.co.za/ed-supplement",
+    url: "https://malevitamin.co.za/ed-supplement",
   },
   alternates: {
-    canonical: "https://malevitamine.co.za/ed-supplement",
+    canonical: "https://malevitamin.co.za/ed-supplement",
   },
 };
 
@@ -31,14 +31,14 @@ const jsonLd = {
       name: "Male Vitamine — Natural ED Supplement",
       description:
         "Natural erectile dysfunction supplement with L-Arginine, Ginseng Extract, Tribulus Terrestris & Zinc for stronger, firmer erections.",
-      image: "https://malevitamine.co.za/product-image.webp",
+      image: "https://malevitamin.co.za/product-image.webp",
       brand: { "@type": "Brand", name: "Male Vitamine" },
       offers: {
         "@type": "Offer",
         price: "850.00",
         priceCurrency: "ZAR",
         availability: "https://schema.org/InStock",
-        url: "https://malevitamine.co.za/ed-supplement",
+        url: "https://malevitamin.co.za/ed-supplement",
       },
     },
     {
@@ -89,8 +89,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamine.co.za" },
-        { "@type": "ListItem", position: 2, name: "Natural ED Supplement", item: "https://malevitamine.co.za/ed-supplement" },
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://malevitamin.co.za" },
+        { "@type": "ListItem", position: 2, name: "Natural ED Supplement", item: "https://malevitamin.co.za/ed-supplement" },
       ],
     },
   ],
@@ -101,7 +101,7 @@ export default function EDSupplementPage() {
     <MiniSitePage
       pageTitle="Natural ED Supplement South Africa"
       pageDescription="Struggling with ED? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections."
-      canonicalUrl="https://malevitamine.co.za/ed-supplement"
+      canonicalUrl="https://malevitamin.co.za/ed-supplement"
       heroH1="NATURAL ED SUPPLEMENT THAT ACTUALLY WORKS"
       heroSubheadline="Struggling to get or stay firm? You're far from alone — and it doesn't have to be this way. Male Vitamine's clinically-backed formula supercharges nitric oxide production and blood flow, giving you stronger, firmer, longer-lasting erections without a prescription. The solution is natural, powerful, and built for men who refuse to underperform."
       heroBadge="ED Solution"
