@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Natural ED Supplement South Africa | Get Harder, Firmer Erections | Male Vitamine",
+  title: "Natural ED Supplement South Africa | Get Harder, Firmer Erections | Male Vitamin",
   description:
-    "Struggling with ED? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Order now in South Africa.",
+    "Struggling with ED? Male Vitamin's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Order now in South Africa.",
   keywords: [
     "natural ED supplement",
     "erectile dysfunction supplement South Africa",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     "firm erection supplement",
   ],
   openGraph: {
-    title: "Natural ED Supplement South Africa | Get Harder, Firmer Erections | Male Vitamine",
+    title: "Natural ED Supplement South Africa | Get Harder, Firmer Erections | Male Vitamin",
     description:
-      "Struggling with ED? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Order now in South Africa.",
+      "Struggling with ED? Male Vitamin's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Order now in South Africa.",
     url: "https://malevitamin.co.za/ed-supplement",
   },
   alternates: {
@@ -28,11 +28,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Natural ED Supplement",
+      name: "Male Vitamin — Natural ED Supplement",
       description:
         "Natural erectile dysfunction supplement with L-Arginine, Ginseng Extract, Tribulus Terrestris & Zinc for stronger, firmer erections.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -57,7 +57,7 @@ const jsonLd = {
           name: "Is this a Viagra alternative?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+            text: "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
           },
         },
         {
@@ -73,7 +73,7 @@ const jsonLd = {
           name: "Is it safe to take?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Male Vitamine is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
+            text: "Yes. Male Vitamin is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
           },
         },
         {
@@ -81,7 +81,7 @@ const jsonLd = {
           name: "Do I need a prescription?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            text: "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
           },
         },
       ],
@@ -100,10 +100,10 @@ export default function EDSupplementPage() {
   return (
     <MiniSitePage
       pageTitle="Natural ED Supplement South Africa"
-      pageDescription="Struggling with ED? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections."
+      pageDescription="Struggling with ED? Male Vitamin's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections."
       canonicalUrl="https://malevitamin.co.za/ed-supplement"
       heroH1="NATURAL ED SUPPLEMENT THAT ACTUALLY WORKS"
-      heroSubheadline="Struggling to get or stay firm? You're far from alone — and it doesn't have to be this way. Male Vitamine's clinically-backed formula supercharges nitric oxide production and blood flow, giving you stronger, firmer, longer-lasting erections without a prescription. The solution is natural, powerful, and built for men who refuse to underperform."
+      heroSubheadline="Struggling to get or stay firm? You're far from alone — and it doesn't have to be this way. Male Vitamin's clinically-backed formula supercharges nitric oxide production and blood flow, giving you stronger, firmer, longer-lasting erections without a prescription. The solution is natural, powerful, and built for men who refuse to underperform."
       heroBadge="ED Solution"
       problemTitle="THE SILENT CRISIS KILLING YOUR CONFIDENCE"
       problemDescription="Erectile dysfunction doesn't just affect your bedroom performance — it destroys your self-esteem, your relationships, and your sense of masculinity. The longer you ignore it, the worse it gets."
@@ -187,7 +187,7 @@ export default function EDSupplementPage() {
         {
           question: "Is this a Viagra alternative?",
           answer:
-            "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+            "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
         },
         {
           question: "How fast does it work?",
@@ -197,12 +197,12 @@ export default function EDSupplementPage() {
         {
           question: "Is it safe to take?",
           answer:
-            "Yes. Male Vitamine is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
+            "Yes. Male Vitamin is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
         },
         {
           question: "Do I need a prescription?",
           answer:
-            "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
         },
       ]}
       currentSlug="ed-supplement"

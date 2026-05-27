@@ -204,7 +204,7 @@ function MiniNavbar({ onOrderNow }: { onOrderNow: () => void }) {
         <Link href="/" className="flex items-center gap-2.5">
           <Flame className="h-7 w-7 text-gold" />
           <span className="text-xl font-black tracking-widest text-gold uppercase">
-            Male Vitamine
+            Male Vitamin
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-6 text-xs font-bold tracking-widest uppercase text-foreground/60">
@@ -353,7 +353,7 @@ function HeroSection({
           <div className="relative bg-gradient-to-br from-[#1a1a15] to-[#0d0d0a] rounded-2xl p-8 sm:p-12 border border-gold/15 gold-glow-strong">
             <img
               src="/product-image.webp"
-              alt={productImageAlt ?? "Male Vitamine Premium Supplement"}
+              alt={productImageAlt ?? "Male Vitamin Premium Supplement"}
               className="w-72 h-72 sm:w-80 sm:h-80 object-contain drop-shadow-2xl"
             />
             <div className="mt-8 text-center">
@@ -670,7 +670,7 @@ function CrossLinksSection({ currentSlug }: { currentSlug: string }) {
             <span className="text-foreground">FOR YOU</span>
           </h2>
           <p className="mt-6 text-foreground/50 max-w-2xl mx-auto text-lg font-light">
-            Male Vitamine is engineered for every aspect of male performance.
+            Male Vitamin is engineered for every aspect of male performance.
             Explore our targeted solutions and find the one that fits your
             specific needs.
           </p>
@@ -695,7 +695,7 @@ function CrossLinksSection({ currentSlug }: { currentSlug: string }) {
                         MAIN PAGE
                       </h3>
                       <p className="mt-2 text-foreground/45 text-sm leading-relaxed font-light">
-                        Full overview of Male Vitamine — benefits, quiz, and
+                        Full overview of Male Vitamin — benefits, quiz, and
                         everything you need to reclaim your edge.
                       </p>
                       <span className="inline-flex items-center gap-1 mt-3 text-gold text-xs font-bold tracking-widest uppercase group-hover:gap-2 transition-all">
@@ -829,7 +829,7 @@ function MiniFooter({ currentSlug }: { currentSlug: string }) {
             <Link href="/" className="flex items-center gap-2.5 mb-4">
               <Flame className="h-6 w-6 text-gold" />
               <span className="text-lg font-black tracking-widest text-gold uppercase">
-                Male Vitamine
+                Male Vitamin
               </span>
             </Link>
             <p className="text-sm text-foreground/30 leading-relaxed font-light">
@@ -927,7 +927,7 @@ function MiniFooter({ currentSlug }: { currentSlug: string }) {
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-gold/5 text-center text-xs text-foreground/20 font-bold tracking-widest uppercase">
-          <p>&copy; {new Date().getFullYear()} Male Vitamine. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Male Vitamin. All rights reserved.</p>
         </div>
       </div>
     </footer>

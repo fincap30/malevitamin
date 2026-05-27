@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Male Vitamine - Erectile Dysfunction & Libido Supplement South Africa",
+  title: "Male Vitamin - Erectile Dysfunction & Libido Supplement South Africa",
   description:
-    "Struggling with erectile dysfunction or low libido? Male Vitamine's natural supplement uses L-Arginine, Tribulus, Maca Root & Ginseng for harder erections, stronger libido and lasting stamina. R 850.00 — South Africa.",
+    "Struggling with erectile dysfunction or low libido? Male Vitamin's natural supplement uses L-Arginine, Tribulus, Maca Root & Ginseng for harder erections, stronger libido and lasting stamina. R 850.00 — South Africa.",
   keywords: [
     "erectile dysfunction supplement",
     "ED supplement South Africa",

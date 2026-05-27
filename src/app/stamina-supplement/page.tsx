@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Male Stamina Supplement South Africa | Last Longer in Bed | Male Vitamine",
+  title: "Male Stamina Supplement South Africa | Last Longer in Bed | Male Vitamin",
   description:
-    "Finish too soon? Male Vitamine's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger. R 850.00 — Order in South Africa.",
+    "Finish too soon? Male Vitamin's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger. R 850.00 — Order in South Africa.",
   keywords: [
     "male stamina supplement",
     "last longer in bed supplement",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     "endurance supplement South Africa",
   ],
   openGraph: {
-    title: "Male Stamina Supplement South Africa | Last Longer in Bed | Male Vitamine",
+    title: "Male Stamina Supplement South Africa | Last Longer in Bed | Male Vitamin",
     description:
-      "Finish too soon? Male Vitamine's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger. R 850.00 — Order in South Africa.",
+      "Finish too soon? Male Vitamin's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger. R 850.00 — Order in South Africa.",
     url: "https://malevitamin.co.za/stamina-supplement",
   },
   alternates: {
@@ -28,11 +28,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Stamina Supplement",
+      name: "Male Vitamin — Stamina Supplement",
       description:
         "Natural male stamina supplement with Maca Root, Ginseng Extract, L-Arginine & Fenugreek to help you last longer and perform stronger.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -65,7 +65,7 @@ const jsonLd = {
           name: "How is this different from delay sprays?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Delay sprays work by numbing your penis with lidocaine or benzocaine — they reduce sensation so you take longer to finish. The problem? They also reduce pleasure for both you and your partner, can cause transfer numbness, and don't address why you're finishing fast in the first place. Male Vitamine takes a completely different approach: it improves your body's natural stamina capacity through better blood flow, fatigue resistance, and hormonal support. You feel everything — you just last longer because your body is actually performing better.",
+            text: "Delay sprays work by numbing your penis with lidocaine or benzocaine — they reduce sensation so you take longer to finish. The problem? They also reduce pleasure for both you and your partner, can cause transfer numbness, and don't address why you're finishing fast in the first place. Male Vitamin takes a completely different approach: it improves your body's natural stamina capacity through better blood flow, fatigue resistance, and hormonal support. You feel everything — you just last longer because your body is actually performing better.",
           },
         },
         {
@@ -73,7 +73,7 @@ const jsonLd = {
           name: "Will it give me more energy overall?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Absolutely. The ingredients in Male Vitamine that improve bedroom stamina also improve your overall energy and endurance. Maca Root is famous for boosting daily energy levels and reducing fatigue. Ginseng is one of the most well-researched adaptogens for improving physical and mental stamina. L-Arginine improves blood flow throughout your entire body, not just the bedroom. Many of our customers report better gym performance, sharper focus at work, and more energy throughout the day — the bedroom benefits are just the most noticeable.",
+            text: "Absolutely. The ingredients in Male Vitamin that improve bedroom stamina also improve your overall energy and endurance. Maca Root is famous for boosting daily energy levels and reducing fatigue. Ginseng is one of the most well-researched adaptogens for improving physical and mental stamina. L-Arginine improves blood flow throughout your entire body, not just the bedroom. Many of our customers report better gym performance, sharper focus at work, and more energy throughout the day — the bedroom benefits are just the most noticeable.",
           },
         },
         {
@@ -81,7 +81,7 @@ const jsonLd = {
           name: "How quickly will I notice a difference?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Many men notice improved energy and endurance within the first week. By week 2-3, most users report lasting noticeably longer in bed and having more stamina for round two. The full effects build over 4-8 weeks as the ingredients reach optimal levels in your system. Unlike quick-fix solutions that wear off, Male Vitamine's effects get stronger over time because you're building genuine physical stamina — not just masking a problem.",
+            text: "Many men notice improved energy and endurance within the first week. By week 2-3, most users report lasting noticeably longer in bed and having more stamina for round two. The full effects build over 4-8 weeks as the ingredients reach optimal levels in your system. Unlike quick-fix solutions that wear off, Male Vitamin's effects get stronger over time because you're building genuine physical stamina — not just masking a problem.",
           },
         },
       ],
@@ -100,10 +100,10 @@ export default function StaminaSupplementPage() {
   return (
     <MiniSitePage
       pageTitle="Male Stamina Supplement South Africa"
-      pageDescription="Finish too soon? Male Vitamine's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger."
+      pageDescription="Finish too soon? Male Vitamin's stamina formula uses Maca Root, Ginseng & L-Arginine to help you last longer and perform stronger."
       canonicalUrl="https://malevitamin.co.za/stamina-supplement"
       heroH1="STAMINA SUPPLEMENT FOR MEN WHO GO THE DISTANCE"
-      heroSubheadline="Finishing before you're ready is not just embarrassing — it's robbing you and your partner of the experience you both deserve. Male Vitamine's stamina formula combines Maca Root, Ginseng, L-Arginine, and Fenugreek to supercharge your endurance so you can last longer, go harder, and deliver the performance she'll remember. No numbing sprays, no band-aids — just real, natural stamina."
+      heroSubheadline="Finishing before you're ready is not just embarrassing — it's robbing you and your partner of the experience you both deserve. Male Vitamin's stamina formula combines Maca Root, Ginseng, L-Arginine, and Fenugreek to supercharge your endurance so you can last longer, go harder, and deliver the performance she'll remember. No numbing sprays, no band-aids — just real, natural stamina."
       heroBadge="Endurance Formula"
       problemTitle="FINISHING TOO SOON DESTROYS EVERYTHING"
       problemDescription="Premature finishing isn't just a physical problem — it's an intimacy killer. Every time you cut things short, you're chipping away at your confidence, your partner's satisfaction, and your own self-respect."
@@ -192,17 +192,17 @@ export default function StaminaSupplementPage() {
         {
           question: "How is this different from delay sprays?",
           answer:
-            "Delay sprays work by numbing your penis with lidocaine or benzocaine — they reduce sensation so you take longer to finish. The problem? They also reduce pleasure for both you and your partner, can cause transfer numbness, and don't address why you're finishing fast in the first place. Male Vitamine takes a completely different approach: it improves your body's natural stamina capacity through better blood flow, fatigue resistance, and hormonal support. You feel everything — you just last longer because your body is actually performing better.",
+            "Delay sprays work by numbing your penis with lidocaine or benzocaine — they reduce sensation so you take longer to finish. The problem? They also reduce pleasure for both you and your partner, can cause transfer numbness, and don't address why you're finishing fast in the first place. Male Vitamin takes a completely different approach: it improves your body's natural stamina capacity through better blood flow, fatigue resistance, and hormonal support. You feel everything — you just last longer because your body is actually performing better.",
         },
         {
           question: "Will it give me more energy overall?",
           answer:
-            "Absolutely. The ingredients in Male Vitamine that improve bedroom stamina also improve your overall energy and endurance. Maca Root is famous for boosting daily energy levels and reducing fatigue. Ginseng is one of the most well-researched adaptogens for improving physical and mental stamina. L-Arginine improves blood flow throughout your entire body, not just the bedroom. Many of our customers report better gym performance, sharper focus at work, and more energy throughout the day — the bedroom benefits are just the most noticeable.",
+            "Absolutely. The ingredients in Male Vitamin that improve bedroom stamina also improve your overall energy and endurance. Maca Root is famous for boosting daily energy levels and reducing fatigue. Ginseng is one of the most well-researched adaptogens for improving physical and mental stamina. L-Arginine improves blood flow throughout your entire body, not just the bedroom. Many of our customers report better gym performance, sharper focus at work, and more energy throughout the day — the bedroom benefits are just the most noticeable.",
         },
         {
           question: "How quickly will I notice a difference?",
           answer:
-            "Many men notice improved energy and endurance within the first week. By week 2-3, most users report lasting noticeably longer in bed and having more stamina for round two. The full effects build over 4-8 weeks as the ingredients reach optimal levels in your system. Unlike quick-fix solutions that wear off, Male Vitamine's effects get stronger over time because you're building genuine physical stamina — not just masking a problem.",
+            "Many men notice improved energy and endurance within the first week. By week 2-3, most users report lasting noticeably longer in bed and having more stamina for round two. The full effects build over 4-8 weeks as the ingredients reach optimal levels in your system. Unlike quick-fix solutions that wear off, Male Vitamin's effects get stronger over time because you're building genuine physical stamina — not just masking a problem.",
         },
       ]}
       currentSlug="stamina-supplement"

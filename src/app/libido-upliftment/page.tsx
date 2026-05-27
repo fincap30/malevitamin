@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Libido Upliftment South Africa | Restore Your Sex Drive Naturally | Male Vitamine",
+  title: "Libido Upliftment South Africa | Restore Your Sex Drive Naturally | Male Vitamin",
   description:
-    "Need libido upliftment? Male Vitamine's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — Order now in South Africa.",
+    "Need libido upliftment? Male Vitamin's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — Order now in South Africa.",
   keywords: [
     "libido upliftment",
     "upliftment of libido",
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     "low libido treatment",
   ],
   openGraph: {
-    title: "Libido Upliftment South Africa | Restore Your Sex Drive Naturally | Male Vitamine",
+    title: "Libido Upliftment South Africa | Restore Your Sex Drive Naturally | Male Vitamin",
     description:
-      "Need libido upliftment? Male Vitamine's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — Order now in South Africa.",
+      "Need libido upliftment? Male Vitamin's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — Order now in South Africa.",
     url: "https://malevitamin.co.za/libido-upliftment",
   },
   alternates: {
@@ -30,11 +30,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Libido Upliftment",
+      name: "Male Vitamin — Libido Upliftment",
       description:
         "Natural libido upliftment supplement with Tribulus Terrestris, Maca Root, Fenugreek Extract & Ginseng to uplift your sex drive, reignite passion, and restore desire.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -51,7 +51,7 @@ const jsonLd = {
           name: "What is libido upliftment and how does it work?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Libido upliftment is the process of restoring and elevating your natural sex drive using targeted nutritional support. Unlike temporary stimulants, libido upliftment works by addressing the root causes of low desire: declining testosterone, disrupted hormonal signaling, stress-induced cortisol elevation, and neurochemical imbalances. Male Vitamine's libido upliftment formula uses Tribulus Terrestris to restore the LH-testosterone signal, Maca Root to activate desire centers in the brain, Fenugreek to support the hormonal environment, and Ginseng to reduce stress hormones that kill libido. The result is a genuine, sustained upliftment of your sex drive — not a temporary spike.",
+            text: "Libido upliftment is the process of restoring and elevating your natural sex drive using targeted nutritional support. Unlike temporary stimulants, libido upliftment works by addressing the root causes of low desire: declining testosterone, disrupted hormonal signaling, stress-induced cortisol elevation, and neurochemical imbalances. Male Vitamin's libido upliftment formula uses Tribulus Terrestris to restore the LH-testosterone signal, Maca Root to activate desire centers in the brain, Fenugreek to support the hormonal environment, and Ginseng to reduce stress hormones that kill libido. The result is a genuine, sustained upliftment of your sex drive — not a temporary spike.",
           },
         },
         {
@@ -67,7 +67,7 @@ const jsonLd = {
           name: "Is libido upliftment different from just taking a stimulant?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Absolutely. Stimulants force a temporary response by artificially spiking certain chemicals in your body, then you crash back down. Libido upliftment is fundamentally different — it works by restoring the natural hormonal and neurochemical environment that drives healthy desire. Think of it like this: a stimulant is like revving an engine with the clutch in — lots of noise, no movement. Libido upliftment is like fixing the engine so it runs properly on its own. Male Vitamine's formula gives your body the raw materials it needs to produce testosterone, activate desire pathways, and manage stress — so your sex drive returns naturally and sustainably.",
+            text: "Absolutely. Stimulants force a temporary response by artificially spiking certain chemicals in your body, then you crash back down. Libido upliftment is fundamentally different — it works by restoring the natural hormonal and neurochemical environment that drives healthy desire. Think of it like this: a stimulant is like revving an engine with the clutch in — lots of noise, no movement. Libido upliftment is like fixing the engine so it runs properly on its own. Male Vitamin's formula gives your body the raw materials it needs to produce testosterone, activate desire pathways, and manage stress — so your sex drive returns naturally and sustainably.",
           },
         },
         {
@@ -75,7 +75,7 @@ const jsonLd = {
           name: "Can libido upliftment help my relationship?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Libido upliftment can be transformational for relationships affected by desire mismatch. When one partner loses their sex drive, both people suffer — the higher-drive partner feels rejected and unattractive, while the lower-drive partner feels guilty and pressured. Libido upliftment addresses this at the source by restoring your natural desire. Men who have experienced libido upliftment with Male Vitamine report not just better sex lives, but better communication, more affection, and a deeper emotional connection with their partners. When the desire returns, everything else improves too.",
+            text: "Libido upliftment can be transformational for relationships affected by desire mismatch. When one partner loses their sex drive, both people suffer — the higher-drive partner feels rejected and unattractive, while the lower-drive partner feels guilty and pressured. Libido upliftment addresses this at the source by restoring your natural desire. Men who have experienced libido upliftment with Male Vitamin report not just better sex lives, but better communication, more affection, and a deeper emotional connection with their partners. When the desire returns, everything else improves too.",
           },
         },
         {
@@ -83,7 +83,7 @@ const jsonLd = {
           name: "Do I need a prescription?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            text: "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
           },
         },
       ],
@@ -102,10 +102,10 @@ export default function LibidoUpliftmentPage() {
   return (
     <MiniSitePage
       pageTitle="Libido Upliftment South Africa"
-      pageDescription="Need libido upliftment? Male Vitamine's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire."
+      pageDescription="Need libido upliftment? Male Vitamin's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire."
       canonicalUrl="https://malevitamin.co.za/libido-upliftment"
       heroH1="LIBIDO UPLIFTMENT THAT RESTORES YOUR DRIVE"
-      heroSubheadline="Your sex drive doesn't have to fade away. Male Vitamine's libido upliftment formula doesn't just mask the problem — it genuinely uplifts your natural desire from the inside out. Tribulus Terrestris restores the hormonal signal for drive. Maca Root activates the brain's desire centers. Fenugreek supports the hormonal environment. Ginseng eliminates the stress that kills libido. This is true libido upliftment — not a temporary fix. Delivered discreetly anywhere in South Africa."
+      heroSubheadline="Your sex drive doesn't have to fade away. Male Vitamin's libido upliftment formula doesn't just mask the problem — it genuinely uplifts your natural desire from the inside out. Tribulus Terrestris restores the hormonal signal for drive. Maca Root activates the brain's desire centers. Fenugreek supports the hormonal environment. Ginseng eliminates the stress that kills libido. This is true libido upliftment — not a temporary fix. Delivered discreetly anywhere in South Africa."
       heroBadge="Libido Upliftment"
       problemTitle="THE DRIVE THAT DISAPPEARED"
       problemDescription="A declining sex drive doesn't just affect your bedroom life — it changes how you feel about yourself as a man. Across South Africa, thousands of men have lost the passion they once took for granted. The desire that used to define them has been replaced by indifference, and it's eroding relationships, self-worth, and identity. Libido upliftment is not a luxury — it's a necessity for men who refuse to accept less."
@@ -184,7 +184,7 @@ export default function LibidoUpliftmentPage() {
         {
           question: "What is libido upliftment and how does it work?",
           answer:
-            "Libido upliftment is the process of restoring and elevating your natural sex drive using targeted nutritional support. Unlike temporary stimulants, libido upliftment works by addressing the root causes of low desire: declining testosterone, disrupted hormonal signaling, stress-induced cortisol elevation, and neurochemical imbalances. Male Vitamine's libido upliftment formula uses Tribulus Terrestris to restore the LH-testosterone signal, Maca Root to activate desire centers in the brain, Fenugreek to support the hormonal environment, and Ginseng to reduce stress hormones that kill libido. The result is a genuine, sustained upliftment of your sex drive — not a temporary spike.",
+            "Libido upliftment is the process of restoring and elevating your natural sex drive using targeted nutritional support. Unlike temporary stimulants, libido upliftment works by addressing the root causes of low desire: declining testosterone, disrupted hormonal signaling, stress-induced cortisol elevation, and neurochemical imbalances. Male Vitamin's libido upliftment formula uses Tribulus Terrestris to restore the LH-testosterone signal, Maca Root to activate desire centers in the brain, Fenugreek to support the hormonal environment, and Ginseng to reduce stress hormones that kill libido. The result is a genuine, sustained upliftment of your sex drive — not a temporary spike.",
         },
         {
           question: "How long does libido upliftment take?",
@@ -194,17 +194,17 @@ export default function LibidoUpliftmentPage() {
         {
           question: "Is libido upliftment different from just taking a stimulant?",
           answer:
-            "Absolutely. Stimulants force a temporary response by artificially spiking certain chemicals in your body, then you crash back down. Libido upliftment is fundamentally different — it works by restoring the natural hormonal and neurochemical environment that drives healthy desire. Think of it like this: a stimulant is like revving an engine with the clutch in — lots of noise, no movement. Libido upliftment is like fixing the engine so it runs properly on its own. Male Vitamine's formula gives your body the raw materials it needs to produce testosterone, activate desire pathways, and manage stress — so your sex drive returns naturally and sustainably.",
+            "Absolutely. Stimulants force a temporary response by artificially spiking certain chemicals in your body, then you crash back down. Libido upliftment is fundamentally different — it works by restoring the natural hormonal and neurochemical environment that drives healthy desire. Think of it like this: a stimulant is like revving an engine with the clutch in — lots of noise, no movement. Libido upliftment is like fixing the engine so it runs properly on its own. Male Vitamin's formula gives your body the raw materials it needs to produce testosterone, activate desire pathways, and manage stress — so your sex drive returns naturally and sustainably.",
         },
         {
           question: "Can libido upliftment help my relationship?",
           answer:
-            "Libido upliftment can be transformational for relationships affected by desire mismatch. When one partner loses their sex drive, both people suffer — the higher-drive partner feels rejected and unattractive, while the lower-drive partner feels guilty and pressured. Libido upliftment addresses this at the source by restoring your natural desire. Men who have experienced libido upliftment with Male Vitamine report not just better sex lives, but better communication, more affection, and a deeper emotional connection with their partners. When the desire returns, everything else improves too.",
+            "Libido upliftment can be transformational for relationships affected by desire mismatch. When one partner loses their sex drive, both people suffer — the higher-drive partner feels rejected and unattractive, while the lower-drive partner feels guilty and pressured. Libido upliftment addresses this at the source by restoring your natural desire. Men who have experienced libido upliftment with Male Vitamin report not just better sex lives, but better communication, more affection, and a deeper emotional connection with their partners. When the desire returns, everything else improves too.",
         },
         {
           question: "Do I need a prescription?",
           answer:
-            "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
         },
       ]}
       currentSlug="libido-upliftment"

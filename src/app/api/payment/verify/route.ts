@@ -264,7 +264,7 @@ async function triggerNotifications(details: {
  * Build WhatsApp message for CUSTOMER.
  * Shows payment confirmation + delivery details only.
  * Money split is PRIVATE — only shown to TJ and JVL.
- * Gateway prepends: 🔔 malevitamine:
+ * Gateway prepends: 🔔 malevitamin:
  */
 function buildCustomerWhatsAppMessage(params: {
   customerName: string;
@@ -303,7 +303,7 @@ function buildCustomerWhatsAppMessage(params: {
  * Shows client particulars, order details, and ONLY JVL's share.
  * No other party's figures shown. "Sitewizard" used as agent name.
  * "Payment gateway" used instead of Flutterwave.
- * Gateway prepends: 🔔 malevitamine:
+ * Gateway prepends: 🔔 malevitamin:
  */
 function buildJVLWhatsAppMessage(params: {
   customerName: string;

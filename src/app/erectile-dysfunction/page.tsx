@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Erectile Dysfunction Treatment South Africa | Natural ED Solution | Male Vitamine",
+  title: "Erectile Dysfunction Treatment South Africa | Natural ED Solution | Male Vitamin",
   description:
-    "Looking for erectile dysfunction treatment? Male Vitamine's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone — for stronger, longer-lasting erections. R 850.00 — Order now in South Africa.",
+    "Looking for erectile dysfunction treatment? Male Vitamin's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone — for stronger, longer-lasting erections. R 850.00 — Order now in South Africa.",
   keywords: [
     "erectile dysfunction treatment",
     "erectile dysfunction South Africa",
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     "erectile dysfunction supplement",
   ],
   openGraph: {
-    title: "Erectile Dysfunction Treatment South Africa | Natural ED Solution | Male Vitamine",
+    title: "Erectile Dysfunction Treatment South Africa | Natural ED Solution | Male Vitamin",
     description:
-      "Looking for erectile dysfunction treatment? Male Vitamine's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone — for stronger, longer-lasting erections. R 850.00 — Order now in South Africa.",
+      "Looking for erectile dysfunction treatment? Male Vitamin's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone — for stronger, longer-lasting erections. R 850.00 — Order now in South Africa.",
     url: "https://malevitamin.co.za/erectile-dysfunction",
   },
   alternates: {
@@ -30,11 +30,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Erectile Dysfunction Treatment",
+      name: "Male Vitamin — Erectile Dysfunction Treatment",
       description:
         "Natural erectile dysfunction treatment with L-Arginine, Ginseng Extract, Tribulus Terrestris & Zinc for stronger, firmer erections.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -59,7 +59,7 @@ const jsonLd = {
           name: "What causes erectile dysfunction?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Erectile dysfunction has multiple root causes. The most common are: (1) Poor blood flow — when blood vessels are narrowed or damaged, not enough blood reaches the penile tissue for a firm erection. (2) Low nitric oxide — this molecule is essential for relaxing blood vessels so blood can flow in. (3) Declining testosterone — low T directly impacts sexual function and desire. (4) Psychological factors — stress, anxiety, and depression can all trigger or worsen ED. Male Vitamine's formula addresses the first three physical causes directly, and by improving your performance, it often breaks the psychological cycle too.",
+            text: "Erectile dysfunction has multiple root causes. The most common are: (1) Poor blood flow — when blood vessels are narrowed or damaged, not enough blood reaches the penile tissue for a firm erection. (2) Low nitric oxide — this molecule is essential for relaxing blood vessels so blood can flow in. (3) Declining testosterone — low T directly impacts sexual function and desire. (4) Psychological factors — stress, anxiety, and depression can all trigger or worsen ED. Male Vitamin's formula addresses the first three physical causes directly, and by improving your performance, it often breaks the psychological cycle too.",
           },
         },
         {
@@ -75,7 +75,7 @@ const jsonLd = {
           name: "Is this a Viagra alternative?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+            text: "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
           },
         },
         {
@@ -83,7 +83,7 @@ const jsonLd = {
           name: "Do I need a prescription?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            text: "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
           },
         },
       ],
@@ -102,10 +102,10 @@ export default function ErectileDysfunctionPage() {
   return (
     <MiniSitePage
       pageTitle="Erectile Dysfunction Treatment South Africa"
-      pageDescription="Looking for erectile dysfunction treatment? Male Vitamine's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone."
+      pageDescription="Looking for erectile dysfunction treatment? Male Vitamin's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone."
       canonicalUrl="https://malevitamin.co.za/erectile-dysfunction"
       heroH1="ERECTILE DYSFUNCTION TREATMENT THAT WORKS"
-      heroSubheadline="Erectile dysfunction doesn't have to define you. Male Vitamine's clinically-backed formula targets the three root causes of erectile dysfunction — poor blood flow, low nitric oxide, and declining testosterone — using nature's most powerful ingredients. No prescription needed. No awkward doctor visits. Just real results, delivered discreetly to your door anywhere in South Africa."
+      heroSubheadline="Erectile dysfunction doesn't have to define you. Male Vitamin's clinically-backed formula targets the three root causes of erectile dysfunction — poor blood flow, low nitric oxide, and declining testosterone — using nature's most powerful ingredients. No prescription needed. No awkward doctor visits. Just real results, delivered discreetly to your door anywhere in South Africa."
       heroBadge="ED Treatment"
       problemTitle="ERECTILE DYSFUNCTION IS DESTROYING MEN'S LIVES"
       problemDescription="Erectile dysfunction isn't just a bedroom problem — it's a life problem. Thousands of men across South Africa are watching their confidence crumble, their relationships deteriorate, and their self-worth evaporate. The silence makes it worse. The longer you ignore erectile dysfunction, the more damage it does to every area of your life."
@@ -189,7 +189,7 @@ export default function ErectileDysfunctionPage() {
         {
           question: "What causes erectile dysfunction?",
           answer:
-            "Erectile dysfunction has multiple root causes. The most common are: (1) Poor blood flow — when blood vessels are narrowed or damaged, not enough blood reaches the penile tissue for a firm erection. (2) Low nitric oxide — this molecule is essential for relaxing blood vessels so blood can flow in. (3) Declining testosterone — low T directly impacts sexual function and desire. (4) Psychological factors — stress, anxiety, and depression can all trigger or worsen ED. Male Vitamine's formula addresses the first three physical causes directly, and by improving your performance, it often breaks the psychological cycle too.",
+            "Erectile dysfunction has multiple root causes. The most common are: (1) Poor blood flow — when blood vessels are narrowed or damaged, not enough blood reaches the penile tissue for a firm erection. (2) Low nitric oxide — this molecule is essential for relaxing blood vessels so blood can flow in. (3) Declining testosterone — low T directly impacts sexual function and desire. (4) Psychological factors — stress, anxiety, and depression can all trigger or worsen ED. Male Vitamin's formula addresses the first three physical causes directly, and by improving your performance, it often breaks the psychological cycle too.",
         },
         {
           question: "How do I know if I have erectile dysfunction?",
@@ -199,12 +199,12 @@ export default function ErectileDysfunctionPage() {
         {
           question: "Is this a Viagra alternative?",
           answer:
-            "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+            "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
         },
         {
           question: "Do I need a prescription?",
           answer:
-            "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+            "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
         },
       ]}
       currentSlug="erectile-dysfunction"

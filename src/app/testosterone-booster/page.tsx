@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Best Testosterone Booster for Men South Africa | Male Vitamine",
+  title: "Best Testosterone Booster for Men South Africa | Male Vitamin",
   description:
-    "Low testosterone killing your drive? Male Vitamine's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence. R 850.00.",
+    "Low testosterone killing your drive? Male Vitamin's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence. R 850.00.",
   keywords: [
     "testosterone booster South Africa",
     "natural testosterone supplement",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     "increase testosterone",
   ],
   openGraph: {
-    title: "Best Testosterone Booster for Men South Africa | Male Vitamine",
+    title: "Best Testosterone Booster for Men South Africa | Male Vitamin",
     description:
-      "Low testosterone killing your drive? Male Vitamine's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence. R 850.00.",
+      "Low testosterone killing your drive? Male Vitamin's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence. R 850.00.",
     url: "https://malevitamin.co.za/testosterone-booster",
   },
   alternates: {
@@ -28,11 +28,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Testosterone Booster",
+      name: "Male Vitamin — Testosterone Booster",
       description:
         "Natural testosterone booster with Zinc, Fenugreek Extract, Tribulus Terrestris & Maca Root to restore T-levels, stamina and confidence.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -73,7 +73,7 @@ const jsonLd = {
           name: "Is this better than TRT?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine and TRT serve different purposes. TRT (Testosterone Replacement Therapy) is a medical treatment for clinically diagnosed hypogonadism that requires ongoing doctor supervision, blood tests, and prescriptions. Male Vitamine is a natural supplement that supports your body's own testosterone production — it works with your endocrine system rather than replacing it. For men with mildly low T or who want to optimize their levels naturally, this is a safer first step with no needles, no prescriptions, and no risk of shutting down your body's natural production.",
+            text: "Male Vitamin and TRT serve different purposes. TRT (Testosterone Replacement Therapy) is a medical treatment for clinically diagnosed hypogonadism that requires ongoing doctor supervision, blood tests, and prescriptions. Male Vitamin is a natural supplement that supports your body's own testosterone production — it works with your endocrine system rather than replacing it. For men with mildly low T or who want to optimize their levels naturally, this is a safer first step with no needles, no prescriptions, and no risk of shutting down your body's natural production.",
           },
         },
         {
@@ -81,7 +81,7 @@ const jsonLd = {
           name: "Are there side effects?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine uses well-tolerated, natural ingredients at clinically studied dosages. Side effects are rare and typically mild — some men report slight stomach discomfort in the first few days as their body adjusts. Unlike synthetic testosterone or prohormones, our formula won't cause hair loss, gynecomastia, testicular shrinkage, or suppress your body's natural hormone production. If you have any pre-existing medical conditions or take medication, consult your healthcare provider before starting any supplement.",
+            text: "Male Vitamin uses well-tolerated, natural ingredients at clinically studied dosages. Side effects are rare and typically mild — some men report slight stomach discomfort in the first few days as their body adjusts. Unlike synthetic testosterone or prohormones, our formula won't cause hair loss, gynecomastia, testicular shrinkage, or suppress your body's natural hormone production. If you have any pre-existing medical conditions or take medication, consult your healthcare provider before starting any supplement.",
           },
         },
       ],
@@ -100,10 +100,10 @@ export default function TestosteroneBoosterPage() {
   return (
     <MiniSitePage
       pageTitle="Testosterone Booster South Africa"
-      pageDescription="Low testosterone killing your drive? Male Vitamine's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence."
+      pageDescription="Low testosterone killing your drive? Male Vitamin's natural testosterone booster uses Zinc, Tribulus & Fenugreek to restore your T-levels, stamina and confidence."
       canonicalUrl="https://malevitamin.co.za/testosterone-booster"
       heroH1="TESTOSTERONE BOOSTER THAT RESTORES YOUR DRIVE"
-      heroSubheadline="Low testosterone is silently destroying your energy, your sex drive, and your confidence — and you might not even realize it. Male Vitamine's natural testosterone booster combines Zinc, Fenugreek, Tribulus, and Maca Root to reignite your body's own T-production. No needles, no prescriptions, just real results you can feel."
+      heroSubheadline="Low testosterone is silently destroying your energy, your sex drive, and your confidence — and you might not even realize it. Male Vitamin's natural testosterone booster combines Zinc, Fenugreek, Tribulus, and Maca Root to reignite your body's own T-production. No needles, no prescriptions, just real results you can feel."
       heroBadge="Testosterone Support"
       problemTitle="YOUR TESTOSTERONE IS UNDER ATTACK"
       problemDescription="After age 30, men lose about 1% of their testosterone every year. Add stress, poor diet, and environmental toxins, and you're looking at a hormone crash that steals your drive, strength, and vitality."
@@ -197,12 +197,12 @@ export default function TestosteroneBoosterPage() {
         {
           question: "Is this better than TRT?",
           answer:
-            "Male Vitamine and TRT serve different purposes. TRT (Testosterone Replacement Therapy) is a medical treatment for clinically diagnosed hypogonadism that requires ongoing doctor supervision, blood tests, and prescriptions. Male Vitamine is a natural supplement that supports your body's own testosterone production — it works with your endocrine system rather than replacing it. For men with mildly low T or who want to optimize their levels naturally, this is a safer first step with no needles, no prescriptions, and no risk of shutting down your body's natural production.",
+            "Male Vitamin and TRT serve different purposes. TRT (Testosterone Replacement Therapy) is a medical treatment for clinically diagnosed hypogonadism that requires ongoing doctor supervision, blood tests, and prescriptions. Male Vitamin is a natural supplement that supports your body's own testosterone production — it works with your endocrine system rather than replacing it. For men with mildly low T or who want to optimize their levels naturally, this is a safer first step with no needles, no prescriptions, and no risk of shutting down your body's natural production.",
         },
         {
           question: "Are there side effects?",
           answer:
-            "Male Vitamine uses well-tolerated, natural ingredients at clinically studied dosages. Side effects are rare and typically mild — some men report slight stomach discomfort in the first few days as their body adjusts. Unlike synthetic testosterone or prohormones, our formula won't cause hair loss, gynecomastia, testicular shrinkage, or suppress your body's natural hormone production. If you have any pre-existing medical conditions or take medication, consult your healthcare provider before starting any supplement.",
+            "Male Vitamin uses well-tolerated, natural ingredients at clinically studied dosages. Side effects are rare and typically mild — some men report slight stomach discomfort in the first few days as their body adjusts. Unlike synthetic testosterone or prohormones, our formula won't cause hair loss, gynecomastia, testicular shrinkage, or suppress your body's natural hormone production. If you have any pre-existing medical conditions or take medication, consult your healthcare provider before starting any supplement.",
         },
       ]}
       currentSlug="testosterone-booster"

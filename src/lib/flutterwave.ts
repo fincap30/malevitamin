@@ -91,10 +91,10 @@ export type DeliveryOption = "normal" | "speed";
 /* ------------------------------------------------------------------ */
 
 export const PRODUCT = {
-  name: process.env.NEXT_PUBLIC_BUSINESS_NAME || "Male Vitamine",
+  name: process.env.NEXT_PUBLIC_BUSINESS_NAME || "Male Vitamin",
   price: Number(process.env.NEXT_PUBLIC_AMOUNT || 85000) / 100, // cents to rands
   currency: process.env.NEXT_PUBLIC_CURRENCY || "ZAR",
-  id: "male-vitamine-001",
+  id: "male-vitamin-001",
 };
 
 /* ------------------------------------------------------------------ */

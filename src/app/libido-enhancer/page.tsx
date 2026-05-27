@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MiniSitePage } from "@/components/mini-site-page";
 
 export const metadata: Metadata = {
-  title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamine",
+  title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamin",
   description:
-    "Lost your sex drive? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
+    "Lost your sex drive? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
   keywords: [
     "libido enhancer for men",
     "increase sex drive naturally",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     "boost sex drive",
   ],
   openGraph: {
-    title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamine",
+    title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamin",
     description:
-      "Lost your sex drive? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
+      "Lost your sex drive? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
     url: "https://malevitamin.co.za/libido-enhancer",
   },
   alternates: {
@@ -28,11 +28,11 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Product",
-      name: "Male Vitamine — Libido Enhancer",
+      name: "Male Vitamin — Libido Enhancer",
       description:
         "Natural libido enhancer with Tribulus Terrestris, Maca Root, Fenugreek Extract & Ginseng to reignite your desire and passion.",
       image: "https://malevitamin.co.za/product-image.webp",
-      brand: { "@type": "Brand", name: "Male Vitamine" },
+      brand: { "@type": "Brand", name: "Male Vitamin" },
       offers: {
         "@type": "Offer",
         price: "850.00",
@@ -73,7 +73,7 @@ const jsonLd = {
           name: "Is this safe with other medications?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
+            text: "Male Vitamin uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
           },
         },
         {
@@ -81,7 +81,7 @@ const jsonLd = {
           name: "Will this help with desire or just performance?",
           answeredAnswer: {
             "@type": "Answer",
-            text: "Male Vitamine specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
+            text: "Male Vitamin specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
           },
         },
       ],
@@ -100,10 +100,10 @@ export default function LibidoEnhancerPage() {
   return (
     <MiniSitePage
       pageTitle="Natural Libido Enhancer South Africa"
-      pageDescription="Lost your sex drive? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion."
+      pageDescription="Lost your sex drive? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion."
       canonicalUrl="https://malevitamin.co.za/libido-enhancer"
       heroH1="LIBIDO ENHANCER THAT REIGNITES YOUR DESIRE"
-      heroSubheadline="Remember when you couldn't stop thinking about sex? When desire hit you like a wave and you actually acted on it? That fire doesn't have to be gone — it's just been smothered by stress, aging, and hormonal decline. Male Vitamine's libido formula combines Tribulus, Maca, Fenugreek, and Ginseng to wake up your desire from the inside out. Not a temporary stimulant — a genuine reignition of your natural drive."
+      heroSubheadline="Remember when you couldn't stop thinking about sex? When desire hit you like a wave and you actually acted on it? That fire doesn't have to be gone — it's just been smothered by stress, aging, and hormonal decline. Male Vitamin's libido formula combines Tribulus, Maca, Fenugreek, and Ginseng to wake up your desire from the inside out. Not a temporary stimulant — a genuine reignition of your natural drive."
       heroBadge="Desire Restorer"
       problemTitle="THE DESIRE THAT DISAPPEARED"
       problemDescription="A declining sex drive doesn't just affect your bedroom life — it changes how you feel about yourself as a man. The passion you once took for granted has been replaced by indifference, and it's eroding your relationship and your identity."
@@ -197,12 +197,12 @@ export default function LibidoEnhancerPage() {
         {
           question: "Is this safe with other medications?",
           answer:
-            "Male Vitamine uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
+            "Male Vitamin uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
         },
         {
           question: "Will this help with desire or just performance?",
           answer:
-            "Male Vitamine specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
+            "Male Vitamin specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
         },
       ]}
       currentSlug="libido-enhancer"

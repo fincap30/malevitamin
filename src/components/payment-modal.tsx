@@ -201,12 +201,12 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                         <div className="flex items-center gap-4">
                           <img
                             src="/product-image.webp"
-                            alt="Male Vitamine"
+                            alt="Male Vitamin"
                             className="w-16 h-16 object-contain"
                           />
                           <div className="flex-1">
                             <p className="font-black text-sm tracking-wider text-foreground uppercase">
-                              Male Vitamine
+                              Male Vitamin
                             </p>
                             <p className="text-xs text-foreground/40 font-light">
                               Premium Performance Supplement

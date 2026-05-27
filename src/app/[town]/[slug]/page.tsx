@@ -70,12 +70,12 @@ export async function generateMetadata({
   const isED = slug === "ed-supplement";
 
   const title = isED
-    ? `Erectile Dysfunction Supplement ${town.name} | Male Vitamine`
-    : `Libido Enhancer ${town.name} | Male Vitamine`;
+    ? `Erectile Dysfunction Supplement ${town.name} | Male Vitamin`
+    : `Libido Enhancer ${town.name} | Male Vitamin`;
 
   const description = isED
-    ? `Struggling with ED in ${town.name}? Male Vitamine's natural erectile dysfunction supplement uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Delivered to ${town.name}, ${town.province}, South Africa.`
-    : `Lost your sex drive in ${town.name}? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — Delivered to ${town.name}, ${town.province}, South Africa.`;
+    ? `Struggling with ED in ${town.name}? Male Vitamin's natural erectile dysfunction supplement uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. R 850.00 — Delivered to ${town.name}, ${town.province}, South Africa.`
+    : `Lost your sex drive in ${town.name}? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — Delivered to ${town.name}, ${town.province}, South Africa.`;
 
   const keywords = isED
     ? [
@@ -122,10 +122,10 @@ function getEdData(town: TownData) {
     "@graph": [
       {
         "@type": "Product",
-        name: `Male Vitamine — Erectile Dysfunction Supplement in ${town.name}`,
+        name: `Male Vitamin — Erectile Dysfunction Supplement in ${town.name}`,
         description: `Natural erectile dysfunction supplement with L-Arginine, Ginseng Extract, Tribulus Terrestris & Zinc for stronger, firmer erections. Delivered to ${town.name}, ${town.province}.`,
         image: "https://malevitamin.co.za/product-image.webp",
-        brand: { "@type": "Brand", name: "Male Vitamine" },
+        brand: { "@type": "Brand", name: "Male Vitamin" },
         offers: {
           "@type": "Offer",
           price: "850.00",
@@ -158,7 +158,7 @@ function getEdData(town: TownData) {
             name: "Is this a Viagra alternative?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+              text: "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
             },
           },
           {
@@ -174,7 +174,7 @@ function getEdData(town: TownData) {
             name: "Is it safe to take?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. Male Vitamine is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
+              text: "Yes. Male Vitamin is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
             },
           },
           {
@@ -182,7 +182,7 @@ function getEdData(town: TownData) {
             name: "Do I need a prescription?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+              text: "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
             },
           },
           {
@@ -190,7 +190,7 @@ function getEdData(town: TownData) {
             name: `Can I get this delivered to ${town.name}?`,
             acceptedAnswer: {
               "@type": "Answer",
-              text: `Yes! We deliver Male Vitamine directly to ${town.name} and all surrounding areas in ${town.province}. Orders are shipped in discreet, unmarked packaging so your privacy is fully protected. Delivery to ${town.name} typically takes 2-5 business days depending on your exact location. Whether you're in the ${town.name} CBD or surrounding suburbs, we've got you covered with fast, discreet delivery across South Africa.`,
+              text: `Yes! We deliver Male Vitamin directly to ${town.name} and all surrounding areas in ${town.province}. Orders are shipped in discreet, unmarked packaging so your privacy is fully protected. Delivery to ${town.name} typically takes 2-5 business days depending on your exact location. Whether you're in the ${town.name} CBD or surrounding suburbs, we've got you covered with fast, discreet delivery across South Africa.`,
             },
           },
         ],
@@ -208,10 +208,10 @@ function getEdData(town: TownData) {
 
   return {
     pageTitle: `Erectile Dysfunction Supplement ${town.name}`,
-    pageDescription: `Struggling with ED in ${town.name}? Male Vitamine's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. Delivered to ${town.name}, ${town.province}.`,
+    pageDescription: `Struggling with ED in ${town.name}? Male Vitamin's natural formula uses L-Arginine, Ginseng & Tribulus to boost blood flow for stronger, firmer erections. Delivered to ${town.name}, ${town.province}.`,
     canonicalUrl,
     heroH1: `ERECTILE DYSFUNCTION SUPPLEMENT IN ${town.name.toUpperCase()}`,
-    heroSubheadline: `Men in ${town.name} are discovering a powerful, natural solution for erectile dysfunction. Male Vitamine's clinically-backed formula supercharges nitric oxide production and blood flow, giving you stronger, firmer, longer-lasting erections without a prescription. Whether you're in the ${town.name} CBD or the surrounding ${town.province} suburbs, this is the ED supplement that delivers real results — discreetly delivered right to your door.`,
+    heroSubheadline: `Men in ${town.name} are discovering a powerful, natural solution for erectile dysfunction. Male Vitamin's clinically-backed formula supercharges nitric oxide production and blood flow, giving you stronger, firmer, longer-lasting erections without a prescription. Whether you're in the ${town.name} CBD or the surrounding ${town.province} suburbs, this is the ED supplement that delivers real results — discreetly delivered right to your door.`,
     heroBadge: `${town.name} ED Solution`,
     problemTitle: `MEN IN ${town.name.toUpperCase()} ARE STRUGGLING — AND STAYING SILENT`,
     problemDescription: `Erectile dysfunction is affecting thousands of men across ${town.name} and ${town.province}. The stress of daily life, aging, and declining health are destroying bedroom performance — and most men are too embarrassed to seek help. The longer you ignore it, the worse it gets.`,
@@ -283,7 +283,7 @@ function getEdData(town: TownData) {
       },
       {
         question: "Is this a Viagra alternative?",
-        answer: "Male Vitamine is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
+        answer: "Male Vitamin is a natural dietary supplement, not a pharmaceutical drug like Viagra. While Viagra works by blocking an enzyme for a temporary effect, our formula supports your body's natural blood flow and circulatory health over time. Many men prefer this approach because it works with their body rather than forcing a response, and it doesn't require a prescription. That said, if you have a medical condition causing your ED, you should consult your doctor.",
       },
       {
         question: "How fast does it work?",
@@ -291,19 +291,19 @@ function getEdData(town: TownData) {
       },
       {
         question: "Is it safe to take?",
-        answer: "Yes. Male Vitamine is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
+        answer: "Yes. Male Vitamin is made from well-researched, natural ingredients that have been used safely for decades. L-Arginine, Ginseng, Tribulus Terrestris, and Zinc are all naturally occurring compounds with extensive safety data. Every batch is third-party tested for purity and potency. As with any supplement, if you're taking blood pressure medication or have a heart condition, consult your healthcare provider first since L-Arginine affects blood vessel dilation.",
       },
       {
         question: "Do I need a prescription?",
-        answer: "No. Male Vitamine is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
+        answer: "No. Male Vitamin is a natural dietary supplement available without a prescription. All our ingredients are classified as food supplements in South Africa. You can order directly from our website and have it delivered discreetly to your door. No doctor visits, no pharmacy queues, no awkward conversations — just a straightforward online order with discreet packaging.",
       },
       {
         question: `Can I get this delivered to ${town.name}?`,
-        answer: `Yes! We deliver Male Vitamine directly to ${town.name} and all surrounding areas in ${town.province}. Orders are shipped in discreet, unmarked packaging so your privacy is fully protected. Delivery to ${town.name} typically takes 2-5 business days depending on your exact location. Whether you're in the ${town.name} CBD or surrounding suburbs, we've got you covered with fast, discreet delivery across South Africa.`,
+        answer: `Yes! We deliver Male Vitamin directly to ${town.name} and all surrounding areas in ${town.province}. Orders are shipped in discreet, unmarked packaging so your privacy is fully protected. Delivery to ${town.name} typically takes 2-5 business days depending on your exact location. Whether you're in the ${town.name} CBD or surrounding suburbs, we've got you covered with fast, discreet delivery across South Africa.`,
       },
     ],
     currentSlug: "ed-supplement",
-    productImageAlt: `Male Vitamine ED Supplement available in ${town.name} — natural erectile dysfunction formula for men in ${town.name}, ${town.province}`,
+    productImageAlt: `Male Vitamin ED Supplement available in ${town.name} — natural erectile dysfunction formula for men in ${town.name}, ${town.province}`,
     jsonLd,
   };
 }
@@ -320,10 +320,10 @@ function getLibidoData(town: TownData) {
     "@graph": [
       {
         "@type": "Product",
-        name: `Male Vitamine — Libido Enhancer in ${town.name}`,
+        name: `Male Vitamin — Libido Enhancer in ${town.name}`,
         description: `Natural libido enhancer with Tribulus Terrestris, Maca Root, Fenugreek Extract & Ginseng to reignite your desire and passion. Delivered to ${town.name}, ${town.province}.`,
         image: "https://malevitamin.co.za/product-image.webp",
-        brand: { "@type": "Brand", name: "Male Vitamine" },
+        brand: { "@type": "Brand", name: "Male Vitamin" },
         offers: {
           "@type": "Offer",
           price: "850.00",
@@ -372,7 +372,7 @@ function getLibidoData(town: TownData) {
             name: "Is this safe with other medications?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Male Vitamine uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
+              text: "Male Vitamin uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
             },
           },
           {
@@ -380,7 +380,7 @@ function getLibidoData(town: TownData) {
             name: "Will this help with desire or just performance?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Male Vitamine specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
+              text: "Male Vitamin specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
             },
           },
           {
@@ -388,7 +388,7 @@ function getLibidoData(town: TownData) {
             name: `Can I get this delivered to ${town.name}?`,
             acceptedAnswer: {
               "@type": "Answer",
-              text: `Absolutely! We deliver Male Vitamine directly to ${town.name} and all surrounding areas in ${town.province}. Your order ships in plain, unmarked packaging — no one will know what's inside. Delivery to ${town.name} typically takes 2-5 business days. Whether you're in the ${town.name} city centre or the outskirts, we ensure fast and discreet delivery throughout South Africa.`,
+              text: `Absolutely! We deliver Male Vitamin directly to ${town.name} and all surrounding areas in ${town.province}. Your order ships in plain, unmarked packaging — no one will know what's inside. Delivery to ${town.name} typically takes 2-5 business days. Whether you're in the ${town.name} city centre or the outskirts, we ensure fast and discreet delivery throughout South Africa.`,
             },
           },
         ],
@@ -406,10 +406,10 @@ function getLibidoData(town: TownData) {
 
   return {
     pageTitle: `Libido Enhancer ${town.name}`,
-    pageDescription: `Lost your sex drive in ${town.name}? Male Vitamine's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. Delivered to ${town.name}, ${town.province}.`,
+    pageDescription: `Lost your sex drive in ${town.name}? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. Delivered to ${town.name}, ${town.province}.`,
     canonicalUrl,
     heroH1: `LIBIDO ENHANCER IN ${town.name.toUpperCase()}`,
-    heroSubheadline: `Men in ${town.name} no longer have to accept a fading sex drive. Male Vitamine's libido formula combines Tribulus, Maca, Fenugreek, and Ginseng to wake up your desire from the inside out. Not a temporary stimulant — a genuine reignition of your natural drive. Available now with discreet delivery to ${town.name} and all of ${town.province}.`,
+    heroSubheadline: `Men in ${town.name} no longer have to accept a fading sex drive. Male Vitamin's libido formula combines Tribulus, Maca, Fenugreek, and Ginseng to wake up your desire from the inside out. Not a temporary stimulant — a genuine reignition of your natural drive. Available now with discreet delivery to ${town.name} and all of ${town.province}.`,
     heroBadge: `${town.name} Desire Restorer`,
     problemTitle: `THE DESIRE THAT DISAPPEARED FROM MEN IN ${town.name.toUpperCase()}`,
     problemDescription: `A declining sex drive doesn't just affect your bedroom life — it changes how you feel about yourself as a man. Across ${town.name} and ${town.province}, thousands of men have lost the passion they once took for granted. It's been replaced by indifference, and it's eroding relationships and self-worth.`,
@@ -489,19 +489,19 @@ function getLibidoData(town: TownData) {
       },
       {
         question: "Is this safe with other medications?",
-        answer: "Male Vitamine uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
+        answer: "Male Vitamin uses natural ingredients with strong safety profiles. However, if you're taking prescription medications — particularly blood pressure medications, antidepressants, or hormone therapies — you should consult your healthcare provider before starting any supplement. Some ingredients like Tribulus can have mild interactions with certain medications. We always recommend being transparent with your doctor about any supplements you're taking. That said, our formula is designed to work with your body's natural systems, not against them.",
       },
       {
         question: "Will this help with desire or just performance?",
-        answer: "Male Vitamine specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
+        answer: "Male Vitamin specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
       },
       {
         question: `Can I get this delivered to ${town.name}?`,
-        answer: `Absolutely! We deliver Male Vitamine directly to ${town.name} and all surrounding areas in ${town.province}. Your order ships in plain, unmarked packaging — no one will know what's inside. Delivery to ${town.name} typically takes 2-5 business days. Whether you're in the ${town.name} city centre or the outskirts, we ensure fast and discreet delivery throughout South Africa.`,
+        answer: `Absolutely! We deliver Male Vitamin directly to ${town.name} and all surrounding areas in ${town.province}. Your order ships in plain, unmarked packaging — no one will know what's inside. Delivery to ${town.name} typically takes 2-5 business days. Whether you're in the ${town.name} city centre or the outskirts, we ensure fast and discreet delivery throughout South Africa.`,
       },
     ],
     currentSlug: "libido-enhancer",
-    productImageAlt: `Male Vitamine Libido Enhancer available in ${town.name} — natural sex drive booster for men in ${town.name}, ${town.province}`,
+    productImageAlt: `Male Vitamin Libido Enhancer available in ${town.name} — natural sex drive booster for men in ${town.name}, ${town.province}`,
     jsonLd,
   };
 }
