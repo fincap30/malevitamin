@@ -141,7 +141,7 @@ export default function TestosteroneBoosterPage() {
             "Testosterone isn't just a physical hormone — it directly affects your brain. Low T is linked to irritability, depression, lack of motivation, and brain fog. You might find yourself snapping at people, losing focus at work, or feeling like you're just going through the motions of life.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE RESTORES YOUR T-LEVELS"
+      howItWorksTitle="HOW MALE VITAMIN RESTORES YOUR T-LEVELS"
       howItWorksSteps={[
         {
           step: 1,

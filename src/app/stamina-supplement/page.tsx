@@ -141,7 +141,7 @@ export default function StaminaSupplementPage() {
             "Physical and mental fatigue are the silent killers of bedroom performance. When your energy reserves are depleted, your body prioritizes survival over performance. Stress, poor sleep, and nutritional deficiencies all contribute to the exhaustion that makes you finish fast and recover slow.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE BUILDS YOUR ENDURANCE"
+      howItWorksTitle="HOW MALE VITAMIN BUILDS YOUR ENDURANCE"
       howItWorksSteps={[
         {
           step: 1,

@@ -78,6 +78,70 @@ export const metadata: Metadata = {
   },
 };
 
+const homepageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Male Vitamin",
+      url: "https://malevitamin.co.za",
+      logo: "https://malevitamin.co.za/product-image.webp",
+      description:
+        "Male Vitamin offers natural male enhancement supplements for erectile dysfunction, low libido, and stamina — delivered across South Africa.",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        areaServed: "ZA",
+        availableLanguage: "English",
+      },
+      sameAs: [],
+    },
+    {
+      "@type": "WebSite",
+      name: "Male Vitamin",
+      url: "https://malevitamin.co.za",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://malevitamin.co.za/?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Product",
+      name: "Male Vitamin — Erectile Dysfunction & Libido Supplement",
+      description:
+        "Natural male supplement with L-Arginine, Tribulus Terrestris, Maca Root, Ginseng Extract, Zinc & Fenugreek for harder erections, stronger libido and lasting stamina. R 850.00 — South Africa.",
+      image: "https://malevitamin.co.za/product-image.webp",
+      brand: { "@type": "Brand", name: "Male Vitamin" },
+      offers: {
+        "@type": "Offer",
+        price: "850.00",
+        priceCurrency: "ZAR",
+        availability: "https://schema.org/InStock",
+        url: "https://malevitamin.co.za",
+        priceValidUntil: "2027-12-31",
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "ZA",
+          },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 2, unitCode: "DAY" },
+            transitTime: { "@type": "QuantitativeValue", minValue: 2, maxValue: 5, unitCode: "DAY" },
+          },
+        },
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        reviewCount: "247",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -85,6 +149,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-ZA" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >

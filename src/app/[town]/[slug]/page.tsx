@@ -250,7 +250,7 @@ function getEdData(town: TownData) {
         description: `Every time you fail to perform, the anxiety compounds. You start anticipating failure before you even begin, which triggers stress hormones that actively work against erection quality. It's a vicious cycle that feeds itself — and it's ruining relationships throughout ${town.name} and ${town.province}.`,
       },
     ],
-    howItWorksTitle: "HOW MALE VITAMINE RESTORES YOUR FIRMNESS",
+    howItWorksTitle: "HOW MALE VITAMIN RESTORES YOUR FIRMNESS",
     howItWorksSteps: [
       {
         step: 1,
@@ -448,7 +448,7 @@ function getLibidoData(town: TownData) {
         description: `It's not just about wanting sex — it's about the spark that makes you feel alive. That magnetic attraction, that hunger, that primal drive that made you feel like a man. When your libido disappears, you lose a piece of your identity. You stop feeling desirable, you stop pursuing, and you settle into a version of yourself you don't even recognize. Men in ${town.name} deserve better.`,
       },
     ],
-    howItWorksTitle: "HOW MALE VITAMINE REIGNITES YOUR DESIRE",
+    howItWorksTitle: "HOW MALE VITAMIN REIGNITES YOUR DESIRE",
     howItWorksSteps: [
       {
         step: 1,

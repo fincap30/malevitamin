@@ -143,7 +143,7 @@ export default function ErectileDysfunctionPage() {
             "Erectile dysfunction is progressive — it doesn't fix itself. The underlying causes (poor circulation, low nitric oxide, declining testosterone) get worse with age and stress. And the psychological impact compounds: each failure increases anxiety, which makes the next failure more likely. Men who ignore ED are setting themselves up for a downward spiral that gets harder to reverse over time.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE TREATS ERECTILE DYSFUNCTION"
+      howItWorksTitle="HOW MALE VITAMIN TREATS ERECTILE DYSFUNCTION"
       howItWorksSteps={[
         {
           step: 1,

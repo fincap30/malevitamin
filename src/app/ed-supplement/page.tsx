@@ -141,7 +141,7 @@ export default function EDSupplementPage() {
             "Every time you fail to perform, the anxiety compounds. You start anticipating failure before you even begin, which triggers stress hormones that actively work against erection quality. It's a vicious cycle that feeds itself.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE RESTORES YOUR FIRMNESS"
+      howItWorksTitle="HOW MALE VITAMIN RESTORES YOUR FIRMNESS"
       howItWorksSteps={[
         {
           step: 1,

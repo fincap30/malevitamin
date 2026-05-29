@@ -143,7 +143,7 @@ export default function LibidoUpliftmentPage() {
             "It's not just about wanting sex — it's about the primal drive that makes you feel alive and masculine. When your libido disappears, you lose a piece of your identity. You stop feeling desirable, you stop pursuing, and you settle into a version of yourself you don't even recognize. You deserve libido upliftment — because you deserve to feel like yourself again.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE UPLIFTS YOUR LIBIDO"
+      howItWorksTitle="HOW MALE VITAMIN UPLIFTS YOUR LIBIDO"
       howItWorksSteps={[
         {
           step: 1,

@@ -93,7 +93,7 @@ const jsonLd = {
         {
           "@type": "Question",
           name: "Will this help with desire or just performance?",
-          answeredAnswer: {
+          acceptedAnswer: {
             "@type": "Answer",
             text: "Male Vitamin specifically targets both desire AND performance — but the libido-enhancing effects are where this formula really shines. Tribulus Terrestris and Maca Root are both clinically shown to increase sexual desire specifically, not just physical capability. You'll notice more spontaneous sexual thoughts, a stronger urge to initiate intimacy, and a renewed sense of passion that goes beyond just 'being able to perform.' This is about reigniting the fire, not just fixing the plumbing.",
           },
@@ -141,7 +141,7 @@ export default function LibidoEnhancerPage() {
             "It's not just about wanting sex — it's about the spark that makes you feel alive. That magnetic attraction, that hunger, that primal drive that made you feel like a man. When your libido disappears, you lose a piece of your identity. You stop feeling desirable, you stop pursuing, and you settle into a version of yourself you don't even recognize.",
         },
       ]}
-      howItWorksTitle="HOW MALE VITAMINE REIGNITES YOUR DESIRE"
+      howItWorksTitle="HOW MALE VITAMIN REIGNITES YOUR DESIRE"
       howItWorksSteps={[
         {
           step: 1,
