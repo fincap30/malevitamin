@@ -103,6 +103,24 @@ export async function generateMetadata({
       title,
       description,
       url: canonicalUrl,
+      images: [
+        {
+          url: "/product-image.webp",
+          width: 1200,
+          height: 630,
+          alt: isED
+            ? `Male Vitamin ED Supplement in ${town.name} — Natural Erectile Dysfunction Solution`
+            : `Male Vitamin Libido Enhancer in ${town.name} — Natural Sex Drive Booster`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: isED
+        ? `Natural ED supplement in ${town.name}. Boost blood flow for stronger, firmer erections. R 850.00 — Delivered to ${town.name}.`
+        : `Natural libido enhancer in ${town.name}. Reignite your desire and passion. R 850.00 — Delivered to ${town.name}.`,
+      images: ["/product-image.webp"],
     },
     alternates: {
       canonical: canonicalUrl,

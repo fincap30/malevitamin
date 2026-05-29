@@ -19,6 +19,20 @@ export const metadata: Metadata = {
     description:
       "Looking for erectile dysfunction treatment? Male Vitamin's natural formula targets the root causes of ED — poor blood flow, low nitric oxide, and declining testosterone — for stronger, longer-lasting erections. R 850.00 — Order now in South Africa.",
     url: "https://malevitamin.co.za/erectile-dysfunction",
+    images: [
+      {
+        url: "/product-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Male Vitamin Erectile Dysfunction Treatment — Natural ED Solution",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Erectile Dysfunction Treatment South Africa | Natural ED Solution | Male Vitamin",
+    description: "Natural ED treatment targeting root causes — poor blood flow, low nitric oxide, declining testosterone. R 850.00 — South Africa.",
+    images: ["/product-image.webp"],
   },
   alternates: {
     canonical: "https://malevitamin.co.za/erectile-dysfunction",

@@ -17,6 +17,20 @@ export const metadata: Metadata = {
     description:
       "Underperforming in the bedroom? Male Vitamin's all-in-one performance formula delivers harder stamina, stronger drive and rock-solid confidence. R 850.00.",
     url: "https://malevitamin.co.za/male-performance",
+    images: [
+      {
+        url: "/product-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Male Vitamin Performance Enhancement — Stronger Bedroom Performance",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Male Performance Enhancement South Africa | Stronger Bedroom Performance | Male Vitamin",
+    description: "Underperforming? Our all-in-one formula delivers harder stamina, stronger drive and rock-solid confidence. R 850.00.",
+    images: ["/product-image.webp"],
   },
   alternates: {
     canonical: "https://malevitamin.co.za/male-performance",

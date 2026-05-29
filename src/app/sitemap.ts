@@ -23,12 +23,12 @@ const towns = [
   { slug: "east-london", name: "East London" },
 ];
 
-const slugs = ["ed-supplement", "libido-enhancer"];
+const townSlugs = ["ed-supplement", "libido-enhancer"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://malevitamin.co.za";
 
-  // Main pages
+  // Main pages (all 7 product pages + homepage)
   const mainPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -66,11 +66,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/erectile-dysfunction`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/libido-upliftment`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ];
 
   // Town-based SEO pages
   const townPages: MetadataRoute.Sitemap = towns.flatMap((town) =>
-    slugs.map((slug) => ({
+    townSlugs.map((slug) => ({
       url: `${baseUrl}/${town.slug}/${slug}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,

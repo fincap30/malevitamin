@@ -1133,11 +1133,68 @@ function Footer() {
 /*  PAGE                                                               */
 /* ------------------------------------------------------------------ */
 
+const homepageJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Male Vitamin",
+      url: "https://malevitamin.co.za",
+      logo: "https://malevitamin.co.za/product-image.webp",
+      description:
+        "South Africa's premium natural male supplement for erectile dysfunction and low libido. L-Arginine, Tribulus, Maca Root & Ginseng formula.",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        areaServed: "ZA",
+      },
+      sameAs: [],
+    },
+    {
+      "@type": "WebSite",
+      name: "Male Vitamin",
+      url: "https://malevitamin.co.za",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://malevitamin.co.za/?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Product",
+      name: "Male Vitamin — Erectile Dysfunction & Libido Supplement",
+      description:
+        "Natural supplement for harder erections, stronger libido and lasting stamina. Contains L-Arginine, Tribulus Terrestris, Maca Root, Ginseng Extract, Zinc & Fenugreek.",
+      image: "https://malevitamin.co.za/product-image.webp",
+      brand: { "@type": "Brand", name: "Male Vitamin" },
+      offers: {
+        "@type": "Offer",
+        price: "850.00",
+        priceCurrency: "ZAR",
+        availability: "https://schema.org/InStock",
+        url: "https://malevitamin.co.za",
+        priceValidUntil: "2027-12-31",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        reviewCount: "2000",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   const [showPayment, setShowPayment] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a08]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homepageJsonLd),
+        }}
+      />
       <Navbar onOrderNow={() => setShowPayment(true)} />
       <main className="flex-1">
         <HeroSection onOrderNow={() => setShowPayment(true)} />

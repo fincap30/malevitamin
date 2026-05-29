@@ -19,6 +19,20 @@ export const metadata: Metadata = {
     description:
       "Need libido upliftment? Male Vitamin's natural formula uses Tribulus, Maca Root & Fenugreek to uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — Order now in South Africa.",
     url: "https://malevitamin.co.za/libido-upliftment",
+    images: [
+      {
+        url: "/product-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Male Vitamin Libido Upliftment — Restore Your Sex Drive Naturally",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Libido Upliftment South Africa | Restore Your Sex Drive Naturally | Male Vitamin",
+    description: "Need libido upliftment? Uplift your sex drive, reignite passion, and restore desire naturally. R 850.00 — South Africa.",
+    images: ["/product-image.webp"],
   },
   alternates: {
     canonical: "https://malevitamin.co.za/libido-upliftment",

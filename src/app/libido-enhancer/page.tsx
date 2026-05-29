@@ -17,6 +17,20 @@ export const metadata: Metadata = {
     description:
       "Lost your sex drive? Male Vitamin's natural libido enhancer uses Tribulus, Maca & Fenugreek to reignite your desire and passion. R 850.00 — South Africa.",
     url: "https://malevitamin.co.za/libido-enhancer",
+    images: [
+      {
+        url: "/product-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Male Vitamin Libido Enhancer — Reignite Your Desire Naturally",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Natural Libido Enhancer for Men South Africa | Boost Your Sex Drive | Male Vitamin",
+    description: "Lost your sex drive? Reignite your desire and passion naturally. R 850.00 — South Africa.",
+    images: ["/product-image.webp"],
   },
   alternates: {
     canonical: "https://malevitamin.co.za/libido-enhancer",
