@@ -693,10 +693,10 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                                 {form.deliveryOption === "speed"
                                   ? "Speed"
                                   : "Normal"}
-                                )
+                                ) — to JVL
                               </span>
                               <span>
-                                -{currencySymbol}{" "}
+                                +{currencySymbol}{" "}
                                 {verificationResult.splitBreakdown.deliveryFee.toFixed(
                                   2
                                 )}

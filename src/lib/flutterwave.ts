@@ -3,12 +3,16 @@
 //
 // PAYMENT LOGIC:
 // 1. Customer pays product price (e.g., R 850)
-// 2. Flutterwave deducts transaction fee → JVL bears this cost
-// 3. TJ gets 25% of GROSS amount (clean, no deductions)
-// 4. JVL gets 75% of GROSS amount MINUS Flutterwave fee MINUS delivery fee
+// 2. Flutterwave deducts transaction fee
+// 3. Both parties split the AFTER-FEE amount 25/75
+// 4. Delivery fee is added to JVL's share (JVL collects from customer)
 // 5. JVL receives WhatsApp with customer name, address, product, delivery details
 //
-// Docs: https://developer.flutterwave.com/v3.0/docs/split-payments
+// Example: R 850 product, speed delivery (R 119)
+//   - Flutterwave fee: R 25.65
+//   - After fee: R 824.35
+//   - Owner (25% of after-fee): R 206.09
+//   - JVL (75% of after-fee): R 618.26 + R 119.00 delivery = R 737.26
 
 declare global {
   interface Window {
@@ -196,17 +200,17 @@ function buildSubaccounts(): FlutterwaveSubaccount[] {
 /**
  * Calculate the expected split breakdown.
  *
- * JVL PAYMENT LOGIC:
+ * PAYMENT LOGIC:
  * 1. Flutterwave deducts its fee from the total
- * 2. TJ gets 25% of the GROSS amount (clean — no deductions)
- * 3. JVL gets the REMAINING after TJ's share and Flutterwave fee
- * 4. Delivery fee is deducted from JVL's share (JVL pays shipping)
+ * 2. Both parties split the AFTER-FEE amount 25/75
+ * 3. Delivery fee is added to JVL's share (JVL collects delivery from customer)
  *
- * Example: R 850.00 product, normal delivery (R 89)
+ * Example: R 850.00 product, speed delivery (R 119)
  *   - Flutterwave fee: R 25.65
- *   - TJ (25% of gross): R 212.50
- *   - JVL (remaining): R 850 - R 212.50 - R 25.65 = R 611.85
- *   - JVL net after delivery: R 611.85 - R 89.00 = R 522.85
+ *   - After fee: R 824.35
+ *   - Owner (25% of after-fee): R 206.09
+ *   - JVL (75% of after-fee): R 618.26
+ *   - JVL total with delivery: R 618.26 + R 119.00 = R 737.26
  */
 export function calculateSplitBreakdown(
   totalAmount: number,
@@ -214,29 +218,33 @@ export function calculateSplitBreakdown(
 ): {
   totalAmount: number;
   flutterwaveFee: number;
-  ownerShare: number; // TJ's 25% clean
-  partnerGrossShare: number; // JVL's share before delivery
+  afterFeeAmount: number;
+  ownerShare: number; // 25% of after-fee
+  partnerGrossShare: number; // 75% of after-fee
   deliveryFee: number;
-  partnerNetShare: number; // JVL's share after delivery
+  partnerNetShare: number; // 75% of after-fee + delivery fee
   settlementAmount: number;
   splits: { label: string; percentage: number; amount: number; note?: string }[];
 } {
   // Flutterwave SA fee: 2.9% + R1 (local card estimate)
   const flutterwaveFee = totalAmount * 0.029 + 1;
 
-  // Owner (TJ) gets 25% of GROSS — clean, no deductions
+  // After Flutterwave fee
+  const afterFeeAmount = totalAmount - flutterwaveFee;
+
+  // Both parties split the AFTER-FEE amount
   const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
-  const ownerShare = totalAmount * (ownerPercentage / 100);
+  const ownerShare = afterFeeAmount * (ownerPercentage / 100);
 
-  // JVL gets the remaining after TJ's share and Flutterwave fee
-  const partnerGrossShare = totalAmount - ownerShare - flutterwaveFee;
+  // JVL gets 75% of after-fee
+  const partnerGrossShare = afterFeeAmount * ((100 - ownerPercentage) / 100);
 
-  // Delivery fee (deducted from JVL's share)
+  // Delivery fee (added to JVL's share — JVL collects from customer)
   const deliveryFee =
     deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
 
-  // JVL net after delivery
-  const partnerNetShare = partnerGrossShare - deliveryFee;
+  // JVL total = 75% of after-fee + delivery fee
+  const partnerNetShare = partnerGrossShare + deliveryFee;
 
   // Settlement amount (what Flutterwave actually distributes)
   const settlementAmount = totalAmount - flutterwaveFee;
@@ -246,19 +254,20 @@ export function calculateSplitBreakdown(
       label: process.env.SPLIT_OWNER_LABEL || "Owner",
       percentage: ownerPercentage,
       amount: ownerShare,
-      note: "Clean — no deductions",
+      note: `${ownerPercentage}% of after-fee amount`,
     },
     {
       label: process.env.SPLIT_PARTNER_LABEL || "Partner",
       percentage: 100 - ownerPercentage,
-      amount: partnerNetShare,
-      note: `After Flutterwave fee (-R ${flutterwaveFee.toFixed(2)}) and delivery (-R ${deliveryFee.toFixed(2)})`,
+      amount: partnerGrossShare,
+      note: `${100 - ownerPercentage}% of after-fee + delivery (R ${deliveryFee.toFixed(2)})`,
     },
   ];
 
   return {
     totalAmount,
     flutterwaveFee,
+    afterFeeAmount,
     ownerShare,
     partnerGrossShare,
     deliveryFee,
