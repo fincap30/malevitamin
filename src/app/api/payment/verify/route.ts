@@ -7,8 +7,9 @@ const FLUTTERWAVE_VERIFY_URL = "https://api.flutterwave.com/v3/transactions";
  *
  * Verifies a Flutterwave transaction server-side and calculates the split breakdown.
  * After successful verification, triggers notifications:
- * - WhatsApp to customer: Payment confirmed + split breakdown + delivery details
- * - WhatsApp to JVL: Full client details + order + split + bank accounts
+ * - WhatsApp to customer: Payment confirmed + delivery details
+ * - WhatsApp to ALL JVL contacts (Nico, Ana, Chalyn, Jacques): Full client details + order + JVL settlement
+ * - WhatsApp to Owner (T Schoeman): Full transaction details + both shares
  * - Email to customer: Payment confirmation
  */
 export async function POST(request: NextRequest) {
@@ -198,11 +199,55 @@ async function triggerNotifications(details: {
     }
   }
 
-  // 2. WhatsApp to JVL — Full client details + split + bank accounts
-  const jvlPhone = process.env.JVL_NOTIFICATION_PHONE;
-  if (jvlPhone) {
+  // 2. WhatsApp to ALL JVL contacts — Full client details + split + bank accounts
+  const jvlPhones = [
+    process.env.JVL_PHONE_NICO,
+    process.env.JVL_PHONE_ANA,
+    process.env.JVL_PHONE_CHALYN,
+    process.env.JVL_PHONE_JACQUES,
+  ].filter(Boolean) as string[];
+
+  if (jvlPhones.length > 0) {
+    const jvlMessage = buildJVLWhatsAppMessage({
+      customerName: details.customerName,
+      customerEmail: details.customerEmail,
+      customerPhone: details.customerPhone || "Not provided",
+      amount: details.amount,
+      currencySymbol,
+      deliveryOption: details.deliveryOption,
+      deliveryFee: details.splitBreakdown.deliveryFee,
+      address: details.customerAddress,
+      txRef: details.txRef,
+      productName: businessName,
+      jvlNet: details.splitBreakdown.partnerNetShare,
+      jvlGross: details.splitBreakdown.partnerGrossShare,
+      ownerShare: details.splitBreakdown.ownerShare,
+      flutterwaveFee: details.splitBreakdown.flutterwaveFee,
+    });
+
+    for (const phone of jvlPhones) {
+      try {
+        await fetch(`${baseUrl}/api/payment/notify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "whatsapp",
+            phone,
+            message: jvlMessage,
+          }),
+        });
+        console.log("[Payment] JVL WhatsApp sent to", phone);
+      } catch (error) {
+        console.error("[Payment] JVL WhatsApp failed for", phone, error);
+      }
+    }
+  }
+
+  // 3. WhatsApp to OWNER (T Schoeman) — Full transaction details + Owner's share
+  const ownerPhone = process.env.OWNER_PHONE;
+  if (ownerPhone) {
     try {
-      const jvlMessage = buildJVLWhatsAppMessage({
+      const ownerMessage = buildOwnerWhatsAppMessage({
         customerName: details.customerName,
         customerEmail: details.customerEmail,
         customerPhone: details.customerPhone || "Not provided",
@@ -213,9 +258,8 @@ async function triggerNotifications(details: {
         address: details.customerAddress,
         txRef: details.txRef,
         productName: businessName,
-        jvlNet: details.splitBreakdown.partnerNetShare,
-        jvlGross: details.splitBreakdown.partnerGrossShare,
         ownerShare: details.splitBreakdown.ownerShare,
+        jvlShare: details.splitBreakdown.partnerNetShare,
         flutterwaveFee: details.splitBreakdown.flutterwaveFee,
       });
 
@@ -224,18 +268,17 @@ async function triggerNotifications(details: {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "whatsapp",
-          phone: jvlPhone,
-          message: jvlMessage,
+          phone: ownerPhone,
+          message: ownerMessage,
         }),
       });
-
-      console.log("[Payment] JVL WhatsApp sent to", jvlPhone);
+      console.log("[Payment] Owner WhatsApp sent to", ownerPhone);
     } catch (error) {
-      console.error("[Payment] JVL WhatsApp failed:", error);
+      console.error("[Payment] Owner WhatsApp failed:", error);
     }
   }
 
-  // 3. Email to customer
+  // 4. Email to customer
   if (details.customerEmail) {
     try {
       await fetch(`${baseUrl}/api/payment/notify`, {
@@ -362,6 +405,69 @@ function buildJVLWhatsAppMessage(params: {
     `━━━ ACTION REQUIRED ━━━`,
     `Please ship to the client at the address above.`,
     `Reply to this message to confirm shipment.`,
+  ].join("\n");
+}
+
+/**
+ * Build WhatsApp message for OWNER (T Schoeman).
+ * Shows full transaction details, client particulars, and BOTH shares.
+ * Owner sees everything — client details, their own share, and JVL's share.
+ * Gateway prepends: 🔔 malevitamin:
+ */
+function buildOwnerWhatsAppMessage(params: {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  amount: number;
+  currencySymbol: string;
+  deliveryOption: string;
+  deliveryFee: number;
+  address: string;
+  txRef: string;
+  productName: string;
+  ownerShare: number;
+  jvlShare: number;
+  flutterwaveFee: number;
+}): string {
+  const deliveryLabel =
+    params.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
+
+  const ownerBank = process.env.OWNER_BANK || "";
+  const ownerAccName = process.env.OWNER_ACCOUNT_NAME || "";
+  const ownerAccNo = process.env.OWNER_ACCOUNT_NUMBER || "";
+  const ownerBranch = process.env.OWNER_BRANCH || "";
+
+  const productPrice = params.amount - params.deliveryFee;
+
+  return [
+    `💰 PAYMENT RECEIVED — ${params.productName}`,
+    ``,
+    `━━━ CLIENT PARTICULARS ━━━`,
+    `👤 Name: ${params.customerName}`,
+    `📞 Phone: ${params.customerPhone}`,
+    `📧 Email: ${params.customerEmail}`,
+    `📍 Address: ${params.address}`,
+    ``,
+    `━━━ TRANSACTION DETAILS ━━━`,
+    `Product: ${params.productName}`,
+    `Product Price: ${params.currencySymbol} ${productPrice.toFixed(2)}`,
+    `Delivery (${deliveryLabel}): ${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
+    `Total Paid: ${params.currencySymbol} ${params.amount.toFixed(2)}`,
+    `Payment Gateway Fee: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
+    `Reference: ${params.txRef}`,
+    `Processed by: Sitewizard`,
+    ``,
+    `━━━ YOUR SETTLEMENT (25%) ━━━`,
+    `Your Share (25% of product after fees): ${params.currencySymbol} ${params.ownerShare.toFixed(2)}`,
+    `  ➤ Bank: ${ownerBank} | ${ownerAccName}`,
+    `  ➤ Account: ${ownerAccNo} | Branch: ${ownerBranch}`,
+    ``,
+    `━━━ JVL SETTLEMENT (75% + delivery) ━━━`,
+    `JVL Share: ${params.currencySymbol} ${params.jvlShare.toFixed(2)}`,
+    `  ➤ Bank: Standard Bank | JVL Headquarters PTY Ltd`,
+    `  ➤ Account: 253215811 | Branch: Menlyn`,
+    ``,
+    `Auto-split by payment gateway. Funds settle to bank accounts within 24h.`,
   ].join("\n");
 }
 
