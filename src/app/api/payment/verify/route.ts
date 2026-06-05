@@ -278,20 +278,85 @@ async function triggerNotifications(details: {
     }
   }
 
-  // 4. Email to customer
-  if (details.customerEmail) {
+  // 4. Email to JVL (Ana) — Full transaction details + client particulars
+  const jvlSaleEmail = process.env.JVL_SALE_EMAIL;
+  if (jvlSaleEmail) {
     try {
-      await fetch(`${baseUrl}/api/payment/notify`, {
+      const deliveryLabel =
+        details.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
+      const productPrice = details.amount - details.splitBreakdown.deliveryFee;
+
+      const jvlEmailBody = [
+        `NEW ORDER — ${businessName}`,
+        ``,
+        `CLIENT PARTICULARS:`,
+        `Name: ${details.customerName}`,
+        `Phone: ${details.customerPhone || "Not provided"}`,
+        `Email: ${details.customerEmail}`,
+        `Address: ${details.customerAddress}`,
+        ``,
+        `ORDER DETAILS:`,
+        `Product: ${businessName}`,
+        `Product Price: R ${productPrice.toFixed(2)}`,
+        `Delivery: ${deliveryLabel} — R ${details.splitBreakdown.deliveryFee.toFixed(2)}`,
+        `Total Paid: R ${details.amount.toFixed(2)}`,
+        `Reference: ${details.txRef}`,
+        `Processed by: Sitewizard`,
+        ``,
+        `JVL SETTLEMENT:`,
+        `JVL Share (75% of product after fees): R ${details.splitBreakdown.partnerGrossShare.toFixed(2)}`,
+        `Plus delivery fee (full): +R ${details.splitBreakdown.deliveryFee.toFixed(2)}`,
+        `Payment gateway fee: -R ${details.splitBreakdown.flutterwaveFee.toFixed(2)}`,
+        ``,
+        `TOTAL TO JVL ACCOUNT: R ${details.splitBreakdown.partnerNetShare.toFixed(2)}`,
+        `Bank: Standard Bank | JVL Headquarters PTY Ltd`,
+        `Account: 253215811 | Branch: Menlyn`,
+        ``,
+        `Owner Share (25%): R ${details.splitBreakdown.ownerShare.toFixed(2)}`,
+        ``,
+        `Auto-split by payment gateway. Funds settle within 24h.`,
+      ].join("\n");
+
+      await fetch(`${baseUrl}/api/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "email",
-          email: details.customerEmail,
-          customerName: details.customerName,
-          amount: details.amount,
-          currency: details.currency,
-          businessName,
-          txRef: details.txRef,
+          to: jvlSaleEmail,
+          subject: `NEW ORDER — ${businessName} — R ${details.amount.toFixed(2)}`,
+          body: jvlEmailBody,
+        }),
+      });
+
+      console.log("[Payment] JVL sale email sent to", jvlSaleEmail);
+    } catch (error) {
+      console.error("[Payment] JVL sale email failed:", error);
+    }
+  }
+
+  // 5. Email to customer
+  if (details.customerEmail) {
+    try {
+      const customerEmailBody = [
+        `Hi ${details.customerName},`,
+        ``,
+        `Your payment of R ${details.amount.toFixed(2)} has been received and confirmed.`,
+        ``,
+        `Your product will be sent to you shortly. You will be informed with tracking details once it ships.`,
+        ``,
+        `Order Reference: ${details.txRef}`,
+        ``,
+        `Thank you for your order!`,
+        ``,
+        `— ${businessName}`,
+      ].join("\n");
+
+      await fetch(`${baseUrl}/api/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: details.customerEmail,
+          subject: `${businessName} — Payment Confirmed`,
+          body: customerEmailBody,
         }),
       });
 

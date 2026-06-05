@@ -177,6 +177,8 @@ async function handleEmailNotification(body: {
   currency?: string;
   businessName?: string;
   txRef?: string;
+  customSubject?: string;
+  customBody?: string;
 }): Promise<NextResponse> {
   const emailApiUrl = process.env.EMAIL_API_URL;
 
@@ -196,14 +198,13 @@ async function handleEmailNotification(body: {
   const currencySymbol =
     body.currency === "ZAR" ? "R" : body.currency || "R";
 
-  const emailContent = {
-    to: body.email,
-    subject: `${businessName} — Payment Confirmed`,
-    body: `Hi ${body.customerName},
+  // Support custom subject/body for JVL and other non-customer emails
+  const subject = body.customSubject || `${businessName} — Payment Confirmed`;
+  const emailBodyText = body.customBody || `Hi ${body.customerName},
 
 Your payment of ${currencySymbol} ${(body.amount || 0).toFixed(
-      2
-    )} has been received and confirmed.
+    2
+  )} has been received and confirmed.
 
 Your product will be sent to you shortly. You will be informed with tracking details once it ships.
 
@@ -211,7 +212,12 @@ Order Reference: ${body.txRef}
 
 Thank you for your order!
 
-— ${businessName}`,
+— ${businessName}`;
+
+  const emailContent = {
+    to: body.email,
+    subject,
+    body: emailBodyText,
   };
 
   if (emailApiUrl) {
