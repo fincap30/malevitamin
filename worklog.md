@@ -135,3 +135,25 @@ Stage Summary:
 - To Ana: jvl.wellnesspa@gmail.com (gets full sale details + JVL settlement)
 - To Customer: Gets payment confirmation + delivery details
 - Every sale now triggers: WhatsApp x5 + Email x2 (Ana + customer)
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Configure malevitamin.co.za custom domain
+
+Work Log:
+- Checked DNS: malevitamin.co.za points to same ALB as malevitamin.space-z.ai (47.239.134.228)
+- Verified site works at malevitamin.space-z.ai (HTTP 200, 75KB)
+- Custom domain returns 503 because ALB doesn't route malevitamin.co.za to the project
+- SSL cert for custom domain is chatglm.site (default ALB cert), not malevitamin.co.za
+- Caddyfile already configured with malevitamin.co.za and www.malevitamin.co.za
+- space-z.ai dashboard doesn't have custom domain settings (redirects to chat.z.ai)
+- No git remotes configured, no deployment API found
+- Created Cloudflare Worker reverse proxy solution as alternative
+
+Stage Summary:
+- DNS is correct but ALB routing is the blocker
+- z.ai platform doesn't expose custom domain configuration
+- Created Cloudflare Worker proxy in /home/z/my-project/download/cloudflare-proxy/
+- Files: worker.js, wrangler.toml, package.json, README.md
+- User needs to set up Cloudflare (free) to complete the proxy setup
