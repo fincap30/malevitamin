@@ -170,32 +170,57 @@ function getSplitRecipients(): SplitRecipient[] {
 /**
  * Build the Flutterwave subaccounts array for split payment.
  *
- * Uses transaction_split_ratio for a 25/75 split between Owner and JVL.
- * The total charged to the customer includes product + delivery.
- * Flutterwave deducts their fee, then splits the settlement 25/75.
- * JVL's 75% share naturally includes the delivery portion.
+ * Uses flat charge for Owner so that:
+ *   - Owner gets exactly 25% of (product price after Flutterwave fees)
+ *   - JVL gets everything else = 75% of (product after fees) + FULL delivery fee
+ *
+ * This ensures the delivery fee goes entirely to JVL, not split 25/75.
  *
  * Example: R 969 charged (R 850 product + R 119 speed delivery)
  *   - Flutterwave fee: ~R 29.10
  *   - Settlement: ~R 939.90
- *   - Owner (25%): ~R 234.97 → to Capitec account
- *   - JVL (75%): ~R 704.93 → to Standard Bank account
+ *   - Owner flat charge (25% of R 820.90): R 205.23 → to Capitec account
+ *   - JVL gets the rest: R 939.90 - R 205.23 = R 734.67 → to Standard Bank
+ *     (which = 75% of product R 615.67 + delivery R 119.00)
  */
-function buildSubaccounts(): FlutterwaveSubaccount[] {
+function buildSubaccounts(deliveryOption: DeliveryOption = "normal"): FlutterwaveSubaccount[] {
   const ownerSubId = process.env.FLUTTERWAVE_OWNER_SUBACCOUNT_ID;
   const partnerSubId = process.env.FLUTTERWAVE_PARTNER_SUBACCOUNT_ID;
 
   if (!ownerSubId || !partnerSubId) return [];
 
-  // Use split ratio: Owner 1 : JVL 3 (= 25% : 75%)
+  const deliveryFee =
+    deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
+  const totalAmount = PRODUCT.price + deliveryFee;
+
+  // Calculate Owner's exact share: 25% of (settlement - delivery)
+  // This ensures delivery fee is NOT included in Owner's split
+  const flutterwaveFee = totalAmount * 0.029 + 1;
+  const settlement = totalAmount - flutterwaveFee;
+  const splitPool = settlement - deliveryFee;
+  const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
+  const ownerFlatCharge = Math.round(splitPool * (ownerPercentage / 100) * 100) / 100;
+
+  console.log("[Flutterwave] Subaccount split calculation:", {
+    totalAmount: `R ${totalAmount.toFixed(2)}`,
+    deliveryFee: `R ${deliveryFee.toFixed(2)}`,
+    flutterwaveFee: `R ${flutterwaveFee.toFixed(2)}`,
+    settlement: `R ${settlement.toFixed(2)}`,
+    splitPool: `R ${splitPool.toFixed(2)}`,
+    ownerFlatCharge: `R ${ownerFlatCharge.toFixed(2)}`,
+    jvlGets: `R ${(settlement - ownerFlatCharge).toFixed(2)}`,
+  });
+
+  // Owner gets a flat charge (25% of product after fees)
+  // JVL gets everything else (75% of product + ALL delivery)
   return [
     {
       id: ownerSubId,
-      transaction_split_ratio: 1,
+      transaction_charge_type: "flat",
+      transaction_charge: ownerFlatCharge,
     },
     {
       id: partnerSubId,
-      transaction_split_ratio: 3,
     },
   ];
 }
@@ -363,7 +388,7 @@ export async function initiatePayment(customer: {
   }
 
   const txRef = generateTxRef();
-  const subaccounts = buildSubaccounts();
+  const subaccounts = buildSubaccounts(customer.deliveryOption);
 
   // Total amount = product price + delivery fee
   const deliveryFee =
@@ -435,9 +460,11 @@ export async function initiatePayment(customer: {
   };
 
   if (subaccounts.length > 0) {
+    const breakdown = calculateSplitBreakdown(totalAmount, customer.deliveryOption);
     console.log(
       "[Flutterwave] Initiating split payment:",
-      getSplitRecipients().map((r) => `${r.label}: ${r.percentage}%`),
+      `Owner (25% of product after fees): R ${breakdown.ownerShare.toFixed(2)}`,
+      `JVL (75% + delivery): R ${breakdown.partnerNetShare.toFixed(2)}`,
       `Total: R ${totalAmount.toFixed(2)} (Product: R ${PRODUCT.price.toFixed(2)} + Delivery: R ${deliveryFee.toFixed(2)})`
     );
   }
