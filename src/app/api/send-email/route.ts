@@ -55,11 +55,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create transporter
+    // Create transporter — use secure=true for port 465, otherwise STARTTLS
+    const useSecure = smtpPort === 465;
     const transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
-      secure: false, // TLS
+      secure: useSecure,
       auth: {
         user: smtpUser,
         pass: smtpPass,
