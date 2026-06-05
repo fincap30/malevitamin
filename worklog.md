@@ -110,3 +110,28 @@ Stage Summary:
 - All 55 pages reference malevitamin.co.za correctly
 - Site accessible locally (HTTP 200 confirmed)
 - HTTPS will activate once Caddy reloads with domain config and DNS propagates
+---
+Task ID: email-setup
+Agent: Main
+Task: Set up email notifications via Hostinger SMTP using support@jvladmin.co.za
+
+Work Log:
+- Updated .env with Hostinger SMTP credentials (smtp.hostinger.com:465 SSL, support@jvladmin.co.za, Kruis2013#)
+- Initial tests with Gmail SMTP failed (App Password required by Google)
+- Tested Hostinger SMTP — initial password Kruis2013 was rejected
+- User reset password to Kruis2013# — Hostinger SMTP login verified successfully
+- Sent test plain email to jvl.wellnesspa@gmail.com — SUCCESS
+- Sent test professional HTML sale notification email — SUCCESS
+- Updated /api/send-email/route.ts to support port 465 SSL and port 587 STARTTLS
+- Updated /api/payment/verify/route.ts to send HTML-formatted emails:
+  - JVL sale email: Professional HTML with client particulars, order details, JVL settlement
+  - Customer confirmation email: Professional HTML with payment confirmation and delivery details
+- Added buildJVLSaleEmailHtml() and buildCustomerSaleEmailHtml() functions
+- Build verified — no errors
+
+Stage Summary:
+- Email notifications are WORKING via Hostinger SMTP
+- From: "Male Vitamin" <support@jvladmin.co.za>
+- To Ana: jvl.wellnesspa@gmail.com (gets full sale details + JVL settlement)
+- To Customer: Gets payment confirmation + delivery details
+- Every sale now triggers: WhatsApp x5 + Email x2 (Ana + customer)

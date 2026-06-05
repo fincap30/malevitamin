@@ -317,6 +317,25 @@ async function triggerNotifications(details: {
         `Auto-split by payment gateway. Funds settle within 24h.`,
       ].join("\n");
 
+      // Professional HTML version of the sale notification
+      const jvlEmailHtml = buildJVLSaleEmailHtml({
+        businessName,
+        customerName: details.customerName,
+        customerPhone: details.customerPhone || "Not provided",
+        customerEmail: details.customerEmail,
+        customerAddress: details.customerAddress,
+        productPrice,
+        deliveryLabel,
+        deliveryFee: details.splitBreakdown.deliveryFee,
+        totalAmount: details.amount,
+        txRef: details.txRef,
+        partnerGrossShare: details.splitBreakdown.partnerGrossShare,
+        deliveryFeeAmount: details.splitBreakdown.deliveryFee,
+        flutterwaveFee: details.splitBreakdown.flutterwaveFee,
+        partnerNetShare: details.splitBreakdown.partnerNetShare,
+        ownerShare: details.splitBreakdown.ownerShare,
+      });
+
       await fetch(`${baseUrl}/api/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -324,6 +343,7 @@ async function triggerNotifications(details: {
           to: jvlSaleEmail,
           subject: `NEW ORDER — ${businessName} — R ${details.amount.toFixed(2)}`,
           body: jvlEmailBody,
+          html: jvlEmailHtml,
         }),
       });
 
@@ -336,6 +356,9 @@ async function triggerNotifications(details: {
   // 5. Email to customer
   if (details.customerEmail) {
     try {
+      const deliveryLabel =
+        details.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
+
       const customerEmailBody = [
         `Hi ${details.customerName},`,
         ``,
@@ -350,6 +373,16 @@ async function triggerNotifications(details: {
         `— ${businessName}`,
       ].join("\n");
 
+      const customerEmailHtml = buildCustomerSaleEmailHtml({
+        businessName,
+        customerName: details.customerName,
+        totalAmount: details.amount,
+        deliveryLabel,
+        deliveryFee: details.splitBreakdown.deliveryFee,
+        address: details.customerAddress,
+        txRef: details.txRef,
+      });
+
       await fetch(`${baseUrl}/api/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -357,6 +390,7 @@ async function triggerNotifications(details: {
           to: details.customerEmail,
           subject: `${businessName} — Payment Confirmed`,
           body: customerEmailBody,
+          html: customerEmailHtml,
         }),
       });
 
@@ -607,4 +641,96 @@ function calculateSplitBreakdown(
 function getBaseUrl(): string {
   const port = process.env.PORT || "3000";
   return `http://localhost:${port}`;
+}
+
+/**
+ * Build professional HTML email for JVL sale notification.
+ * Shows client particulars, order details, and JVL settlement breakdown.
+ */
+function buildJVLSaleEmailHtml(params: {
+  businessName: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerAddress: string;
+  productPrice: number;
+  deliveryLabel: string;
+  deliveryFee: number;
+  totalAmount: number;
+  txRef: string;
+  partnerGrossShare: number;
+  deliveryFeeAmount: number;
+  flutterwaveFee: number;
+  partnerNetShare: number;
+  ownerShare: number;
+}): string {
+  return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:0;">
+    <div style="background:#2563eb;color:white;padding:20px 24px;border-radius:8px 8px 0 0;">
+      <h2 style="margin:0;font-size:20px;">&#128722; NEW ORDER — ${params.businessName}</h2>
+    </div>
+    <div style="padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;">
+      <h3 style="color:#374151;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-top:0;">CLIENT PARTICULARS</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:120px;">Name:</td><td style="padding:6px 0;font-weight:600;">${params.customerName}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Phone:</td><td style="padding:6px 0;font-weight:600;">${params.customerPhone}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Email:</td><td style="padding:6px 0;font-weight:600;">${params.customerEmail}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Address:</td><td style="padding:6px 0;font-weight:600;">${params.customerAddress}</td></tr>
+      </table>
+      <h3 style="color:#374151;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-top:24px;">ORDER DETAILS</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:120px;">Product:</td><td style="padding:6px 0;font-weight:600;">${params.businessName}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Product Price:</td><td style="padding:6px 0;font-weight:600;">R ${params.productPrice.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Delivery:</td><td style="padding:6px 0;font-weight:600;">${params.deliveryLabel} — R ${params.deliveryFee.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Total Paid:</td><td style="padding:6px 0;font-weight:600;">R ${params.totalAmount.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Reference:</td><td style="padding:6px 0;font-weight:600;">${params.txRef}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Processed by:</td><td style="padding:6px 0;font-weight:600;">Sitewizard</td></tr>
+      </table>
+      <h3 style="color:#374151;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-top:24px;">JVL SETTLEMENT</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:200px;">JVL Share (75% of product after fees):</td><td style="padding:6px 0;font-weight:600;">R ${params.partnerGrossShare.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Plus delivery fee (full):</td><td style="padding:6px 0;font-weight:600;">+R ${params.deliveryFeeAmount.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Payment gateway fee:</td><td style="padding:6px 0;font-weight:600;">-R ${params.flutterwaveFee.toFixed(2)}</td></tr>
+        <tr style="background:#f0fdf4;"><td style="padding:10px 6px;color:#059669;font-weight:700;font-size:16px;">TOTAL TO JVL ACCOUNT:</td><td style="padding:10px 6px;font-weight:700;font-size:18px;color:#059669;">R ${params.partnerNetShare.toFixed(2)}</td></tr>
+      </table>
+      <div style="background:#f9fafb;padding:12px 16px;border-radius:6px;margin-top:16px;">
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Bank:</strong> Standard Bank | JVL Headquarters PTY Ltd</p>
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Account:</strong> 253215811 | <strong>Branch:</strong> Menlyn</p>
+      </div>
+      <p style="color:#6b7280;font-size:12px;margin-top:20px;">Owner Share (25%): R ${params.ownerShare.toFixed(2)}<br>Auto-split by payment gateway. Funds settle within 24h.<br>Sent by Sitewizard on behalf of ${params.businessName}</p>
+    </div>
+  </div>`;
+}
+
+/**
+ * Build professional HTML email for customer payment confirmation.
+ * Shows payment confirmation + delivery details only (no money split).
+ */
+function buildCustomerSaleEmailHtml(params: {
+  businessName: string;
+  customerName: string;
+  totalAmount: number;
+  deliveryLabel: string;
+  deliveryFee: number;
+  address: string;
+  txRef: string;
+}): string {
+  return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:0;">
+    <div style="background:#059669;color:white;padding:20px 24px;border-radius:8px 8px 0 0;">
+      <h2 style="margin:0;font-size:20px;">&#9989; Payment Confirmed!</h2>
+    </div>
+    <div style="padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;">
+      <p style="font-size:16px;color:#374151;">Hi ${params.customerName},</p>
+      <p style="font-size:16px;color:#374151;">Your payment of <strong>R ${params.totalAmount.toFixed(2)}</strong> has been received and confirmed.</p>
+      <h3 style="color:#374151;border-bottom:2px solid #059669;padding-bottom:8px;margin-top:24px;">Delivery Details</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:120px;">Address:</td><td style="padding:6px 0;font-weight:600;">${params.address}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Delivery:</td><td style="padding:6px 0;font-weight:600;">${params.deliveryLabel} — R ${params.deliveryFee.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Reference:</td><td style="padding:6px 0;font-weight:600;">${params.txRef}</td></tr>
+      </table>
+      <p style="font-size:15px;color:#374151;margin-top:20px;">Your product will be sent to you shortly. You will be informed with tracking details once it ships.</p>
+      <p style="font-size:15px;color:#374151;">Thank you for your order!</p>
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
+      <p style="color:#6b7280;font-size:12px;">— ${params.businessName}</p>
+    </div>
+  </div>`;
 }
