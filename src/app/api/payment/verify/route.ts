@@ -41,8 +41,10 @@ export async function POST(request: NextRequest) {
     ) {
       console.log("[Payment Verify] Demo mode — simulating success");
 
+      const deliveryFee = deliveryOption === "speed" ? 119 : 89;
+      const totalAmount = 850 + deliveryFee;
       const splitBreakdown = calculateSplitBreakdown(
-        850,
+        totalAmount,
         deliveryOption || "normal"
       );
 
@@ -52,7 +54,7 @@ export async function POST(request: NextRequest) {
         customerPhone: customerPhone || undefined,
         customerAddress: customerAddress || "123 Demo Street, Pretoria",
         deliveryOption: deliveryOption || "normal",
-        amount: 850,
+        amount: totalAmount,
         currency: "ZAR",
         txRef,
         transactionId,
@@ -64,7 +66,7 @@ export async function POST(request: NextRequest) {
         data: {
           id: transactionId,
           tx_ref: txRef,
-          amount: 850,
+          amount: totalAmount,
           currency: "ZAR",
           status: "successful",
           payment_type: "demo",

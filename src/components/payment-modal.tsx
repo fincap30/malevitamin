@@ -76,13 +76,15 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
       if (isDemoMode()) {
         await loadFlutterwaveScript();
         setTimeout(() => {
+          const selectedFee = form.deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
+          const totalAmount = PRODUCT.price + selectedFee;
           const breakdown = calculateSplitBreakdown(
-            PRODUCT.price,
+            totalAmount,
             form.deliveryOption
           );
           const demoResult: PaymentVerificationResult = {
             verified: true,
-            amount: PRODUCT.price,
+            amount: totalAmount,
             currency: PRODUCT.currency,
             customerName: form.name,
             customerEmail: form.email,
@@ -130,10 +132,11 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
     onClose();
   };
 
-  const breakdown = calculateSplitBreakdown(PRODUCT.price, form.deliveryOption);
-  const currencySymbol = PRODUCT.currency === "ZAR" ? "R" : PRODUCT.currency;
   const selectedDeliveryFee =
     form.deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
+  const totalAmount = PRODUCT.price + selectedDeliveryFee;
+  const breakdown = calculateSplitBreakdown(totalAmount, form.deliveryOption);
+  const currencySymbol = PRODUCT.currency === "ZAR" ? "R" : PRODUCT.currency;
 
   return (
     <AnimatePresence>

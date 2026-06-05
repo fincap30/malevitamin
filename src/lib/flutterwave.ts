@@ -169,32 +169,35 @@ function getSplitRecipients(): SplitRecipient[] {
 
 /**
  * Build the Flutterwave subaccounts array for split payment.
- * Flutterwave splits the SETTLEMENT amount (after their fee) between subaccounts.
+ *
+ * Uses transaction_split_ratio for a 25/75 split between Owner and JVL.
+ * The total charged to the customer includes product + delivery.
+ * Flutterwave deducts their fee, then splits the settlement 25/75.
+ * JVL's 75% share naturally includes the delivery portion.
+ *
+ * Example: R 969 charged (R 850 product + R 119 speed delivery)
+ *   - Flutterwave fee: ~R 29.10
+ *   - Settlement: ~R 939.90
+ *   - Owner (25%): ~R 234.97 → to Capitec account
+ *   - JVL (75%): ~R 704.93 → to Standard Bank account
  */
 function buildSubaccounts(): FlutterwaveSubaccount[] {
-  const recipients = getSplitRecipients();
+  const ownerSubId = process.env.FLUTTERWAVE_OWNER_SUBACCOUNT_ID;
+  const partnerSubId = process.env.FLUTTERWAVE_PARTNER_SUBACCOUNT_ID;
 
-  if (recipients.length === 0) return [];
+  if (!ownerSubId || !partnerSubId) return [];
 
-  if (recipients.length === 1) {
-    return [
-      {
-        id: recipients[0].subaccountId,
-        transaction_charge_type: "percentage",
-        transaction_charge: recipients[0].percentage / 100,
-      },
-    ];
-  }
-
-  // Multiple recipients — use split ratio (e.g., 25/75 → ratio 1:3)
-  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
-  const percentages = recipients.map((r) => r.percentage);
-  const commonDivisor = percentages.reduce((acc, val) => gcd(acc, val));
-
-  return recipients.map((r) => ({
-    id: r.subaccountId,
-    transaction_split_ratio: r.percentage / commonDivisor,
-  }));
+  // Use split ratio: Owner 1 : JVL 3 (= 25% : 75%)
+  return [
+    {
+      id: ownerSubId,
+      transaction_split_ratio: 1,
+    },
+    {
+      id: partnerSubId,
+      transaction_split_ratio: 3,
+    },
+  ];
 }
 
 /**
