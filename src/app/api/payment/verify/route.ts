@@ -353,7 +353,79 @@ async function triggerNotifications(details: {
     }
   }
 
-  // 5. Email to customer
+  // 5. Email to OWNER (T Schoeman) — Full transaction details + both shares
+  const ownerSaleEmail = process.env.OWNER_SALE_EMAIL;
+  if (ownerSaleEmail) {
+    try {
+      const deliveryLabel =
+        details.deliveryOption === "speed" ? "Speed (2-3 days)" : "Normal (5-7 days)";
+      const productPrice = details.amount - details.splitBreakdown.deliveryFee;
+
+      const ownerEmailBody = [
+        `PAYMENT RECEIVED — ${businessName}`,
+        ``,
+        `CLIENT PARTICULARS:`,
+        `Name: ${details.customerName}`,
+        `Phone: ${details.customerPhone || "Not provided"}`,
+        `Email: ${details.customerEmail}`,
+        `Address: ${details.customerAddress}`,
+        ``,
+        `TRANSACTION DETAILS:`,
+        `Product: ${businessName}`,
+        `Product Price: R ${productPrice.toFixed(2)}`,
+        `Delivery (${deliveryLabel}): R ${details.splitBreakdown.deliveryFee.toFixed(2)}`,
+        `Total Paid: R ${details.amount.toFixed(2)}`,
+        `Payment Gateway Fee: -R ${details.splitBreakdown.flutterwaveFee.toFixed(2)}`,
+        `Reference: ${details.txRef}`,
+        `Processed by: Sitewizard`,
+        ``,
+        `YOUR SETTLEMENT (25%):`,
+        `Your Share (25% of product after fees): R ${details.splitBreakdown.ownerShare.toFixed(2)}`,
+        `Bank: Capitec | Theunis J Schoeman`,
+        `Account: 2399132838 | Branch: 470010`,
+        ``,
+        `JVL SETTLEMENT (75% + delivery):`,
+        `JVL Share: R ${details.splitBreakdown.partnerNetShare.toFixed(2)}`,
+        `Bank: Standard Bank | JVL Headquarters PTY Ltd`,
+        `Account: 253215811 | Branch: Menlyn`,
+        ``,
+        `Auto-split by payment gateway. Funds settle within 24h.`,
+      ].join("\n");
+
+      const ownerEmailHtml = buildOwnerSaleEmailHtml({
+        businessName,
+        customerName: details.customerName,
+        customerPhone: details.customerPhone || "Not provided",
+        customerEmail: details.customerEmail,
+        customerAddress: details.customerAddress,
+        productPrice,
+        deliveryLabel,
+        deliveryFee: details.splitBreakdown.deliveryFee,
+        totalAmount: details.amount,
+        flutterwaveFee: details.splitBreakdown.flutterwaveFee,
+        txRef: details.txRef,
+        ownerShare: details.splitBreakdown.ownerShare,
+        partnerNetShare: details.splitBreakdown.partnerNetShare,
+      });
+
+      await fetch(`${baseUrl}/api/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: ownerSaleEmail,
+          subject: `PAYMENT RECEIVED — ${businessName} — R ${details.amount.toFixed(2)}`,
+          body: ownerEmailBody,
+          html: ownerEmailHtml,
+        }),
+      });
+
+      console.log("[Payment] Owner sale email sent to", ownerSaleEmail);
+    } catch (error) {
+      console.error("[Payment] Owner sale email failed:", error);
+    }
+  }
+
+  // 6. Email to customer
   if (details.customerEmail) {
     try {
       const deliveryLabel =
@@ -731,6 +803,68 @@ function buildCustomerSaleEmailHtml(params: {
       <p style="font-size:15px;color:#374151;">Thank you for your order!</p>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
       <p style="color:#6b7280;font-size:12px;">— ${params.businessName}</p>
+    </div>
+  </div>`;
+}
+
+/**
+ * Build professional HTML email for Owner (T Schoeman).
+ * Shows client particulars, full transaction details, and BOTH shares.
+ */
+function buildOwnerSaleEmailHtml(params: {
+  businessName: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerAddress: string;
+  productPrice: number;
+  deliveryLabel: string;
+  deliveryFee: number;
+  totalAmount: number;
+  flutterwaveFee: number;
+  txRef: string;
+  ownerShare: number;
+  partnerNetShare: number;
+}): string {
+  return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:0;">
+    <div style="background:#d97706;color:white;padding:20px 24px;border-radius:8px 8px 0 0;">
+      <h2 style="margin:0;font-size:20px;">&#128176; PAYMENT RECEIVED — ${params.businessName}</h2>
+    </div>
+    <div style="padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;">
+      <h3 style="color:#374151;border-bottom:2px solid #d97706;padding-bottom:8px;margin-top:0;">CLIENT PARTICULARS</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:120px;">Name:</td><td style="padding:6px 0;font-weight:600;">${params.customerName}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Phone:</td><td style="padding:6px 0;font-weight:600;">${params.customerPhone}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Email:</td><td style="padding:6px 0;font-weight:600;">${params.customerEmail}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Address:</td><td style="padding:6px 0;font-weight:600;">${params.customerAddress}</td></tr>
+      </table>
+      <h3 style="color:#374151;border-bottom:2px solid #d97706;padding-bottom:8px;margin-top:24px;">TRANSACTION DETAILS</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;width:120px;">Product:</td><td style="padding:6px 0;font-weight:600;">${params.businessName}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Product Price:</td><td style="padding:6px 0;font-weight:600;">R ${params.productPrice.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Delivery:</td><td style="padding:6px 0;font-weight:600;">${params.deliveryLabel} — R ${params.deliveryFee.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Total Paid:</td><td style="padding:6px 0;font-weight:600;">R ${params.totalAmount.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Gateway Fee:</td><td style="padding:6px 0;font-weight:600;">-R ${params.flutterwaveFee.toFixed(2)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Reference:</td><td style="padding:6px 0;font-weight:600;">${params.txRef}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;">Processed by:</td><td style="padding:6px 0;font-weight:600;">Sitewizard</td></tr>
+      </table>
+      <h3 style="color:#374151;border-bottom:2px solid #d97706;padding-bottom:8px;margin-top:24px;">YOUR SETTLEMENT (25%)</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr style="background:#fffbeb;"><td style="padding:10px 6px;color:#d97706;font-weight:700;font-size:16px;">Your Share (25% of product after fees):</td><td style="padding:10px 6px;font-weight:700;font-size:18px;color:#d97706;">R ${params.ownerShare.toFixed(2)}</td></tr>
+      </table>
+      <div style="background:#f9fafb;padding:12px 16px;border-radius:6px;margin-top:12px;">
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Bank:</strong> Capitec | Theunis J Schoeman</p>
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Account:</strong> 2399132838 | <strong>Branch:</strong> 470010</p>
+      </div>
+      <h3 style="color:#374151;border-bottom:2px solid #d97706;padding-bottom:8px;margin-top:24px;">JVL SETTLEMENT (75% + delivery)</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr style="background:#f0fdf4;"><td style="padding:10px 6px;color:#059669;font-weight:700;font-size:16px;">JVL Share:</td><td style="padding:10px 6px;font-weight:700;font-size:18px;color:#059669;">R ${params.partnerNetShare.toFixed(2)}</td></tr>
+      </table>
+      <div style="background:#f9fafb;padding:12px 16px;border-radius:6px;margin-top:12px;">
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Bank:</strong> Standard Bank | JVL Headquarters PTY Ltd</p>
+        <p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Account:</strong> 253215811 | <strong>Branch:</strong> Menlyn</p>
+      </div>
+      <p style="color:#6b7280;font-size:12px;margin-top:20px;">Auto-split by payment gateway. Funds settle to bank accounts within 24h.<br>Sent by Sitewizard on behalf of ${params.businessName}</p>
     </div>
   </div>`;
 }
