@@ -216,6 +216,16 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                             </p>
                           </div>
                         </div>
+                        <div className="mt-3 pt-3 border-t border-gold/10 flex justify-between items-center">
+                          <div className="text-xs text-foreground/50">
+                            <span>Product: {currencySymbol} {PRODUCT.price.toFixed(2)}</span>
+                            <span className="mx-2">+</span>
+                            <span>Delivery: {currencySymbol} {selectedDeliveryFee.toFixed(2)}</span>
+                          </div>
+                          <p className="text-sm font-black text-gold">
+                            Total: {currencySymbol} {(PRODUCT.price + selectedDeliveryFee).toFixed(2)}
+                          </p>
+                        </div>
                       </div>
 
                       <form onSubmit={handleSubmit} className="space-y-4">
@@ -377,13 +387,13 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                           className="w-full rounded-none bg-gold text-black font-black tracking-wider uppercase text-sm hover:bg-gold-light h-12 mt-2"
                         >
                           <Lock className="mr-2 h-4 w-4" />
-                          Pay {currencySymbol} {PRODUCT.price.toFixed(2)}
+                          Pay {currencySymbol} {(PRODUCT.price + selectedDeliveryFee).toFixed(2)}
                         </Button>
 
                         <p className="text-xs text-foreground/25 text-center">
-                          Delivery fee ({currencySymbol}{" "}
-                          {selectedDeliveryFee.toFixed(2)}) is included and
-                          handled separately
+                          Includes {currencySymbol}{" "}
+                          {PRODUCT.price.toFixed(2)} product + {currencySymbol}{" "}
+                          {selectedDeliveryFee.toFixed(2)} delivery
                         </p>
                       </form>
 

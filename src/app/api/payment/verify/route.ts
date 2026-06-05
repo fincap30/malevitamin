@@ -329,7 +329,6 @@ function buildJVLWhatsAppMessage(params: {
   const partnerAccNo = process.env.PARTNER_ACCOUNT_NUMBER || "";
   const partnerBranch = process.env.PARTNER_BRANCH || "";
 
-  const totalCosts = params.flutterwaveFee + params.deliveryFee;
   const jvlAccountPayment = params.jvlNet;
 
   return [
@@ -349,10 +348,9 @@ function buildJVLWhatsAppMessage(params: {
     `Processed by: Sitewizard`,
     ``,
     `━━━ JVL SETTLEMENT ━━━`,
-    `JVL Share (75% of after-fee): ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
-    `Plus delivery fee collected:`,
-    `  ➤ Payment gateway fee deducted: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
-    `  ➤ Delivery fee (+${params.currencySymbol} ${params.deliveryFee.toFixed(2)})`,
+    `JVL Share (75% of product after fees): ${params.currencySymbol} ${params.jvlGross.toFixed(2)}`,
+    `Plus delivery fee: +${params.currencySymbol} ${params.deliveryFee.toFixed(2)}`,
+    `Payment gateway fee deducted: -${params.currencySymbol} ${params.flutterwaveFee.toFixed(2)}`,
     ``,
     `💰 AMOUNT TO JVL ACCOUNT: ${params.currencySymbol} ${jvlAccountPayment.toFixed(2)}`,
     `  ➤ Bank: ${partnerBank} | ${partnerAccName}`,
@@ -367,14 +365,17 @@ function buildJVLWhatsAppMessage(params: {
 /**
  * Calculate the split breakdown.
  *
- * Both parties split the AFTER-FEE amount 25/75.
- * Delivery fee is added to JVL's share (JVL collects delivery from customer).
+ * Customer pays total = product price + delivery fee.
+ * Flutterwave takes fee from total. Delivery goes to JVL.
+ * Owner and JVL split the product portion (after fees) 25/75.
  *
- * Example: R 850, speed delivery (R 119)
- *   - Flutterwave fee: R 25.65
- *   - After fee: R 824.35
- *   - Owner (25%): R 206.09
- *   - JVL (75%): R 618.26 + R 119.00 delivery = R 737.26
+ * Example: R 969 total (R 850 product + R 119 speed delivery)
+ *   - Flutterwave fee: R 29.10
+ *   - Settlement: R 939.90
+ *   - Delivery to JVL: R 119.00
+ *   - Split pool: R 939.90 - R 119.00 = R 820.90
+ *   - Owner (25%): R 205.23
+ *   - JVL (75% + delivery): R 615.68 + R 119.00 = R 734.68
  */
 function calculateSplitBreakdown(
   totalAmount: number,
@@ -383,16 +384,19 @@ function calculateSplitBreakdown(
   const flutterwaveFee = totalAmount * 0.029 + 1;
   const afterFeeAmount = totalAmount - flutterwaveFee;
 
-  const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
-  const ownerShare = afterFeeAmount * (ownerPercentage / 100);
-
-  const partnerGrossShare = afterFeeAmount * ((100 - ownerPercentage) / 100);
-
   const normalFee = Number(process.env.DELIVERY_FEE_NORMAL || 8900) / 100;
   const speedFee = Number(process.env.DELIVERY_FEE_SPEED || 11900) / 100;
   const deliveryFee = deliveryOption === "speed" ? speedFee : normalFee;
 
-  // JVL total = 75% of after-fee + delivery fee
+  // Split pool = settlement minus delivery fee
+  const splitPool = afterFeeAmount - deliveryFee;
+
+  const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
+  const ownerShare = splitPool * (ownerPercentage / 100);
+
+  const partnerGrossShare = splitPool * ((100 - ownerPercentage) / 100);
+
+  // JVL total = 75% of split pool + delivery fee
   const partnerNetShare = partnerGrossShare + deliveryFee;
   const settlementAmount = totalAmount - flutterwaveFee;
 
@@ -401,23 +405,25 @@ function calculateSplitBreakdown(
       label: process.env.SPLIT_OWNER_LABEL || "Owner",
       percentage: ownerPercentage,
       amount: Math.round(ownerShare * 100) / 100,
-      note: `${ownerPercentage}% of after-fee amount`,
+      note: `${ownerPercentage}% of product after fees`,
     },
     {
-      label: process.env.SPLIT_PARTNER_LABEL || "Partner",
+      label: process.env.SPLIT_PARTNER_LABEL || "JVL",
       percentage: 100 - ownerPercentage,
       amount: Math.round(partnerGrossShare * 100) / 100,
-      note: `${100 - ownerPercentage}% of after-fee + delivery (R ${deliveryFee.toFixed(2)})`,
+      note: `${100 - ownerPercentage}% of product + delivery (R ${deliveryFee.toFixed(2)})`,
     },
   ];
 
   return {
     totalAmount,
+    productPrice: totalAmount - deliveryFee,
     flutterwaveFee: Math.round(flutterwaveFee * 100) / 100,
     afterFeeAmount: Math.round(afterFeeAmount * 100) / 100,
+    deliveryFee: Math.round(deliveryFee * 100) / 100,
+    splitPool: Math.round(splitPool * 100) / 100,
     ownerShare: Math.round(ownerShare * 100) / 100,
     partnerGrossShare: Math.round(partnerGrossShare * 100) / 100,
-    deliveryFee: Math.round(deliveryFee * 100) / 100,
     partnerNetShare: Math.round(partnerNetShare * 100) / 100,
     settlementAmount: Math.round(settlementAmount * 100) / 100,
     splits,
