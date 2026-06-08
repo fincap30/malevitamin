@@ -409,7 +409,7 @@ export async function initiatePayment(customer: {
     customizations: {
       title: PRODUCT.name,
       description: `Payment for ${PRODUCT.name} + delivery`,
-      logo: `${window.location.origin}/product-image.webp`,
+      logo: `${window.location.origin}/api/logo`,
     },
     subaccounts,
     callback: async (response) => {

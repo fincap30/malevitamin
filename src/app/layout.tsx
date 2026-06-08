@@ -85,7 +85,7 @@ const homepageJsonLd = {
       "@type": "Organization",
       name: "Male Vitamin",
       url: "https://malevitamin.co.za",
-      logo: "https://malevitamin.co.za/product-image.webp",
+      logo: "https://malevitamin.co.za/api/logo",
       description:
         "Male Vitamin offers natural male enhancement supplements for erectile dysfunction, low libido, and stamina — delivered across South Africa.",
       contactPoint: {

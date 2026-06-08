@@ -200,7 +200,11 @@ function Navbar({ onOrderNow }: { onOrderNow: () => void }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div className="flex items-center gap-2.5">
-          <Flame className="h-7 w-7 text-gold" />
+          <img
+            src="/api/logo"
+            alt="Male Vitamin Logo"
+            className="h-9 w-9 object-contain"
+          />
           <span className="text-xl font-black tracking-widest text-gold uppercase">
             Male Vitamin
           </span>
@@ -985,7 +989,11 @@ function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-4">
-              <Flame className="h-6 w-6 text-gold" />
+              <img
+                src="/api/logo"
+                alt="Male Vitamin Logo"
+                className="h-8 w-8 object-contain"
+              />
               <span className="text-lg font-black tracking-widest text-gold uppercase">
                 Male Vitamin
               </span>
@@ -1140,7 +1148,7 @@ const homepageJsonLd = {
       "@type": "Organization",
       name: "Male Vitamin",
       url: "https://malevitamin.co.za",
-      logo: "https://malevitamin.co.za/product-image.webp",
+      logo: "https://malevitamin.co.za/api/logo",
       description:
         "South Africa's premium natural male supplement for erectile dysfunction and low libido. L-Arginine, Tribulus, Maca Root & Ginseng formula.",
       contactPoint: {
