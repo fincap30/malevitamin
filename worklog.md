@@ -23,3 +23,26 @@ Stage Summary:
 - Skill covers: Web app → Payment gateway → Notifications → Custom domain → SEO
 - All code templates are production-ready and tested with malevitamin.co.za
 - Skill is located at /home/z/my-project/skills/product-launcher/
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Save Cloudflare credentials and deploy Worker v3 with embedded product image
+
+Work Log:
+- Saved Cloudflare API credentials to /home/z/my-project/.env.cloudflare
+- Email: fincap30@gmail.com (Global API Key auth)
+- Account ID: 4d39203d7efc56c5bb9a7fcff99a0f1c
+- Created updated worker.js (v3) with embedded base64 product-image.webp data
+- Deployed worker to Cloudflare via API (script: malevitamin-proxy)
+- Discovered malevitamin.co.za zone is on a DIFFERENT Cloudflare account (uses gwen/ryan.ns.cloudflare.com)
+- The existing v2 worker on that account is already serving product-image.webp correctly (200, 17520 bytes, image/webp)
+- Attempted to add zone to fincap30 account but deleted it to avoid DNS conflicts
+- Enabled workers.dev route for the new worker at malevitamin-proxy.fincap30.workers.dev
+
+Stage Summary:
+- Cloudflare credentials saved and working (fincap30@gmail.com + Global API Key)
+- product-image.webp IS already accessible at https://malevitamin.co.za/product-image.webp (verified working)
+- The site is served through a v2 Cloudflare Worker on a different account
+- Worker v3 deployed on fincap30 account but NOT routed to malevitamin.co.za (zone is on different account)
+- All critical endpoints verified: Homepage 200, Product Image 200, Sitemap 200, Robots.txt 200
