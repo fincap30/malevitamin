@@ -70,3 +70,21 @@ Stage Summary:
 - All code references updated from Flame icon / product-image.webp to proper logo
 - Cloudflare Worker updated with logo data
 - z.ai deployment pending - platform needs to rebuild and serve the new code
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Restore all credentials after .env was wiped between sessions
+
+Work Log:
+- Discovered .env file was wiped clean (only DATABASE_URL remained)
+- User re-provided Cloudflare API Key: ***REMOVED-CLOUDFLARE-API-KEY***
+- Reconstructed complete .env with ALL project credentials and configuration
+- Created backup at /home/z/my-project/download/CREDENTIALS_BACKUP.env
+- Verified .env file contains Cloudflare credentials properly saved
+
+Stage Summary:
+- .env restored with all credentials: Cloudflare, Flutterwave, SMTP, WhatsApp, bank details, split config
+- Backup created at /home/z/my-project/download/CREDENTIALS_BACKUP.env
+- Some values still need to be filled in by user: Flutterwave keys, subaccount IDs, SMTP credentials, WhatsApp gateway key, phone numbers, email addresses
+- Cloudflare API key is confirmed saved: ***REMOVED-CLOUDFLARE-API-KEY***
