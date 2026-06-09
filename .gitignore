@@ -30,8 +30,28 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files — never commit real secrets
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+.env.*
+# ...but DO allow the template to be committed
+!.env.example
+
+# credential / secret backup files
+*.env
+*CREDENTIALS*
+*credentials*
+*.secret
+*.secrets
+secrets.*
+.env.backup
+CREDENTIALS_BACKUP.env
+# ...but DO allow the documentation guide (no secrets, placeholders only)
+!CREDENTIALS_SETUP.md
 
 # vercel
 .vercel
