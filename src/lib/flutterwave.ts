@@ -14,6 +14,12 @@
 //   - Owner (25% of after-fee): R 206.09
 //   - JVL (75% of after-fee): R 618.26 + R 119.00 delivery = R 737.26
 
+// Split-payment math lives in one place (src/lib/payment/split.ts) so the
+// client and server can never drift apart. Re-exported below for existing
+// importers of this module.
+import { calculateSplitBreakdown } from "./payment/split";
+export { calculateSplitBreakdown };
+
 declare global {
   interface Window {
     FlutterwaveCheckout: (config: FlutterwaveConfig) => void;
@@ -223,100 +229,6 @@ function buildSubaccounts(deliveryOption: DeliveryOption = "normal"): Flutterwav
       id: partnerSubId,
     },
   ];
-}
-
-/**
- * Calculate the expected split breakdown.
- *
- * PAYMENT LOGIC:
- * 1. Customer pays total = product price + delivery fee (e.g., R 850 + R 119 = R 969)
- * 2. Flutterwave deducts its fee from the total
- * 3. Both parties split the PRODUCT portion (after product-fee) 25/75
- * 4. Delivery fee goes entirely to JVL
- *
- * Example: R 850.00 product, speed delivery (R 119)
- *   - Customer pays: R 969.00
- *   - Flutterwave fee (on total): R 29.10
- *   - Settlement: R 939.90
- *   - Delivery fee (to JVL): R 119.00
- *   - Remaining for split: R 939.90 - R 119.00 = R 820.90
- *   - Owner (25% of remaining): R 205.23
- *   - JVL (75% of remaining + delivery): R 615.68 + R 119.00 = R 734.68
- */
-export function calculateSplitBreakdown(
-  totalAmount: number,
-  deliveryOption: DeliveryOption = "normal"
-): {
-  totalAmount: number;
-  productPrice: number;
-  flutterwaveFee: number;
-  afterFeeAmount: number;
-  deliveryFee: number;
-  splitPool: number;
-  ownerShare: number; // 25% of split pool
-  partnerGrossShare: number; // 75% of split pool
-  partnerNetShare: number; // 75% of split pool + delivery fee
-  settlementAmount: number;
-  splits: { label: string; percentage: number; amount: number; note?: string }[];
-} {
-  // Flutterwave SA fee: 2.9% + R1 (local card estimate)
-  const flutterwaveFee = totalAmount * 0.029 + 1;
-
-  // After Flutterwave fee
-  const afterFeeAmount = totalAmount - flutterwaveFee;
-
-  // Delivery fee (goes entirely to JVL)
-  const deliveryFee =
-    deliveryOption === "speed" ? DELIVERY.speedFee : DELIVERY.normalFee;
-
-  // Product price
-  const productPrice = totalAmount - deliveryFee;
-
-  // Split pool = settlement minus delivery fee
-  // The 25/75 split applies to this pool only
-  const splitPool = afterFeeAmount - deliveryFee;
-
-  // Both parties split the split pool
-  const ownerPercentage = Number(process.env.SPLIT_OWNER_PERCENTAGE || 25);
-  const ownerShare = splitPool * (ownerPercentage / 100);
-
-  // JVL gets 75% of split pool
-  const partnerGrossShare = splitPool * ((100 - ownerPercentage) / 100);
-
-  // JVL total = 75% of split pool + delivery fee
-  const partnerNetShare = partnerGrossShare + deliveryFee;
-
-  // Settlement amount (what Flutterwave actually distributes)
-  const settlementAmount = totalAmount - flutterwaveFee;
-
-  const splits = [
-    {
-      label: process.env.SPLIT_OWNER_LABEL || "Owner",
-      percentage: ownerPercentage,
-      amount: ownerShare,
-      note: `${ownerPercentage}% of product after fees`,
-    },
-    {
-      label: process.env.SPLIT_PARTNER_LABEL || "JVL",
-      percentage: 100 - ownerPercentage,
-      amount: partnerGrossShare,
-      note: `${100 - ownerPercentage}% of product + delivery (R ${deliveryFee.toFixed(2)})`,
-    },
-  ];
-
-  return {
-    totalAmount,
-    productPrice,
-    flutterwaveFee,
-    afterFeeAmount,
-    deliveryFee,
-    splitPool,
-    ownerShare,
-    partnerGrossShare,
-    partnerNetShare,
-    settlementAmount,
-    splits,
-  };
 }
 
 /* ------------------------------------------------------------------ */
