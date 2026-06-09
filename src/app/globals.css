@@ -167,6 +167,109 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
+/* ------------------------------------------------------------------ */
+/*  CTA + MOTION UTILITIES (added for landing page redesign)           */
+/* ------------------------------------------------------------------ */
+
+/* Animated sheen sweeping across primary CTAs */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 75%
+  );
+  background-size: 250% 100%;
+  background-position: 200% 0;
+  pointer-events: none;
+  animation: btn-sheen 3.2s ease-in-out infinite;
+}
+@keyframes btn-sheen {
+  0%,
+  60% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+/* Pulsing gold glow to draw the eye to key conversion buttons */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.45),
+      0 10px 30px -8px rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(212, 175, 55, 0),
+      0 14px 40px -6px rgba(212, 175, 55, 0.65);
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.6s ease-in-out infinite;
+}
+
+/* Gentle float for the hero product */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.animate-float {
+  animation: float 5.5s ease-in-out infinite;
+}
+
+/* Marquee for the announcement / trust bar */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Soft rising entrance used by lighter sections */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn-shimmer::after,
+  .animate-pulse-glow,
+  .animate-float,
+  .animate-marquee {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 /* Custom scrollbar for dark theme */
 ::-webkit-scrollbar {
   width: 8px;
