@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+/// An e-commerce order created when a customer initiates / completes a
+/// Flutterwave payment. This is the single source of truth for a sale and
+/// survives even if downstream notifications (WhatsApp / email) fail.
+///
+/// NOTE: SQLite (via Prisma) does not support native enums, so status and
+/// delivery fields are stored as strings with documented allowed values.
+/// All monetary amounts are stored in the major currency unit (e.g. Rands),
+/// matching the values returned by Flutterwave.
+model Order {
+  id String @id @default(cuid())
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // --- Payment / transaction identity ---
+  /// Our generated reference passed to Flutterwave as tx_ref (unique per order).
+  txRef         String  @unique
+  /// Flutterwave numeric transaction id (set once known / verified).
+  transactionId String?
+  /// Payment status: "pending" | "successful" | "failed" | "demo".
+  status        String  @default("pending")
+  /// Flutterwave payment method (e.g. "card", "banktransfer"), when known.
+  paymentType   String?
+  /// True when processed through demo mode (no real money moved).
+  demo          Boolean @default(false)
+
+  // --- Money ---
+  /// Total amount charged to the customer (product + delivery).
+  amount       Float
+  /// Currency code (e.g. "ZAR").
+  currency     String  @default("ZAR")
+  /// Product price portion (amount - deliveryFee).
+  productPrice Float
+  /// Estimated payment-gateway fee deducted from the total.
+  gatewayFee   Float   @default(0)
+
+  // --- Delivery ---
+  /// Delivery option: "normal" | "speed".
+  deliveryOption String @default("normal")
+  /// Delivery fee charged for the selected option.
+  deliveryFee    Float  @default(0)
+
+  // --- Split payment breakdown ---
+  /// Owner's settlement share (percentage of product after fees).
+  ownerShare   Float @default(0)
+  /// Partner's settlement share (their % of product + full delivery).
+  partnerShare Float @default(0)
+
+  // --- Customer details ---
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  customerAddress String
+
+  // --- Notification tracking ---
+  /// Whether the post-payment notification fan-out completed without error.
+  notificationsSent Boolean @default(false)
+  /// Optional JSON / text summary of notification results for debugging.
+  notificationLog   String?
+
+  // --- Timestamps ---
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  /// Set when the payment was confirmed successful.
+  paidAt    DateTime?
+
+  @@index([status])
+  @@index([customerEmail])
+  @@index([createdAt])
 }
