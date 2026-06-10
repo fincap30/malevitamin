@@ -80,6 +80,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  // Legal & support pages
+  const legalPages: MetadataRoute.Sitemap = [
+    "faqs",
+    "shipping",
+    "returns",
+    "privacy-policy",
+    "terms-of-service",
+    "disclaimer",
+  ].map((slug) => ({
+    url: `${baseUrl}/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.4,
+  }));
+
   // Town-based SEO pages
   const townPages: MetadataRoute.Sitemap = towns.flatMap((town) =>
     townSlugs.map((slug) => ({
@@ -90,5 +105,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
-  return [...mainPages, ...townPages];
+  return [...mainPages, ...legalPages, ...townPages];
 }

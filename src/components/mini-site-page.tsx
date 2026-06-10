@@ -911,17 +911,38 @@ function MiniFooter({ currentSlug }: { currentSlug: string }) {
           </div>
           <div>
             <h4 className="font-black text-xs tracking-widest uppercase text-gold/60 mb-4">
-              Legal
+              Support &amp; Legal
             </h4>
             <ul className="space-y-2 text-sm text-foreground/30 font-light">
               <li>
-                <span className="cursor-default">Privacy Policy</span>
+                <Link href="/faqs" className="hover:text-gold transition-colors">
+                  FAQs
+                </Link>
               </li>
               <li>
-                <span className="cursor-default">Terms of Service</span>
+                <Link href="/shipping" className="hover:text-gold transition-colors">
+                  Shipping
+                </Link>
               </li>
               <li>
-                <span className="cursor-default">Disclaimer</span>
+                <Link href="/returns" className="hover:text-gold transition-colors">
+                  Returns
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-gold transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-of-service" className="hover:text-gold transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/disclaimer" className="hover:text-gold transition-colors">
+                  Disclaimer
+                </Link>
               </li>
             </ul>
           </div>
