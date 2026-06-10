@@ -1,30 +1,22 @@
 // Notification service — orchestrates the post-payment fan-out.
 //
-// Channels (each best-effort and isolated so one failure never blocks others):
-//   1. WhatsApp to customer        — confirmation + delivery.
-//   2. WhatsApp to every partner    — JVL contacts (Nico, Ana, Chalyn, Jacques).
-//   3. WhatsApp to owner            — full details + both shares.
-//   4. Email to partner sale inbox  — JVL settlement.
-//   5. Email to owner sale inbox    — both shares.
-//   6. Email to customer            — confirmation.
+// As of the CodeWords integration this is a thin wrapper over the CodeWords
+// Transaction Hub. A single hub call now handles every channel that used to be
+// fanned out by hand:
+//   - Customer receipt email
+//   - Customer WhatsApp confirmation
+//   - Team WhatsApp alerts (all numbers in CODEWORDS_OWNER_PHONES)
+//   - Team email alerts (all addresses in CODEWORDS_OWNER_EMAILS)
+//   - Google Sheets logging
 //
-// Calls the WhatsApp / email libs directly (no server-to-server self-fetch),
-// and returns a structured summary the caller can persist on the order.
+// The public surface (`notifyOrder` + `NotificationSummary`) is unchanged so
+// callers such as /api/payment/verify need no modification.
 
 import type { CustomerInfo, SplitBreakdown } from "@/lib/payment/types";
-import { sendWhatsApp } from "./whatsapp";
-import { sendEmail } from "./email";
 import {
-  buildCustomerWhatsAppMessage,
-  buildOwnerWhatsAppMessage,
-  buildPartnerWhatsAppMessage,
-  type OrderMessageContext,
-} from "./messages";
-import {
-  buildCustomerEmail,
-  buildOwnerEmail,
-  buildPartnerEmail,
-} from "./emails";
+  sendTransactionNotification,
+  isCodeWordsConfigured,
+} from "./codewords";
 
 export interface NotifyOrderInput {
   customer: CustomerInfo;
@@ -36,101 +28,76 @@ export interface NotifyOrderInput {
 }
 
 export interface NotificationSummary {
-  /** True only if every attempted channel reported success. */
+  /** True only if the notification hub reported success. */
   allSent: boolean;
   /** Per-channel outcome lines for auditing / persistence. */
   log: string[];
+}
+
+/** Human-readable delivery descriptor used in the receipt description. */
+function describeDelivery(option: CustomerInfo["deliveryOption"]): string {
+  return option === "speed" ? "Speed delivery (1-2 days)" : "Normal delivery (5-7 days)";
 }
 
 export async function notifyOrder(
   input: NotifyOrderInput
 ): Promise<NotificationSummary> {
   const businessName =
-    process.env.NEXT_PUBLIC_BUSINESS_NAME || "Our Store";
-  const currencySymbol = input.currency === "ZAR" ? "R" : input.currency;
-
-  const ctx: OrderMessageContext = {
-    customerName: input.customer.customerName,
-    customerEmail: input.customer.customerEmail,
-    customerPhone: input.customer.customerPhone || "Not provided",
-    customerAddress: input.customer.customerAddress,
-    deliveryOption: input.customer.deliveryOption,
-    amount: input.amount,
-    currencySymbol,
-    txRef: input.txRef,
-    productName: businessName,
-    split: input.split,
-  };
+    process.env.CODEWORDS_BUSINESS_NAME ||
+    process.env.NEXT_PUBLIC_BUSINESS_NAME ||
+    "Male Vitamin";
 
   const log: string[] = [];
-  let allSent = true;
 
-  const record = (channel: string, target: string, ok: boolean, reason?: string) => {
-    if (!ok) allSent = false;
+  // Build a clear description for the receipt / sheet row.
+  const delivery = describeDelivery(input.customer.deliveryOption);
+  const description = `${businessName} order — ${delivery}. Address: ${input.customer.customerAddress}`;
+
+  // Transaction date in YYYY-MM-DD (hub expects this format).
+  const transactionDate = new Date().toISOString().slice(0, 10);
+
+  if (!isCodeWordsConfigured()) {
     log.push(
-      `${ok ? "OK" : "FAIL"} ${channel} -> ${target}${reason ? ` (${reason})` : ""}`
+      "SKIP codewords -> not configured (set CODEWORDS_API_KEY, CODEWORDS_ENDPOINT)"
     );
-  };
-
-  // 1. Customer WhatsApp
-  if (input.customer.customerPhone) {
-    const r = await sendWhatsApp({
-      phone: input.customer.customerPhone,
-      message: buildCustomerWhatsAppMessage(ctx),
-      context: { txRef: input.txRef, audience: "customer" },
-    });
-    record("whatsapp", "customer", r.sent, r.reason);
+    console.warn("[NotificationService] CodeWords not configured — nothing sent.");
+    return { allSent: false, log };
   }
 
-  // 2. Partner (JVL) WhatsApp — every configured contact
-  const partnerPhones = [
-    process.env.JVL_PHONE_NICO,
-    process.env.JVL_PHONE_ANA,
-    process.env.JVL_PHONE_CHALYN,
-    process.env.JVL_PHONE_JACQUES,
-  ].filter(Boolean) as string[];
+  const outcome = await sendTransactionNotification({
+    customer_name: input.customer.customerName,
+    customer_email: input.customer.customerEmail,
+    customer_phone: input.customer.customerPhone,
+    amount: input.amount,
+    currency: input.currency,
+    reference: input.txRef,
+    description,
+    transaction_date: transactionDate,
+    // business_name, logo_url, owner_phones, owner_emails fall back to env
+    // defaults inside the CodeWords client.
+  });
 
-  if (partnerPhones.length > 0) {
-    const partnerMsg = buildPartnerWhatsAppMessage(ctx);
-    for (const phone of partnerPhones) {
-      const r = await sendWhatsApp({
-        phone,
-        message: partnerMsg,
-        context: { txRef: input.txRef, audience: "partner" },
-      });
-      record("whatsapp", `partner:${phone}`, r.sent, r.reason);
-    }
-  }
+  let allSent = false;
 
-  // 3. Owner WhatsApp
-  if (process.env.OWNER_PHONE) {
-    const r = await sendWhatsApp({
-      phone: process.env.OWNER_PHONE,
-      message: buildOwnerWhatsAppMessage(ctx),
-      context: { txRef: input.txRef, audience: "owner" },
-    });
-    record("whatsapp", "owner", r.sent, r.reason);
-  }
+  if (outcome.skipped) {
+    log.push(`SKIP codewords -> ${outcome.reason ?? "skipped"}`);
+  } else if (!outcome.ok || !outcome.result) {
+    log.push(`FAIL codewords -> ${outcome.reason ?? "unknown error"}`);
+  } else {
+    const r = outcome.result;
+    log.push(`OK codewords customer-email -> ${r.customer_email_sent}`);
+    log.push(`OK codewords customer-whatsapp -> ${r.whatsapp_sent}`);
+    log.push(`OK codewords team-whatsapp -> ${r.owner_phones_notified} notified`);
+    log.push(`OK codewords team-email -> ${r.owner_emails_sent} sent`);
+    log.push(`OK codewords sheet-logged -> ${r.sheet_logged}`);
+    if (r.sheet_url) log.push(`INFO codewords sheet-url -> ${r.sheet_url}`);
+    log.push(`INFO codewords message -> ${r.message}`);
 
-  // 4. Partner (JVL) sale email
-  if (process.env.JVL_SALE_EMAIL) {
-    const email = buildPartnerEmail(ctx);
-    const r = await sendEmail({ to: process.env.JVL_SALE_EMAIL, ...email });
-    record("email", "partner", r.sent, r.reason);
-  }
-
-  // 5. Owner sale email
-  if (process.env.OWNER_SALE_EMAIL) {
-    const email = buildOwnerEmail(ctx);
-    const r = await sendEmail({ to: process.env.OWNER_SALE_EMAIL, ...email });
-    record("email", "owner", r.sent, r.reason);
-  }
-
-  // 6. Customer email
-  if (input.customer.customerEmail) {
-    const email = buildCustomerEmail(ctx);
-    const r = await sendEmail({ to: input.customer.customerEmail, ...email });
-    record("email", "customer", r.sent, r.reason);
+    // Consider it "all sent" if the customer receipt + at least one team
+    // channel succeeded.
+    allSent =
+      r.customer_email_sent &&
+      (r.owner_phones_notified > 0 || r.owner_emails_sent > 0);
   }
 
   console.log("[NotificationService] Summary:", { allSent, log });
