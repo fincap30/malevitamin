@@ -76,3 +76,12 @@ server.log
 *.db
 db/*.db
 prisma/db/
+flutterwave_subaccounts.json
+
+# OpenNext
+.open-next
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
