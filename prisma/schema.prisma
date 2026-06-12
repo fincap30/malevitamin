@@ -77,3 +77,32 @@ model Order {
   @@index([customerEmail])
   @@index([createdAt])
 }
+
+/// An inbound WhatsApp message received from a customer via the Universal
+/// WhatsApp Gateway webhook (/api/whatsapp-webhook). Stored so customer
+/// replies are never lost and can be reviewed / actioned for follow-up,
+/// auto-responses, or order-status updates.
+model WhatsAppMessage {
+  id String @id @default(cuid())
+
+  /// Sender phone number in international format (e.g. "+27831234567").
+  phone String
+  /// Display name reported by the gateway, when available.
+  fromName String?
+  /// The message body the customer sent.
+  message String
+  /// Gateway message id (used for de-duplication where provided).
+  messageId String?
+  /// Classified intent (e.g. "delivery_confirmation", "order_status").
+  intent String?
+  /// Message direction: "inbound" (from customer) | "outbound".
+  direction String @default("inbound")
+  /// Timestamp reported by the gateway for the original message.
+  sentAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@index([createdAt])
+  @@index([messageId])
+}

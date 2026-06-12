@@ -17,6 +17,54 @@ import {
   sendTransactionNotification,
   isCodeWordsConfigured,
 } from "./codewords";
+import { send_whatsapp, type SendWhatsAppResult } from "@/lib/whatsapp/whatsapp-service";
+
+/**
+ * Customer-facing WhatsApp messages for each order lifecycle stage.
+ *
+ * The gateway automatically prefixes every message with "💪 MaleVitamin:" —
+ * these strings must NOT include that prefix. Messages are intentionally
+ * discreet and professional (no product names / health references) and never
+ * expose payment-split or settlement figures.
+ */
+export const ORDER_WHATSAPP_MESSAGES = {
+  placed: "Thank you for your order! It ships within 2 business days. 📦",
+  paymentVerified: "Payment confirmed! Your order is being processed.",
+  /** `track` is the tracking URL. */
+  shipped: (track: string) =>
+    `Your MaleVitamin order is on its way! Track: ${track}`,
+} as const;
+
+/**
+ * Notify the customer that their order has been placed.
+ * Sent right after an order is created / payment initiated.
+ */
+export async function notifyOrderPlaced(
+  phone: string | undefined | null
+): Promise<SendWhatsAppResult> {
+  return send_whatsapp(phone, ORDER_WHATSAPP_MESSAGES.placed);
+}
+
+/**
+ * Notify the customer that their payment has been verified / confirmed.
+ * Sent once a payment is verified successful.
+ */
+export async function notifyPaymentVerified(
+  phone: string | undefined | null
+): Promise<SendWhatsAppResult> {
+  return send_whatsapp(phone, ORDER_WHATSAPP_MESSAGES.paymentVerified);
+}
+
+/**
+ * Notify the customer that their order has shipped, including a tracking link.
+ * Sent when the order is dispatched.
+ */
+export async function notifyOrderShipped(
+  phone: string | undefined | null,
+  trackingUrl: string
+): Promise<SendWhatsAppResult> {
+  return send_whatsapp(phone, ORDER_WHATSAPP_MESSAGES.shipped(trackingUrl));
+}
 
 export interface NotifyOrderInput {
   customer: CustomerInfo;

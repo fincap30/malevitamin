@@ -7,7 +7,10 @@ import {
   recordOrder,
   updateNotificationStatus,
 } from "@/lib/order/order-service";
-import { notifyOrder } from "@/lib/notifications/notification-service";
+import {
+  notifyOrder,
+  notifyPaymentVerified,
+} from "@/lib/notifications/notification-service";
 
 /**
  * POST /api/payment/verify
@@ -104,7 +107,20 @@ export async function POST(request: NextRequest) {
       split: result.splitBreakdown,
     });
 
-    // 4. Record the notification outcome on the order.
+    // 4. Send the customer a discreet WhatsApp payment-confirmation via the
+    //    Universal Gateway (best-effort, never blocks the response).
+    try {
+      const waResult = await notifyPaymentVerified(customer.customerPhone);
+      summary.log.push(
+        `${waResult.sent ? "OK" : "SKIP"} whatsapp payment-verified -> ${
+          waResult.success ? "sent" : waResult.reason ?? "not sent"
+        }`
+      );
+    } catch (error) {
+      console.error("[Payment Verify] WhatsApp confirmation failed:", error);
+    }
+
+    // 5. Record the notification outcome on the order.
     await updateNotificationStatus(txRef, summary.allSent, summary.log.join("\n"));
 
     return NextResponse.json({
