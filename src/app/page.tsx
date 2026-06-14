@@ -1314,6 +1314,11 @@ function Footer() {
                   Disclaimer
                 </Link>
               </li>
+              <li>
+                <Link href="/admin" className="text-foreground/15 hover:text-gold/50 transition-colors">
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
