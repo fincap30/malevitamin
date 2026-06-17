@@ -1,0 +1,18 @@
+# Netlify configuration.
+#
+# NOTE: the build command, publish directory, and Next.js runtime are
+# auto-detected by Netlify's Next.js plugin, so they are intentionally NOT
+# overridden here.
+
+[build.environment]
+  # --- Secret scanning ---
+  # DATABASE_URL and DIRECT_URL are configured as real environment variables in
+  # the Netlify UI (they hold the Neon Postgres connection string). Netlify's
+  # secret scanner otherwise flags their values when they appear in the compiled
+  # serverless/function build output, which blocks the deploy. These two keys are
+  # legitimately required at runtime, so we exclude them from the scan.
+  SECRETS_SCAN_OMIT_KEYS = "DATABASE_URL,DIRECT_URL"
+
+  # Documentation files only ever contain placeholders (never real secrets), so
+  # exclude them from scanning as an extra safeguard against false positives.
+  SECRETS_SCAN_OMIT_PATHS = "CREDENTIALS_SETUP.md,NETLIFY_DATABASE_SETUP.md,.env.example,README.md"

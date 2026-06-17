@@ -45,7 +45,8 @@ the others enable payments and notifications.
 
 | Variable | Purpose | Example / Notes |
 |---|---|---|
-| `DATABASE_URL` | Prisma DB connection | `file:./db/custom.db` for local SQLite |
+| `DATABASE_URL` | Prisma DB connection (pooled, app runtime) | Neon Postgres, e.g. `postgresql://USER:PASSWORD@HOST-pooler.REGION.aws.neon.tech/DBNAME?sslmode=require` |
+| `DIRECT_URL` | Prisma DB connection (direct, migrations) | Same as `DATABASE_URL` but without `-pooler` in the host |
 | `NEXT_PUBLIC_BUSINESS_NAME` | Product/brand name shown in UI | `Male Vitamin` |
 | `NEXT_PUBLIC_AMOUNT` | Product price in **cents** | `85000` = R 850.00 |
 | `NEXT_PUBLIC_CURRENCY` | Currency code | `ZAR` |
@@ -132,9 +133,15 @@ the others enable payments and notifications.
 3. **API token/key:** **My Profile → API Tokens** (create a scoped token) — prefer a
    scoped API **token** over the global API key.
 
-### Database
-- Local development: keep the default `DATABASE_URL="file:./db/custom.db"` (SQLite).
-- Production: point it at your managed database connection string.
+### Database (Neon Postgres)
+- The app uses **Neon Postgres** (Prisma `postgresql` provider) for both local and
+  production. Create a free project at **https://console.neon.tech/** and copy the
+  connection string from the dashboard.
+- Set two variables (placeholders only — never commit the real values):
+  - `DATABASE_URL` → the **pooled** string (host contains `-pooler`), used by the app.
+  - `DIRECT_URL` → the **direct** string (same, without `-pooler`), used for migrations.
+- Apply the schema with `npx prisma migrate deploy` (or `npx prisma db push`).
+- In production (Netlify), set both as environment variables in the Netlify UI.
 
 ---
 
