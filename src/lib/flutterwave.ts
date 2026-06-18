@@ -312,7 +312,9 @@ export async function initiatePayment(customer: {
     tx_ref: txRef,
     amount: totalAmount,
     currency: PRODUCT.currency,
-    payment_options: "card,banktransfer,eft,mobilemoney",
+    // ZAR (South Africa) only supports card and bank transfer via Flutterwave.
+    // "eft" and "mobilemoney" are invalid for ZAR and cause checkout validation noise, so they are removed.
+    payment_options: "card,banktransfer",
     customer: {
       email: customer.email,
       name: customer.name,
