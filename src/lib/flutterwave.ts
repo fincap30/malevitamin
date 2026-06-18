@@ -356,6 +356,10 @@ export async function initiatePayment(customer: {
     onclose: () => {
       console.log("Payment modal closed by customer");
     },
+    // Flutterwave's inline checkout requires `meta` to be a FLAT object of
+    // primitive values (string / number / boolean). Nested objects or arrays
+    // trigger an "Invalid meta data passed" error, so the split breakdown is
+    // serialised into a single string instead of a nested array.
     meta: {
       product_id: PRODUCT.id,
       quantity: 1,
@@ -364,10 +368,9 @@ export async function initiatePayment(customer: {
       delivery_option: customer.deliveryOption,
       product_price: PRODUCT.price,
       delivery_fee: deliveryFee,
-      split_config: getSplitRecipients().map((r) => ({
-        label: r.label,
-        percentage: r.percentage,
-      })),
+      split_config: getSplitRecipients()
+        .map((r) => `${r.label}:${r.percentage}%`)
+        .join(", "),
     },
   };
 
